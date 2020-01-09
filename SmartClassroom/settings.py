@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ITSOControl',
+    'StaffControl',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +56,7 @@ ROOT_URLCONF = 'SmartClassroom.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "ITSOControl", "TemplateSource"), os.path.join(BASE_DIR, "StaffControl", "TemplateSource")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,8 +77,10 @@ WSGI_APPLICATION = 'SmartClassroom.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'Unknown',
+        'USER': 'root',
+        'PASSWORD': None
     }
 }
 
@@ -117,4 +121,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/ResourceStatics/'
+# The path where all static files will be collected, which to be placed here.
+STATIC_ROOT = os.path.join(BASE_DIR, 'AppCollectedStatic')
+
+# Additional Directory from where we collect static files. For instance, we have another folder that contains files to be candidated as a static resources for our app.
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'ResourceStatics')
+]
