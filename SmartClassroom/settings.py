@@ -78,9 +78,9 @@ WSGI_APPLICATION = 'SmartClassroom.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Unknown',
-        'USER': 'root',
-        'PASSWORD': None
+        'NAME': 'SmartC_DataCont',
+        'USER': 'root', # Required Soon.
+        'PASSWORD': None # Required Soon.
     }
 }
 
