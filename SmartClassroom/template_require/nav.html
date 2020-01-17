@@ -1,0 +1,51 @@
+<header class="navbar navbar-dark navbar-full bg-danger fixed-top">
+
+
+    {% if requireSideNav == True %}
+    <button aria-controls="navdrawerDefault" aria-expanded="false" aria-label="Toggle Navdrawer" class="navbar-toggler d-lg-none"
+        data-target="#navdrawerDefault" data-toggle="navdrawer" data-breakpoint="lg" data-type="permanent">
+        <span class="navbar-toggler-icon"></span></button>
+    {% endif %}
+    <span class="navbar-brand mr-auto">{{ page_title }}</span>
+    <div class="align-right">
+
+        {% if page_type == "Home" %}
+        <button class="btn btn-flat-secondary text-white btn-icon-prepend" type="button" data-toggle="modal" data-target="#register_ModalForm"><i
+                class="material-icons text-white">create</i>Register</button>
+        <button class="btn btn-flat-primary text-white btn-icon-prepend" type="button" data-toggle="modal" data-target="#login_ModalForm"><i
+                class="material-icons text-white">favorite_border</i>Login</button>
+
+        {% elif page_type == "Admin" %}
+
+        <div class="dropdown">
+            <button class="btn btn-icon btn-sm text-white" type="button"><i class="material-icons">notifications_none</i></button>
+            <button class="btn btn-icon btn-sm text-white" type="button" id="accountInfo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons text-white">account_circle</i></button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="accountInfo">
+                <h5 class="dropdown-header text-black-primary">Hello! Username Here</h5>
+                <h6 class="dropdown-header text-black-secondary">Currently Login as User Type</h6>
+                <div class="dropdown-divider"></div>
+                <span class="dropdown-header text-black-secondary">System</span>
+                <a class="dropdown-item btn-icon-prepend" href="#"><i class="material-icons">settings</i>System Settings</a>
+                <a class="dropdown-item btn-icon-prepend" href="#"><i class="material-icons">update</i>Reset Server</a>
+                <div class="dropdown-divider"></div>
+                <span class="dropdown-header text-black-secondary">Account</span>
+                <a class="dropdown-item btn-icon-prepend" href="#"><i class="material-icons">account_tree</i>Account Settings</a>
+                <a class="dropdown-item btn-icon-prepend" href="#"><i class="material-icons">swap_horiz</i>Change User</a>
+                <a class="dropdown-item btn-icon-prepend" href="#"><i class="material-icons">power_settings_new</i>Log-out</a>
+            </div>
+        </div>
+        {% elif page_type == "Teacher" %}
+        <button class="btn btn-flat-primary text-white" type="button"><i
+                class="material-icons text-white">favorite_border</i>Login</button>
+        <button class="btn btn-flat-secondary text-white" type="button"><i
+                class="material-icons text-white">favorite_border</i>Account</button>
+        {% else %}
+        {% endif %}
+    </div>
+
+</header>
+{% if requireSideNav == True %}
+{% include "sidebar.html" with requireSideNav=True user_name="I Dont Know" user_type=page_action %}
+{% else %}
+{% include "sidebar.html" with requireSideNav=False user_name="I Dont Know" user_type=page_action %}
+{% endif %}

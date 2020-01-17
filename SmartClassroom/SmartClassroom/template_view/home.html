@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% include "header.html" with tab_title=page_title %}
+</head>
+
+<body>
+
+    {% include "nav.html" with tab_title=page_title requireSideNav=True page_action=page_type %}
+    <div class="container" style="padding: 80px 0">
+        {% include "dashboard.html" %}
+    </div>
+
+    {% include "home_modals.html" %}
+    {% include "footer.html" %}
+</body>
+
+</html>

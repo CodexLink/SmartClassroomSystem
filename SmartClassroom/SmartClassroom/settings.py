@@ -56,7 +56,12 @@ ROOT_URLCONF = 'SmartClassroom.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "AdminRoomControl", "TemplateSource"), os.path.join(BASE_DIR, "TeacherRoomControl", "TemplateSource")],
+        'DIRS': [os.path.join(BASE_DIR, "template_require"),
+                 os.path.join(BASE_DIR, "template_reuse"),
+                 os.path.join(BASE_DIR, "SmartClassroom", "template_view"),
+                 os.path.join(BASE_DIR, "AdminRoomControl", "template_view"),
+                 os.path.join(BASE_DIR, "TeacherRoomControl", "template_view")
+                 ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,8 +84,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'SmartC_DataCont',
-        'USER': 'root', # Required Soon.
-        'PASSWORD': None # Required Soon.
+        'USER': 'root',  # Required Soon.
+        'PASSWORD': None  # Required Soon.
     }
 }
 
@@ -122,6 +127,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static_src/'
+
 # The path where all static files will be collected, which to be placed here.
 STATIC_ROOT = os.path.join(BASE_DIR, 'app_static_src')
 
