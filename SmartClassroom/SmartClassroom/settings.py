@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'AdminRoomControl',
     'TeacherRoomControl',
+    'sass_processor',
 ]
 
 MIDDLEWARE = [
