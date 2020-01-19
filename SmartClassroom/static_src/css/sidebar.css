@@ -1,0 +1,15 @@
+/*
+    sidebar.css
+    Created by Janrey Licas
+    This was added to aid sidebar permanent fix clipping through nav bar.
+*/
+
+.navdrawer.navdrawer-permanent-lg div.navdrawer-content
+{
+    padding: 70px 0 0 0 !important;
+}
+
+.navdrawer.navdrawer-permanent-lg.show div.navdrawer-content
+{
+    padding: unset !important;
+}
