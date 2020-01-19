@@ -13,3 +13,15 @@
 {
     padding: unset !important;
 }
+
+.navdrawer-divider.special-type
+{
+    margin: 8px 0 8px 0 !important;
+}
+
+img.primary-user-pic
+{
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+}

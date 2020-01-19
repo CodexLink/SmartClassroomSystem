@@ -1,20 +1,75 @@
+{% load static %}
 {% if requireSideNav == True %}
 <div aria-hidden="true" class="navdrawer navdrawer-permanent-lg" id="navdrawerDefault" tabindex="-1">
-    <div class="navdrawer-content">
-        <a class="navbar-brand px-0" href="javascript:void(0)">{{user_name}} | {{user_type}} </a>
-      <div class="navdrawer-divider"></div>
-      <div class="navdrawer-subheader">Navdrawer subheader</div>
-      <ul class="navdrawer-nav">
-        <li class="nav-item">
-          <a class="nav-link active" href="javascript:void(0)"><i class="material-icons mr-3">alarm_on</i> Active with icon</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="javascript:void(0)"><i class="material-icons mr-3">alarm_off</i> Disabled with icon</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="javascript:void(0)"><i class="material-icons mr-3">link</i> Link with icon</a>
-        </li>
-      </ul>
+  {% if user_type == "Admin" or user_type == "Teacher" %}
+  <div class="navdrawer-content">
+    <div class="sidebar-account container">
+        <img class="primary-user-pic" src="{% static 'rsrc/avatar.jpg' %}">
+      <div class="primary-name-account">
+        <h6 class="text-black-primary" href="javascript:void(0)">{{user_name}}</h6>
+      </div>
+      <div class="secondary-name-account">
+        <span class="text-black-secondary" href="javascript:void(0)">{{user_type}} </span>
+        <button class="btn btn-icon btn-sm text-white align-right" type="button" id="accountInfo" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false"><i
+            class="material-icons text-black-secondary">arrow_drop_down</i></button>
+        <div class="dropdown-menu" aria-labelledby="accountInfo">
+          <span class="dropdown-header text-black-secondary">Account</span>
+          <a class="dropdown-item btn-icon-prepend" href="#"><i
+              class="material-icons text-black-secondary">account_tree</i>Account
+            Settings</a>
+          <a class="dropdown-item btn-icon-prepend" href="#"><i
+              class="material-icons text-black-secondary">swap_horiz</i>Change
+            User</a>
+          <a class="dropdown-item btn-icon-prepend" href="#"><i
+              class="material-icons text-black-secondary">power_settings_new</i>Log-out</a>
+        </div>
+      </div>
     </div>
+    <div class="navdrawer-divider special-type"></div>
+    {% if user_type == "Admin" %}
+    <div class="navdrawer-subheader">Manage</div>
+    <ul class="navdrawer-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:void(0)"><i
+            class="material-icons mr-3 text-black-secondary">meeting_room</i>Classrooms</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:void(0)"><i
+            class="material-icons mr-3 text-black-secondary">assignment</i>Recent Logs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:void(0)"><i
+            class="material-icons mr-3 text-black-secondary">gavel</i>Control Override</a>
+      </li>
+    </ul>
+    {% elif user_type == "Teacher" %}
+    <div class="navdrawer-subheader">Manage</div>
+    <ul class="navdrawer-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:void(0)"><i
+            class="material-icons mr-3 text-black-secondary">meeting_room</i>Classrooms</a>
+      </li>
+    </ul>
   </div>
+  {% else %}
   {% endif %}
+  {% if user_type == "Admin" %}
+  <div class="navdrawer-divider"></div>
+  <div class="navdrawer-subheader">System</div>
+  <ul class="navdrawer-nav">
+    <li class="nav-item">
+      <a class="nav-link" href="javascript:void(0)"><i
+          class="material-icons mr-3 text-black-secondary">settings</i>System
+        Settings</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="javascript:void(0)"><i class="material-icons mr-3 text-black-secondary">update</i>Reset
+        Server</a>
+    </li>
+  </ul>
+  {% endif %}
+</div>
+{% endif %}
+</div>
+{% endif %}

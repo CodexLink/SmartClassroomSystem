@@ -19,10 +19,7 @@
         <div class="dropdown">
             <button class="btn btn-icon btn-sm text-white" type="button"><i
                     class="material-icons">notifications_none</i></button>
-            <button class="btn btn-icon btn-sm text-white" type="button" id="accountInfo" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false"><i
-                    class="material-icons text-white">account_circle</i></button>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="accountInfo">
+            <div class="dropdown-menu" aria-labelledby="accountInfo">
                 <h5 class="dropdown-header text-black-primary">Hello! Username Here</h5>
                 <h6 class="dropdown-header text-black-secondary">Currently Login as User Type</h6>
                 <div class="dropdown-divider"></div>
@@ -40,11 +37,6 @@
                         class="material-icons">power_settings_new</i>Log-out</a>
             </div>
         </div>
-        {% elif page_type == "Teacher" %}
-        <button class="btn btn-flat-primary text-white" type="button"><i
-                class="material-icons text-white">favorite_border</i>Login</button>
-        <button class="btn btn-flat-secondary text-white" type="button"><i
-                class="material-icons text-white">favorite_border</i>Account</button>
         {% else %}
         {% endif %}
     </div>

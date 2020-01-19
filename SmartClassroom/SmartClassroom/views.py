@@ -8,4 +8,4 @@ class HomeFrameView(TemplateView):
     title_page = None
 
     def get(self, request):
-        return render(request, 'home.html', {"page_title": self.title_page, "page_type": "Home"})
+        return render(request, 'home.html', {"page_title": self.title_page, "page_type": "Admin"})
