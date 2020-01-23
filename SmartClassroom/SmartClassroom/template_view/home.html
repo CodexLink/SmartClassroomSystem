@@ -9,7 +9,7 @@
 
     {% include "nav.html" with tab_title=page_title requireSideNav=True page_action=page_type %}
     <div class="container" style="padding: 80px 0">
-        {% include "dashboard.html" %}
+        {% include "dashboard.html" with username=user_name user_role=page_type %}
     </div>
 
     {% include "home_modals.html" %}

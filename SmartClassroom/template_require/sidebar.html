@@ -4,7 +4,7 @@
   {% if user_type == "Admin" or user_type == "Teacher" %}
   <div class="navdrawer-content">
     <div class="sidebar-account container">
-        <img class="primary-user-pic" src="{% static 'rsrc/avatar.jpg' %}">
+      <img class="primary-user-pic" src="{% static 'rsrc/avatar.jpg' %}">
       <div class="primary-name-account">
         <h6 class="text-black-primary" href="javascript:void(0)">{{user_name}}</h6>
       </div>
@@ -51,6 +51,14 @@
             class="material-icons mr-3 text-black-secondary">meeting_room</i>Classrooms</a>
       </li>
     </ul>
+    <div class="navdrawer-divider"></div>
+    <div class="navdrawer-subheader">Information</div>
+    <ul class="navdrawer-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:void(0)"><i
+            class="material-icons mr-3 text-black-secondary">update</i>About Us</a>
+      </li>
+    </ul>
   </div>
   {% else %}
   {% endif %}
@@ -66,6 +74,14 @@
     <li class="nav-item">
       <a class="nav-link" href="javascript:void(0)"><i class="material-icons mr-3 text-black-secondary">update</i>Reset
         Server</a>
+    </li>
+  </ul>
+  <div class="navdrawer-divider"></div>
+  <div class="navdrawer-subheader">Information</div>
+  <ul class="navdrawer-nav">
+    <li class="nav-item">
+      <a class="nav-link" href="javascript:void(0)"><i class="material-icons mr-3 text-black-secondary">update</i>About
+        Us</a>
     </li>
   </ul>
   {% endif %}

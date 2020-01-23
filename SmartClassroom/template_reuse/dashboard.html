@@ -1,62 +1,178 @@
 {% load static %}
 <div class="card-columns">
+    <div class="card bg-warning">
+        <div class="card-header border-0">
+            <h1 class="card-title">Hello, {{username}}!</h1>
+            <p class="card-text text-black-secondary">You're logged in as {{user_role}}.</p>
+        </div>
+        <div class="card-body">
+        </div>
+    </div>
+    <div class="card bg-success">
+        <div class="card-header border-0">
+            <h1 class="card-title text-white-primary">System Time</h1>
+        </div>
+        <div class="card-body">
+            <h3 class="card-title text-white-primary">8:05PM</h3>
+            <p class="card-text text-white-secondary">January 1, 2020.</p>
+        </div>
+    </div>
+    {% if user_role == "Teacher" %}
+    <div class="card bg-danger">
+        <div class="card-header border-0">
+            <h1 class="card-title text-white-primary">Current Class Time</h1>
+        </div>
+        <div class="card-body">
+            <h3 class="card-title text-white-primary">8:05PM</h3>
+            <p class="card-text text-white-secondary">January 1, 2020.</p>
+        </div>
+    </div>
     <div class="card">
-        <img class="card-img" src="{% static 'rsrc/2ndLayerTriangleVector_ReEdited_Opacity.png' %}" alt="Card User Image">
-        <div class="card-img-overlay card-body">
-            <h1 class="card-title text-white-primary">Hello, {user_name}!</h1>
-            <p class="card-text text-white-secondary">You're accessing the control in {mode} Mode.</p>
+        <div class="card-header border-0">
+            <h2 class="card-title">Your Schedule</h2>
+            <h3 class="card-subtitle text-black-secondary">Check your schedule for today!</h3>
+        </div>
+        <div class="card-body list-group border-0" id="list-tab" role="tablist">
+            <a class="list-group-item list-group-item-action active d-flex justify-content-between align-items-center"
+                id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home <span
+                    class="badge badge-primary badge-pill">Current</span></a>
+            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                id="list-profile-list" data-toggle="list" href="#list-profile" role="tab"
+                aria-controls="profile">Profile<span class="badge badge-primary badge-pill">Next</span></a>
+            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                id="list-messages-list" data-toggle="list" href="#list-messages" role="tab"
+                aria-controls="messages">Messages</a>
+            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                id="list-settings-list" data-toggle="list" href="#list-settings" role="tab"
+                aria-controls="settings">Settings</a>
+        </div>
+        <div class="card-actions border-top">
+            <a class="btn btn-flat-primary" href="#">More...</a>
+        </div>
+    </div>
+    {% elif user_role == "Admin" %}
+    <div class="card bg-warning">
+        <div class="card-header border-0">
+            <h1 class="card-title">Classroom Overall Status</h1>
+            <p class="card-text text-black-secondary">Opened, In-use, Closed.</p>
+        </div>
+        <div class="card-body">
         </div>
     </div>
     <div class="card">
-        <div class="card-body">
-            <h2 class="card-title">Classroom Status</h2>
-            <h3 class="card-subtitle text-black-secondary">by Kurt Wagner</h3>
-            <p class="card-text text-black-secondary">Visit ten places on our planet that are undergoing the biggest
-                changes today.</p>
+        <div class="card-header border-0">
+            <h2 class="card-title">Quick | Control Overrides</h2>
+            <h3 class="card-subtitle text-black-secondary">Caution This Control Applies to All Classrooms!</h3>
         </div>
-        <div class="card-actions">
-            <a class="card-link" href="#">C-Link</a>
-            <a class="btn btn-link" href="#">B-Link</a>
-            <button class="btn btn-flat-primary" type="button">button</button>
+        <div class="card-body list-group border-0" id="list-tab" role="tablist">
+            <a class="list-group-item list-group-item-action active d-flex justify-content-between align-items-center"
+                id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home <span
+                    class="badge badge-primary badge-pill">Current</span></a>
+            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                id="list-profile-list" data-toggle="list" href="#list-profile" role="tab"
+                aria-controls="profile">Profile<span class="badge badge-primary badge-pill">Next</span></a>
+            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                id="list-messages-list" data-toggle="list" href="#list-messages" role="tab"
+                aria-controls="messages">Messages</a>
+            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                id="list-settings-list" data-toggle="list" href="#list-settings" role="tab"
+                aria-controls="settings">Settings</a>
         </div>
-    </div>
-    <div class="card card-shaped">
-        <div class="card-body">
-            <h2 class="card-title">Recent Logs</h2>
-            <h3 class="card-subtitle text-black-secondary">by Kurt Wagner</h3>
-            <p class="card-text text-black-secondary">Visit ten places on our planet that are undergoing the biggest
-                changes today.</p>
-        </div>
-        <div class="card-actions">
-            <a class="card-link" href="#">C-Link</a>
-            <a class="btn btn-link" href="#">B-Link</a>
-            <button class="btn btn-flat-primary" type="button">button</button>
+        <div class="card-actions border-top">
+            <a class="btn btn-flat-primary" href="#">More...</a>
         </div>
     </div>
-    <div class="card card-shaped">
-        <div class="card-body">
-            <h2 class="card-title"></h2>
-            <h3 class="card-subtitle text-black-secondary">by Kurt Wagner</h3>
-            <p class="card-text text-black-secondary">Visit ten places on our planet that are undergoing the biggest
-                changes today.</p>
+    <div class="card">
+        <div class="card-header border-0">
+            <h2 class="card-title">Classroom Overviews</h2>
+            <h3 class="card-subtitle text-black-secondary">3 Functions In One!</h3>
         </div>
-        <div class="card-actions">
-            <a class="card-link" href="#">C-Link</a>
-            <a class="btn btn-link" href="#">B-Link</a>
-            <button class="btn btn-flat-primary" type="button">button</button>
+        <ul class="nav nav-justified nav-tabs" id="justifiedTab" role="tablist">
+            <li class="nav-item">
+                <a aria-controls="home" aria-selected="true" class="nav-link active" data-toggle="tab" href="#home"
+                    id="home-tab" role="tab">Schedules</a>
+            </li>
+            <li class="nav-item">
+                <a aria-controls="profile" aria-selected="false" class="nav-link" data-toggle="tab" href="#profile"
+                    id="profile-tab" role="tab">Overrides</a>
+            </li>
+            <li class="nav-item">
+                <a aria-controls="contact" aria-selected="false" class="nav-link" data-toggle="tab" href="#contact"
+                    id="contact-tab" role="tab">Logs</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="justifiedTabContent">
+            <div aria-labelledby="home-tab" class="tab-pane fade show active" id="home" role="tabpanel">
+                <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                    <a class="list-group-item list-group-item-action active d-flex justify-content-between align-items-center"
+                        id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home
+                        <span class="badge badge-primary badge-pill">Current</span></a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        id="list-profile-list" data-toggle="list" href="#list-profile" role="tab"
+                        aria-controls="profile">Profile<span class="badge badge-primary badge-pill">Next</span></a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        id="list-messages-list" data-toggle="list" href="#list-messages" role="tab"
+                        aria-controls="messages">Messages</a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        id="list-settings-list" data-toggle="list" href="#list-settings" role="tab"
+                        aria-controls="settings">Settings</a>
+                </div>
+            </div>
+            <div aria-labelledby="profile-tab" class="tab-pane fade" id="profile" role="tabpanel">
+                <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                    <a class="list-group-item list-group-item-action active d-flex justify-content-between align-items-center"
+                        id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home
+                        <span class="badge badge-primary badge-pill">Current</span></a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        id="list-profile-list" data-toggle="list" href="#list-profile" role="tab"
+                        aria-controls="profile">Profile<span class="badge badge-primary badge-pill">Next</span></a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        id="list-messages-list" data-toggle="list" href="#list-messages" role="tab"
+                        aria-controls="messages">Messages</a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        id="list-settings-list" data-toggle="list" href="#list-settings" role="tab"
+                        aria-controls="settings">Settings</a>
+                </div>
+            </div>
+            <div aria-labelledby="contact-tab" class="tab-pane fade" id="contact" role="tabpanel">
+                <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                    <a class="list-group-item list-group-item-action active d-flex justify-content-between align-items-center"
+                        id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home
+                        <span class="badge badge-primary badge-pill">Current</span></a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        id="list-profile-list" data-toggle="list" href="#list-profile" role="tab"
+                        aria-controls="profile">Profile<span class="badge badge-primary badge-pill">Next</span></a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        id="list-messages-list" data-toggle="list" href="#list-messages" role="tab"
+                        aria-controls="messages">Messages</a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        id="list-settings-list" data-toggle="list" href="#list-settings" role="tab"
+                        aria-controls="settings">Settings</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-actions border-top">
+            <a class="btn btn-flat-primary" href="#">Go to Overview</a>
         </div>
     </div>
-    <div class="card card-shaped">
-        <div class="card-body">
-            <h2 class="card-title">Our Changing Planet</h2>
-            <h3 class="card-subtitle text-black-secondary">by Kurt Wagner</h3>
-            <p class="card-text text-black-secondary">Visit ten places on our planet that are undergoing the biggest
-                changes today.</p>
+    <div class="card">
+        <div class="card-header border-0">
+            <h2 class="card-title">System Options</h2>
+            <h3 class="card-subtitle text-black-secondary">Requires Authentication for Each...</h3>
         </div>
-        <div class="card-actions">
-            <a class="card-link" href="#">C-Link</a>
-            <a class="btn btn-link" href="#">B-Link</a>
-            <button class="btn btn-flat-primary" type="button">button</button>
+        <div class="card-body list-group border-0" id="list-tab" role="tablist">
+            <a class="list-group-item    d-flex justify-content-between align-items-center"
+                id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Reboot Server</a>
+            <a class="list-group-item    d-flex justify-content-between align-items-center"
+                id="list-profile-list" data-toggle="list" href="#list-profile" role="tab"
+                aria-controls="profile">Send Reboot to All MCUs</a>
+            <a class="list-group-item    d-flex justify-content-between align-items-center"
+                id="list-messages-list" data-toggle="list" href="#list-messages" role="tab"
+                aria-controls="messages">Messages</a>
+            <a class="list-group-item    d-flex justify-content-between align-items-center"
+                id="list-settings-list" data-toggle="list" href="#list-settings" role="tab"
+                aria-controls="settings">Settings</a>
         </div>
     </div>
+    {% endif %}
 </div>
