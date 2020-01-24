@@ -2,9 +2,19 @@
 // * 01/24/2019
 
 // Mansory Dashboard View
-$('.dashboard-grid').masonry({
-    itemSelector: '.dashboard-item', // use a separate class for itemSelector, other than .col-
+$('.dashboard-grid').isotope({
+    itemSelector: '.dashboard-item',
+    layoutMode: 'packery',
+    packery: {
+        columnWidth: '.dashboard-item',
+        horizontal: false
+    },
     percentPosition: true,
-    transitionDuration: '0.3s',
-    resize: true,
+});
+
+$('.quick-actions-handler').click(function (event) {
+    setTimeout(function ()
+    {
+        $('.dashboard-grid').isotope("arrange");
+    }, 200);
 });

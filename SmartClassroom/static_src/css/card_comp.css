@@ -8,9 +8,19 @@
 }
 .progress-label
 {
-    margin: 8px 0 0 0 !important;
+    margin: 8px 0 0 !important;
 }
 .dashboard-item
 {
     margin-bottom: 8px !important;
+}
+
+.unpadded-actions
+{
+    padding:unset !important;
+}
+
+.quick-actions.classroom
+{
+    padding: 8px 0 !important;
 }

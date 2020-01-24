@@ -1,0 +1,99 @@
+<!-- Home Specific Modals |- START -->
+<div class="modal fade" id="register_ModalForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Register</h5>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="col form-group textfield-box">
+                            <input type="text" class="form-control" placeholder="First name">
+                        </div>
+                        <div class="col form-group textfield-box">
+                            <input type="text" class="form-control" placeholder="Last name">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col form-group textfield-box">
+                            <label for="exampleFormControlSelect1">Example select</label>
+                            <select class="form-control" id="exampleFormControlSelect1">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary">Clear Entries</button>
+                <button type="button" class="btn btn-primary">Register</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="login_ModalForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Login</h5>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    <div class="container">
+                        <div class="form-group textfield-box">
+                            <input type="text" class="form-control" placeholder="Username">
+                        </div>
+                        <div class="form-group textfield-box">
+                            <input type="password" class="form-control" placeholder="Password">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary">Clear Entries</button>
+                <button type="button" class="btn btn-primary">Login</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Home Specific Modals |- END -->
+
+<!-- Authentication Specific Modals |- END -->
+<div class="modal fade" id="actionAuthenticate" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">{{user_role}} | Action Authentication</h5>
+        </div>
+        <div class="modal-body">
+        This feature allows you to automatically open the electricity of the room that you're about to go in. This was not
+        <form enctype="multipart/form-data" autocomplete="off">
+            <div class="form-group">
+                <div class="floating-label textfield-box">
+                  <label for="exampleFloatingBox1">Password Authentication</label>
+                  <input class="form-control" id="exampleFloatingBox1" placeholder="Required Parameter to Continue..." type="password">
+                </div>
+              </div>
+        </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary">Confirm Action</button>
+        </div>
+      </div>
+    </div>
+  </div>
