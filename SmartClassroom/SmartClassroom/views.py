@@ -11,11 +11,11 @@ class HomeFrameView(TemplateView):
     title_page = None
 
     def get(self, request):
-        return render(request, 'home.html', {"page_title": self.sendMCUData(), "page_type": "Teacher"})
+        return render(request, 'home.html', {"page_title": self.sendMCUData(), "page_type": "Admin"})
 
     def sendMCUData(self):
         try:
-            return requests.get("http://192.168.100.41/RequestSens", timeout=3)
+            return requests.get("http://192.168.100.41/RequestSens", timeout=.1)
         except ConnectionError as Err:
             return None
             #self.response.text = None
