@@ -16,10 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from .views import HomeFrameView
+
 urlpatterns = [
 
-    #path('admin/<str:AdminKey>/', include('AdminRoomControl.urls')), ! To Be Used for Certain Logins and other such stuff.
+    # path('admin/<str:AdminKey>/', include('AdminRoomControl.urls')), ! To Be Used for Certain Logins and other such stuff.
     path('', HomeFrameView.as_view(title_page="Welcome")),
-    path('admin/', include('AdminRoomControl.urls')),
+    path('admin/', admin.site.urls),
+    #path('admin/', include('AdminRoomControl.urls')),
     path('staff/', include('TeacherRoomControl.urls')),
 ]

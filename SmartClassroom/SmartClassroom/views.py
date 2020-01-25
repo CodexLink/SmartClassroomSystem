@@ -11,7 +11,7 @@ class HomeFrameView(TemplateView):
     title_page = None
 
     def get(self, request):
-        return render(request, 'home.html', {"page_title": self.sendMCUData(), "page_type": "Teacher"})
+        return render(request, 'home.html', {"page_title": "Dashboard", "page_type": "Teacher"})
 
     def sendMCUData(self):
         try:
