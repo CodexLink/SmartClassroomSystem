@@ -3,9 +3,9 @@
 
 # * For Course Lecture Classification.
 CourseSessionTypes = (
-    (1, 'Technology'),
-    (2, 'Laboratory'),
-    (3, 'External Env.'),
+    (0, 'Technology'),
+    (1, 'Laboratory'),
+    (2, 'External Env.'),
 )
 
 YearBatchClasses = (
@@ -19,14 +19,14 @@ YearBatchClasses = (
 # ! Based from https://www.tip.edu.ph/Engineering_and_Architecture_QC_Branch
 # ! CEA Only, I'm doing over-effort, please stop thanks.
 CEAProgamCCode = (
-    (1, 'Arch'),
-    (2, 'CE'),
-    (3, 'CpE'),
-    (4, 'EE'),
-    (5, 'ECE'),
-    (6, 'EnSE'),
-    (7, 'IE'),
-    (8, 'ME')
+    (0, 'Arch'),
+    (1, 'CE'),
+    (2, 'CpE'),
+    (3, 'EE'),
+    (4, 'ECE'),
+    (5, 'EnSE'),
+    (6, 'IE'),
+    (7, 'ME')
 )
 
 # * For Semester Indication Only.
@@ -56,13 +56,12 @@ BuildingClassification = (
     (7, 'Building 7'),
     (8, 'Building 8'),
     (9, 'Building 9'),
-    (10, 'PE CNTR 1'),
-    (11, 'PE CNTR 2')
+    (9, 'PE CNTR 1'),
+    (10, 'PE CNTR 2')
 )
 
 BuildingFloors = (
-    (0, 'Ground Floor'),
-    (1, '1st Floor'),
+    (1, 'Ground Floor'),
     (2, '2nd Floor'),
     (3, '3rd Floor'),
     (4, '4th Floor'),
