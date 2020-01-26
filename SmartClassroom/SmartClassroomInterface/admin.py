@@ -1,10 +1,12 @@
 from django.contrib import admin
 from .models import *
+from django import forms
 
 # Register your models here.
 
-class SmartClassroomAdmin(admin.ModelAdmin):
+class SmartClassroomAdminInitSet(admin.ModelAdmin):
     # ! We use this to hide our data from django-admin. No one will edit this one but can view it.
-    exclude = ('roomClassReferrable', 'secSubReferrable')
+    #readonly_fields = ('',)
+    pass
 
-admin.site.register((Classroom, Course, ProgramBranch, SectionGroup, CourseSchedule, ClassroomLogger), SmartClassroomAdmin)
+admin.site.register((Classroom, Course, ProgramBranch, SectionGroup, CourseSchedule, ClassroomActionLog), SmartClassroomAdminInitSet)

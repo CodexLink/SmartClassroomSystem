@@ -3,47 +3,51 @@
 
 # * For Course Lecture Classification.
 CourseSessionTypes = (
-    (0, 'Technology'),
-    (1, 'Laboratory'),
-    (2, 'External Env.'),
+    ('Technological Only', 'Technological Only'),
+    ('Laboratory Only', 'Laboratory Only'),
+    ('External Only', 'External Only'),
+    ('Technological and Laboratory', 'Technological and Laboratory'),
+    ('Technological and External', 'Technological and External'),
+    ('Laboratory and Technological', 'Technological and Laboratory'),
+    ('Laboratory and External', 'External and Laboratory'),
 )
 
 YearBatchClasses = (
-    (1, '1st Year'),
-    (2, '2nd Year'),
-    (3, '3rd Year'),
-    (4, '4th Year'),
-    (5, '5th Year')
+    ('1st Year', '1st Year'),
+    ('2nd Year', '2nd Year'),
+    ('3rd Year', '3rd Year'),
+    ('4th Year', '4th Year'),
+    ('5th Year', '5th Year')
 )
 
 # ! Based from https://www.tip.edu.ph/Engineering_and_Architecture_QC_Branch
 # ! CEA Only, I'm doing over-effort, please stop thanks.
 CEAProgamCCode = (
-    (0, 'Arch'),
-    (1, 'CE'),
-    (2, 'CpE'),
-    (3, 'EE'),
-    (4, 'ECE'),
-    (5, 'EnSE'),
-    (6, 'IE'),
-    (7, 'ME')
+    ('Arch', 'Arch'),
+    ('CE', 'CE'),
+    ('CpE', 'CpE'),
+    ('EE', 'EE'),
+    ('ECE', 'ECE'),
+    ('EnSE', 'EnSE'),
+    ('IE', 'IE'),
+    ('ME', 'ME')
 )
 
 # * For Semester Indication Only.
 SemClassification = (
-    (1, '1st Semester'),
-    (2, '2nd Semester')
+    ('1st Semester', '1st Semester'),
+    ('2nd Semester', '2nd Semester')
 )
 
 # ! Declared Weekdays and Weekends for Proper Declaration at DB
 SessionDaysClassification = (
-    (1, 'Monday'),
-    (2, 'Tuesday'),
-    (3, 'Wednesday'),
-    (4, 'Thursday'),
-    (5, 'Friday'),
-    (6, 'Saturday'),
-    (7, 'Sunday')
+    ('Monday', 'Monday'),
+    ('Tuesday', 'Tuesday'),
+    ('Wednesdy', 'Wednesday'),
+    ('Thursday', 'Thursday'),
+    ('Friday', 'Friday'),
+    ('Saturday', 'Saturday'),
+    ('Sunday', 'Sunday')
 )
 
 BuildingClassification = (
@@ -56,8 +60,8 @@ BuildingClassification = (
     (7, 'Building 7'),
     (8, 'Building 8'),
     (9, 'Building 9'),
-    (9, 'PE CNTR 1'),
-    (10, 'PE CNTR 2')
+    (10, 'PE CNTR 1'),
+    (11, 'PE CNTR 2')
 )
 
 BuildingFloors = (
@@ -70,47 +74,47 @@ BuildingFloors = (
 
 # ! Classroom Action Logs
 ClassroomActionTypes = (
-    (0, 'Opened Classroom'),
-    (1, 'Closed Classroom'),
-    (2, 'Action: Automatically Set as Open on Time'),
-    (3, 'Action: Automatically Set as Closed on Time'),
-    (4, 'Authorized Staff Entry'),
-    (5, 'Authorized Teacher Entry'),
-    (6, 'Disabled Access Entry'),
-    (7, 'Enabled Access Entry'),
-    (8, 'Classroom Access is set to Disabled.'),
-    (9, 'Classroom Access is Disabled.'),
-    (10, 'Forbidden Attempt To Entry Detected.'),
-    (11, 'Unauthorized Access Detected.'),
+    ('Opened Classroom', 'Opened Classroom'),
+    ('Closed Classroom', 'Closed Classroom'),
+    ('Action: Automatically Set as Open on Time', 'Action: Automatically Set as Open on Time'),
+    ('Action: Automatically Set as Closed on Time', 'Action: Automatically Set as Closed on Time'),
+    ('Authorized Staff Entry', 'Authorized Staff Entry'),
+    ('Authorized Teacher Entry', 'Authorized Teacher Entry'),
+    ('Disabled Access Entry', 'Disabled Access Entry'),
+    ('Enabled Access Entry', 'Enabled Access Entry'),
+    ('Classroom Access is set to Disabled.', 'Classroom Access is set to Disabled.'),
+    ('Classroom Access is Disabled.', 'Classroom Access is Disabled.'),
+    ('Forbidden Attempt To Entry Detected.', 'Forbidden Attempt To Entry Detected.'),
+    ('Unauthorized Access Detected.', 'Unauthorized Access Detected.'),
 )
 
 # * Included Only Possible Class Occupation
 SubSectionUniqueKeys = (
-    (0, 'FA1'),
-    (1, 'FA2'),
-    (2, 'FA3'),
-    (3, 'FA4'),
-    (4, 'FA5'),
-    (5, 'FA6'),
-    (7, 'FA7'),
-    (8, 'FA8'),
-    (9, 'FA9'),
-    (10, 'FB1'),
-    (11, 'FB2'),
-    (12, 'FB3'),
-    (13, 'FB4'),
-    (14, 'FB5'),
-    (15, 'FB6'),
-    (17, 'FB7'),
-    (18, 'FB8'),
-    (19, 'FB9'),
-    (20, 'FC1'),
-    (21, 'FC2'),
-    (22, 'FC3'),
-    (23, 'FC4'),
-    (24, 'FC5'),
-    (25, 'FC6'),
-    (27, 'FC7'),
-    (28, 'FC8'),
-    (29, 'FC9'),
+    ('FA1', 'FA1'),
+    ('FA2', 'FA2'),
+    ('FA3', 'FA3'),
+    ('FA4', 'FA4'),
+    ('FA5', 'FA5'),
+    ('FA6', 'FA6'),
+    ('FA7', 'FA7'),
+    ('FA8', 'FA8'),
+    ('FA9', 'FA9'),
+    ('FB1', 'FB1'),
+    ('FB2', 'FB2'),
+    ('FB3', 'FB3'),
+    ('FB4', 'FB4'),
+    ('FB5', 'FB5'),
+    ('FB6', 'FB6'),
+    ('FB7', 'FB7'),
+    ('FB8', 'FB8'),
+    ('FB9', 'FB9'),
+    ('FC1', 'FC1'),
+    ('FC2', 'FC2'),
+    ('FC3', 'FC3'),
+    ('FC4', 'FC4'),
+    ('FC5', 'FC5'),
+    ('FC6', 'FC6'),
+    ('FC7', 'FC7'),
+    ('FC8', 'FC8'),
+    ('FC9', 'FC9'),
 )
