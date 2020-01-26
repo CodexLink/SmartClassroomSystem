@@ -13,30 +13,30 @@ CourseSessionTypes = (
 )
 
 YearBatchClasses = (
-    ('1st Year', '1st Year'),
-    ('2nd Year', '2nd Year'),
-    ('3rd Year', '3rd Year'),
-    ('4th Year', '4th Year'),
-    ('5th Year', '5th Year')
+    (1, '1st Year'),
+    (2, '2nd Year'),
+    (3, '3rd Year'),
+    (4, '4th Year'),
+    (5, '5th Year')
 )
 
 # ! Based from https://www.tip.edu.ph/Engineering_and_Architecture_QC_Branch
 # ! CEA Only, I'm doing over-effort, please stop thanks.
 CEAProgamCCode = (
-    ('Arch', 'Arch'),
-    ('CE', 'CE'),
-    ('CpE', 'CpE'),
-    ('EE', 'EE'),
-    ('ECE', 'ECE'),
-    ('EnSE', 'EnSE'),
-    ('IE', 'IE'),
-    ('ME', 'ME')
+    ('ARch', 'Architecture'),
+    ('CE', 'Civil Engineering'),
+    ('CpE', 'Computer Engineering'),
+    ('EE', 'Electrical Engineering'),
+    ('ECE', 'Electronics Engineering'),
+    ('EnSE', 'Environment and Sanitary Engineering'),
+    ('IE', 'Industrial Engineering'),
+    ('ME', 'Mechanical Engineering')
 )
 
 # * For Semester Indication Only.
 SemClassification = (
-    ('1st Semester', '1st Semester'),
-    ('2nd Semester', '2nd Semester')
+    (1, '1st Semester'),
+    (2, '2nd Semester')
 )
 
 # ! Declared Weekdays and Weekends for Proper Declaration at DB
@@ -76,15 +76,19 @@ BuildingFloors = (
 ClassroomActionTypes = (
     ('Opened Classroom', 'Opened Classroom'),
     ('Closed Classroom', 'Closed Classroom'),
-    ('Action: Automatically Set as Open on Time', 'Action: Automatically Set as Open on Time'),
-    ('Action: Automatically Set as Closed on Time', 'Action: Automatically Set as Closed on Time'),
+    ('Action: Automatically Set as Open on Time',
+     'Action: Automatically Set as Open on Time'),
+    ('Action: Automatically Set as Closed on Time',
+     'Action: Automatically Set as Closed on Time'),
     ('Authorized Staff Entry', 'Authorized Staff Entry'),
     ('Authorized Teacher Entry', 'Authorized Teacher Entry'),
     ('Disabled Access Entry', 'Disabled Access Entry'),
     ('Enabled Access Entry', 'Enabled Access Entry'),
-    ('Classroom Access is set to Disabled.', 'Classroom Access is set to Disabled.'),
+    ('Classroom Access is set to Disabled.',
+     'Classroom Access is set to Disabled.'),
     ('Classroom Access is Disabled.', 'Classroom Access is Disabled.'),
-    ('Forbidden Attempt To Entry Detected.', 'Forbidden Attempt To Entry Detected.'),
+    ('Forbidden Attempt To Entry Detected.',
+     'Forbidden Attempt To Entry Detected.'),
     ('Unauthorized Access Detected.', 'Unauthorized Access Detected.'),
 )
 
@@ -117,4 +121,21 @@ SubSectionUniqueKeys = (
     ('FC7', 'FC7'),
     ('FC8', 'FC8'),
     ('FC9', 'FC9'),
+)
+
+'''
+# ! Human Declared Types
+* We don't use Groups in DJango, why?
+* It's hard to do it, programatically.
+Instead, we rely with the use of declaring our own roles on database-level.
+'''
+RoleDeclaredTypes = (
+    ("Project Owner", "Project Owner"),
+    ("Project Members", "Project Members"),
+    ("ITSO Administrator", "ITSO Administrator"),
+    ("ITSO Assitant Administrator", "ITSO Assitant Administrator"),
+    ("ITSO Supervisor", "ITSO Supervisor"),
+    ("Department Staff", "Department Staff"),
+    ("Teacher Staff", "Teacher Staff"),
+    ("Student Staff", "Student Staff"),
 )

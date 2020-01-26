@@ -37,9 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'AdminRoomControl',
-    'TeacherRoomControl',
-    'SmartClassroomInterface',
+    'SC_ControlSystem',
     'sass_processor',
     'django_extensions'
 ]
@@ -61,9 +59,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, "template_require"),
                  os.path.join(BASE_DIR, "template_reuse"),
-                 os.path.join(BASE_DIR, "SmartClassroom", "template_view"),
-                 os.path.join(BASE_DIR, "AdminRoomControl", "template_view"),
-                 os.path.join(BASE_DIR, "TeacherRoomControl", "template_view")
+                 os.path.join(BASE_DIR, "SC_ControlSystem", "template_view"),
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -86,7 +82,7 @@ WSGI_APPLICATION = 'SmartClassroom.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'SmartC_DataCont',
+        'NAME': 'SCDataCont',
         'USER': 'root',  # Required Soon.
         'PASSWORD': None  # Required Soon.
     }
@@ -138,3 +134,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'app_static_src')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static_src')
 ]
+
+# ! User Model Extender
+AUTH_USER_MODEL = 'SC_ControlSystem.UserDataCredentials'
