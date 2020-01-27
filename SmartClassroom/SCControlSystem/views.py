@@ -9,11 +9,11 @@ from requests.exceptions import ConnectionError
 
 class HomeView(TemplateView):
     template_view = 'elem_inst_view.html'
-
     title_page = "Welcome"
+    InstanceClassName = str(__qualname__) # ! Qualified Class Name
 
     def get(self, request):
-        return render(request, self.template_view, {"page_title": "Dashboard", "page_type": "Teacher"})
+        return render(request, self.template_view, {"InstanceCaller": self.InstanceClassName, "page_title": "Home"})
 
     def sendMCUData(self):
         try:
@@ -27,13 +27,14 @@ class HomeView(TemplateView):
 class DashboardView(TemplateView):
     template_view = 'elem_inst_view.html'
     title_page = 'Dashboard'
+    InstanceClassName = str(__qualname__) # ! Qualified Class Name
 
     # ! User Instance Type is already passable so creating variable is useless.
 
     def get(self, request):
-        return render(request, self.template_view, {"page_title": "Dashboard", "page_type": "Admin"})
+        return render(request, self.template_view, {"InstanceCaller": self.InstanceClassName, "page_title": "Dashboard", "page_type": "Teacher"})
 
-    def post(self, request, classRoomID):
+    def post(self, request):
         pass
 
     def sendMCUData(self):
@@ -84,7 +85,6 @@ class ScheduleListView(ListView):
 
     def post(self, request, classRoomID):
         pass
-
 
 class OverrideControlView(TemplateView):
     page_title = "Override System"
