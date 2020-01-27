@@ -1,7 +1,11 @@
-// ! Janrey "CodexLink" Licas Required Code for SmartClassrooms
-// * 01/24/2019
+/*
+    ! sc_require.js
+    * Created by Janrey Licas
+    * Created on 01/24/2019
+    * This was added to make front-end customizations and other such stuff such as AJAX.
+*/
 
-// Mansory Dashboard View
+// ! Mansory Dashboard View
 $('.dashboard-grid').isotope({
     itemSelector: '.dashboard-item',
     layoutMode: 'packery',
@@ -12,6 +16,7 @@ $('.dashboard-grid').isotope({
     percentPosition: true,
 });
 
+// ! Update View ACcording to Layout Changes Since Card is at Absolute Position
 $('.quick-actions-handler').click(function (event) {
     setTimeout(function ()
     {
