@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'SC_ControlSystem',
+    'SCControlSystem',
     'sass_processor',
     'django_extensions'
 ]
@@ -59,7 +59,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, "template_require"),
                  os.path.join(BASE_DIR, "template_reuse"),
-                 os.path.join(BASE_DIR, "SC_ControlSystem", "template_view"),
+                 os.path.join(BASE_DIR, "template_callable"),
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -136,4 +136,4 @@ STATICFILES_DIRS = [
 ]
 
 # ! User Model Extender
-AUTH_USER_MODEL = 'SC_ControlSystem.UserDataCredentials'
+AUTH_USER_MODEL = 'SCControlSystem.UserDataCredentials'

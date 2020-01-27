@@ -1,0 +1,22 @@
+<!-- ! Element Instance Viewer by Janrey "CodexLink" Licas -->
+<!-- * This is basically a Content Generator. We're trying to achieve DRY principles here. We'll keep using this template here -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "header.html" with tab_title=page_title %}
+</head>
+
+<!-- ! Content Starts Here -->
+<body>
+    {% include "nav.html" with tab_title=page_title requireSideNav=True page_action=page_type %}
+
+    <div class="container" style="padding: 80px 0">
+    <!-- ! Multiple Instance Content Here -->
+    {% include "dashboard.html" with username=user_name user_role=page_type %}
+</div>
+
+{% include "modals.html" with user_role=page_type %}
+{% include "footer.html" %}
+</body>
+<!-- ! Content Ends Here -->
+</html>

@@ -19,6 +19,6 @@ from django.urls import include, path
 urlpatterns = [
 
     # path('admin/<str:AdminKey>/', include('AdminRoomControl.urls')), ! To Be Used for Certain Logins and other such stuff.
-    path('', include('SC_ControlSystem.urls')),
+    path('', include('SCControlSystem.urls')),
     path('accounts/', admin.site.urls),
 ]
