@@ -1,0 +1,63 @@
+/*
+
+    sc_require.css
+    Created by Janrey Licas
+    This was added to aid unfixede multiple component layouts.
+    ** NOTE: This was subjected to change such as converting itself to SCSS.
+*/
+
+/* ! Sidebar CSS Rulesets - START */
+
+.navdrawer.navdrawer-permanent-lg div.navdrawer-content
+{
+    padding: 70px 0 0 0 !important;
+}
+
+.navdrawer.navdrawer-permanent-lg.show div.navdrawer-content
+{
+    padding: unset !important;
+}
+
+.navdrawer-divider.special-type
+{
+    margin: 8px 0 8px 0 !important;
+}
+
+img.primary-user-pic
+{
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+}
+/* ! Sidebar CSS Rulesets - END */
+
+/* ! Card Compatibility CSS Rulesets - START */
+
+.card-img-overlay.keep-content-top
+{
+    bottom: unset !important;
+}
+.card-img
+{
+    opacity: 0.7 !important;
+}
+.progress-label
+{
+    margin: 8px 0 0 !important;
+}
+.dashboard-item
+{
+    margin-bottom: 8px !important;
+}
+
+.unpadded-actions
+{
+    padding:unset !important;
+}
+
+.quick-actions.classroom
+{
+    padding: 8px 0 !important;
+}
+
+/* ! Card Compatibility CSS Rulesets - END */
