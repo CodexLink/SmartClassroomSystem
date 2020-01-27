@@ -4,9 +4,8 @@
         class="navbar-toggler" data-target="#navdrawer" data-toggle="navdrawer">
         <span class="navbar-toggler-icon"></span></button>
     {% endif %}
-    <span class="navbar-brand mr-auto">{{ page_title }} | Smart Classroom — System View</span>
+    <span class="navbar-brand mr-auto">{% if page_title == "Home" %} Welcome to Smart Classroom {% else %} {{ page_title }} | Smart Classroom {% endif %}</span>
     <div class="align-right">
-
         {% if page_type == "Home" %}
         <button class="btn btn-flat-secondary text-white btn-icon-prepend" type="button" data-toggle="modal"
             data-target="#register_ModalForm"><i class="material-icons text-white">create</i>Register</button>
