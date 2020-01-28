@@ -83,8 +83,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'SCDataCont',
-        'USER': 'root',  # Required Soon.
-        'PASSWORD': None  # Required Soon.
+        'USER': 'root',
+        'PASSWORD': None
     }
 }
 
