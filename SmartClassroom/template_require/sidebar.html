@@ -5,10 +5,10 @@
   <div class="navdrawer-content">
     <div class="sidebar-account container">
       <img class="primary-user-pic" src="{% static 'rsrc/avatar.jpg' %}">
-      <div class="primary-name-account">
-        <h6 class="text-black-primary" href="javascript:void(0)">{{user_name}}</h6>
+      <div class="sidebar-primary-name-acc">
+        <h6 class="text-black-primary primary-name-acc" href="javascript:void(0)">{{user_name}}</h6>
       </div>
-      <div class="secondary-name-account">
+      <div class="sidebar-secondary-name-acc">
         <span class="text-black-secondary" href="javascript:void(0)">{{user_type}} </span>
         <button class="btn btn-icon btn-sm text-white align-right" type="button" id="accountInfo" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false"><i
@@ -25,6 +25,13 @@
     </div>
     <div class="navdrawer-divider special-type"></div>
     {% if user_type == "Admin" %}
+    <div class="navdrawer-subheader">Main Menu</div>
+    <ul class="navdrawer-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/dashboard/"><i
+            class="material-icons mr-3 text-black-secondary">dashboard</i>Dashboard</a>
+      </li>
+    </ul>
     <div class="navdrawer-subheader">Manage</div>
     <ul class="navdrawer-nav">
       <li class="nav-item">
@@ -32,33 +39,41 @@
             class="material-icons mr-3 text-black-secondary">meeting_room</i>Classrooms</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/classroom/logs/"><i
+        <a class="nav-link" href="/logs/"><i
             class="material-icons mr-3 text-black-secondary">assignment</i>Recent Logs</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/override/"><i
-            class="material-icons mr-3 text-black-secondary">gavel</i>Control Override</a>
+        <a class="nav-link" href="/override/"><i class="material-icons mr-3 text-black-secondary">gavel</i>Control
+          Override</a>
       </li>
     </ul>
     {% elif user_type == "Teacher" %}
+    <div class="navdrawer-subheader">Main Menu</div>
+    <ul class="navdrawer-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/dashboard/"><i
+            class="material-icons mr-3 text-black-secondary">dashboard</i>Dashboard</a>
+      </li>
+    </ul>
+    <div class="navdrawer-divider"></div>
     <div class="navdrawer-subheader">Manage</div>
     <ul class="navdrawer-nav">
       <li class="nav-item">
-        <a class="nav-link" href="/schedule/"><i
-            class="material-icons mr-3 text-black-secondary">schedule</i>Your Schedule</a>
+        <a class="nav-link" href="/schedule/"><i class="material-icons mr-3 text-black-secondary">schedule</i>Your
+          Schedule</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/classroom/"><i
             class="material-icons mr-3 text-black-secondary">meeting_room</i>Classrooms</a>
       </li>
-    <div class="navdrawer-divider"></div>
-    <div class="navdrawer-subheader">Information</div>
-    <ul class="navdrawer-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="javascript:void(0)"><i
-            class="material-icons mr-3 text-black-secondary">update</i>About Us</a>
-      </li>
-    </ul>
+      <div class="navdrawer-divider"></div>
+      <div class="navdrawer-subheader">Information</div>
+      <ul class="navdrawer-nav">
+        <li class="nav-item">
+          <a class="nav-link close-sidebar" href="javascript:void(0)" data-toggle="modal" data-target="#actionAboutDeveloper"><i
+              class="material-icons mr-3 text-black-secondary">update</i>About Us</a>
+        </li>
+      </ul>
   </div>
   {% else %}
   {% endif %}
@@ -67,8 +82,7 @@
   <div class="navdrawer-subheader">System</div>
   <ul class="navdrawer-nav">
     <li class="nav-item">
-      <a class="nav-link" href="/system/"><i
-          class="material-icons mr-3 text-black-secondary">settings</i>System
+      <a class="nav-link" href="/system/"><i class="material-icons mr-3 text-black-secondary">settings</i>System
         Settings</a>
     </li>
     <li class="nav-item">
@@ -80,7 +94,8 @@
   <div class="navdrawer-subheader">Information</div>
   <ul class="navdrawer-nav">
     <li class="nav-item">
-      <a class="nav-link" href="javascript:void(0)"><i class="material-icons mr-3 text-black-secondary">update</i>About
+      <a class="nav-link close-sidebar" href="javascript:void(0)" data-toggle="modal" data-target="#actionAboutDeveloper"><i
+          class="material-icons mr-3 text-black-secondary">update</i>About
         Us</a>
     </li>
   </ul>
