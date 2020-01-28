@@ -125,9 +125,8 @@ SubSectionUniqueKeys = (
 
 '''
 # ! Human Declared Types
-* We don't use Groups in DJango, why?
-* It's hard to do it, programatically.
-Instead, we rely with the use of declaring our own roles on database-level.
+* ### Concept Roles To Be Used in DJango. Confirmed correlated with Group Model.
+# ! Will still be used on Database-Level.
 '''
 RoleDeclaredTypes = (
     ("Project Owner", "Project Owner"),
@@ -138,4 +137,15 @@ RoleDeclaredTypes = (
     ("Department Staff", "Department Staff"),
     ("Teacher Staff", "Teacher Staff"),
     ("Student Staff", "Student Staff"),
+)
+
+# ! Group Name Definition based Human Roles
+GroupDefinitionRoles = (
+    "Project Owner",
+    "Project Members",
+    "Debuggers",
+    "ITSO Administrators",
+    "ITSO Members",
+    "Staffs",
+    "Students"
 )
