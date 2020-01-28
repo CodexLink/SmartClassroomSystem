@@ -29,6 +29,17 @@ img.primary-user-pic
     height: 64px;
     border-radius: 50%;
 }
+
+.primary-name-acc
+{
+    margin: 0 !important;
+}
+
+.sidebar-account
+{
+ padding-top: 16px !important;
+}
+
 /* ! Sidebar CSS Rulesets - END */
 
 /* ! Card Compatibility CSS Rulesets - START */
