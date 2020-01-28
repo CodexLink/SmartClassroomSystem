@@ -24,3 +24,8 @@ $('.quick-actions-handler').click(function (event) {
         $('.dashboard-grid').isotope("arrange");
     }, 260);
 });
+
+// ! Close Sidebar Upon Click
+$('.close-sidebar').click(function (event) {
+    $('#navdrawer').navdrawer('hide');
+})
