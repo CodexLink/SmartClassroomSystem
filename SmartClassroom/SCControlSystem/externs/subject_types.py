@@ -143,9 +143,9 @@ RoleDeclaredTypes = (
 GroupDefinitionRoles = (
     "Project Owner",
     "Project Members",
-    "Debuggers",
+    "Project Debuggers",
     "ITSO Administrators",
     "ITSO Members",
-    "Staffs",
+    "Professors",
     "Students"
 )
