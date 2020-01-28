@@ -9,6 +9,7 @@
 $('.dashboard-grid').isotope({
     itemSelector: '.dashboard-item',
     layoutMode: 'packery',
+    resize: true,
     packery: {
         columnWidth: '.dashboard-item',
         horizontal: false
@@ -21,5 +22,5 @@ $('.quick-actions-handler').click(function (event) {
     setTimeout(function ()
     {
         $('.dashboard-grid').isotope("arrange");
-    }, 200);
+    }, 260);
 });
