@@ -24,12 +24,12 @@ urlpatterns = [
     path('dashboard/', DashboardView.as_view(), name='dashboard_user_view'),
     path('classroom/', ClassroomView.as_view(), name='classroom_user_view'),
     # ! Check for possible options here, URL Parameters.
-    path('classroom/logs/', SelectableClassroomView.as_view(), name='classroom_log_extensible_view'), # ! Extensible means usable as whole page or modular component.
+    path('logs/', SelectableClassroomView.as_view(), name='classroom_log_extensible_view'), # ! Extensible means usable as whole page or modular component.
     # ! Not confirmed yet.
-    path('classroom/<str:clasroom_number>/logs/', SelectableClassroomView.as_view(path_action='check_log', as_modular_view=False), name='classroom_log_extensible_view'), # ! Extensible means usable as whole page or modular component.
-    path('classroom/<str:clasroom_number>/info/', SelectableClassroomView.as_view(path_action='show_info'), name='classroom_info_view'),
-    path('classroom/<str:clasroom_number>/schedule/', SelectableClassroomView.as_view(path_action='show_selected_schedule'), name='classroom_schedule_view'),
-    path('classroom/<str:clasroom_number>/actions/', SelectableClassroomView.as_view(path_action='get_actions'), name='classroom_action_view'),
+    path('classroom/<str:classRoomID>/logs/', SelectableClassroomView.as_view(path_action='check_log', as_modular_view=False), name='classroom_log_extensible_view'), # ! Extensible means usable as whole page or modular component.
+    path('classroom/<str:classRoomID>/info/', SelectableClassroomView.as_view(path_action='show_info'), name='classroom_info_view'),
+    path('classroom/<str:classRoomID>/schedule/', SelectableClassroomView.as_view(path_action='show_selected_schedule'), name='classroom_schedule_view'),
+    path('classroom/<str:classRoomID>/actions/', SelectableClassroomView.as_view(path_action='get_actions'), name='classroom_action_view'),
     path('schedule/', ScheduleListView.as_view(), name='schedule_exclusive_view'), # ! For teachers only.
     path('override/', OverrideControlView.as_view(), name='override_exclusive_view'),
     path('system/', SystemSettingsView.as_view(), name='syssettings_exclusive_view')
