@@ -13,7 +13,6 @@ class HomeView(TemplateView):
 
     view_context = {
         "title_view": "Welcome",
-        "page_view": "Home",
         "ClassInstance": str(__qualname__),
     }
 
@@ -32,7 +31,6 @@ class HomeView(TemplateView):
 class DashboardView(TemplateView):
     view_context = {
         "title_view": "Dashboard",
-        "page_view": "Dashboard",
         "user_class": "Admin",
         "ClassInstance": str(__qualname__),
     }
@@ -60,7 +58,6 @@ class ClassroomView(ListView):
 
     view_context = {
         "title_view": "Classroom List",
-        "page_view": "List of Classrooms",
         "user_class": "Admin",
         "ClassInstance": str(__qualname__),
     }
@@ -81,7 +78,6 @@ class SelectableClassroomView(TemplateView):
 
     view_context = {
         "title_view": "Classroom",
-        "page_view": "Classroom",
         "user_class": "Admin",
         "ClassInstance": str(__qualname__),
     }
@@ -100,7 +96,6 @@ class ScheduleListView(ListView):
 
     view_context = {
         "title_view": "Classroom",
-        "page_view": "Your Class Schedules",
         "user_class": "Admin",
         "ClassInstance": str(__qualname__),
     }
@@ -118,7 +113,6 @@ class OverrideControlView(TemplateView):
 
     view_context = {
         "title_view": "Override",
-        "page_view": "Override System",
         "user_class": "Admin",
         "ClassInstance": str(__qualname__),
     }
@@ -135,7 +129,6 @@ class SystemSettingsView(TemplateView):
 
     view_context = {
         "title_view": "System Overview",
-        "page_view": "System Settings",
         "user_class": "Admin",
         "ClassInstance": str(__qualname__),
     }
@@ -151,7 +144,6 @@ class SystemSettingsView(TemplateView):
 class AuthUserView(LoginView):
     view_context = {
         "title_view": "Login View",
-        "page_view": "Login",
         "user_class": None,
         "ClassInstance": str(__qualname__),
     }
@@ -168,7 +160,6 @@ class DeauthUserView(LoginView):
 
     view_context = {
         "title_view": "Logout View",
-        "page_view": "Logout",
         "user_class": None,
         "ClassInstance": str(__qualname__),
     }
@@ -182,7 +173,6 @@ class DeauthUserView(LoginView):
 class RedirectPerspective(RedirectView):
     view_context = {
         "title_view": "Redirect View",
-        "page_view": "Redirect",
         "user_class": None,
         "ClassInstance": str(__qualname__),
     }
