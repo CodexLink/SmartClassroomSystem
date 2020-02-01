@@ -4,15 +4,15 @@
         class="navbar-toggler" data-target="#navdrawer" data-toggle="navdrawer">
         <span class="navbar-toggler-icon"></span></button>
     {% endif %}
-    <span class="navbar-brand mr-auto">{% if page_title == "Home" %} Welcome to Smart Classroom {% else %} {{ page_title }} | Smart Classroom {% endif %}</span>
+    <span class="navbar-brand mr-auto">{% if inst_title == "Home" %} Welcome to Smart Classroom {% else %} {{ inst_title }} | Smart Classroom {% endif %}</span>
     <div class="align-right">
-        {% if page_type == "Home" %}
+        {% if user_type == "Home" %}
         <button class="btn btn-flat-secondary text-white btn-icon-prepend" type="button" data-toggle="modal"
             data-target="#register_ModalForm"><i class="material-icons text-white">create</i>Register</button>
         <button class="btn btn-flat-primary text-white btn-icon-prepend" type="button" data-toggle="modal"
             data-target="#login_ModalForm"><i class="material-icons text-white">favorite_border</i>Login</button>
 
-        {% elif page_type == "Admin" %}
+        {% elif user_type == "Admin" %}
 
         <div class="dropdown">
             <button class="btn btn-icon btn-sm text-white" type="button"><i
@@ -41,7 +41,7 @@
 </header>
 
 {% if requireSideNav == True %}
-{% include "sidebar.html" with requireSideNav=True user_name="I Dont Know" user_type=page_action %}
+{% include "sidebar.html" with requireSideNav=True user_current_name=user_session_name user_inst_type=user_type %}
 {% else %}
-{% include "sidebar.html" with requireSideNav=False user_name="I Dont Know" user_type=page_action %}
+{% include "sidebar.html" with requireSideNav=False user_current_name=user_session_name user_inst_type=user_type %}
 {% endif %}
