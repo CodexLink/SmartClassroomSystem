@@ -71,4 +71,9 @@ img.primary-user-pic
     padding: 8px 0 !important;
 }
 
+.container.content-offset
+{
+    padding: 80px 0 !important;
+}
+
 /* ! Card Compatibility CSS Rulesets - END */

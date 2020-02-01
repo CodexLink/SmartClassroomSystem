@@ -4,34 +4,39 @@
 <html lang="en">
 
 <head>
-    {% include "header.html" with tab_title=page_title %}
+    {% include "header.html" with instance_formal_name=page_view %}
 </head>
 
 <!-- ! Content Starts Here -->
 
 <body>
-    {% include "nav.html" with tab_title=page_title requireSideNav=True page_action=page_type %}
 
-    <div class="container" style="padding: 80px 0">
-        <!-- ! Multiple Instance Content Here -->
-        {% if InstanceCaller == "HomeView" %}
-            {% include "home.html" %}
-        {% elif InstanceCaller == "DashboardView" %}
-            {% include "dashboard.html" with username=user_name user_role=page_type %}
-        {% elif InstanceCaller == "ClassroomView" %}
-            {% include "classrooms.html" %}
-        {% elif InstanceCaller == "SelectableClassroomView" %}
-            {% include "classrooms.html" %}
-        {% elif InstanceCaller == "ScheduleListView" %}
-            {% include "user_schedule.html" %}
-        {% elif InstanceCaller == "OverrideControlView" %}
-            {% include "override_control.html" %}
-        {% elif InstanceCaller == "SystemSettingsView" %}
-            {% include "sys_settings.html" %}
+    <!-- ! Multiple Instance Content Here -->
+    {% if ClassInstance == "HomeView" %}
+        {% include "nav.html" with tab_title=title_view requireSideNav=True page_action=user_class %}
+        {% include "home.html" %}
+        {% elif ClassInstance == "DashboardView" %}
+        {% include "nav.html" with tab_title=title_view requireSideNav=True page_action=user_class %}
+        {% include "dashboard.html" with username=user_name user_role=page_type %}
+        {% elif ClassInstance == "ClassroomView" %}
+        {% include "nav.html" with tab_title=title_view requireSideNav=True page_action=user_class %}
+        {% include "classrooms.html" %}
+        {% elif ClassInstance == "SelectableClassroomView" %}
+        {% include "nav.html" with tab_title=title_view requireSideNav=True page_action=user_class %}
+        {% include "classrooms.html" %}
+        {% elif ClassInstance == "ScheduleListView" %}
+        {% include "nav.html" with tab_title=title_view requireSideNav=True page_action=user_class %}
+        {% include "user_schedule.html" %}
+        {% elif ClassInstance == "OverrideControlView" %}
+        {% include "nav.html" with tab_title=title_view requireSideNav=True page_action=user_class %}
+        {% include "override_control.html" %}
+        {% elif ClassInstance == "SystemSettingsView" %}
+        {% include "nav.html" with tab_title=title_view requireSideNav=True page_action=user_class %}
+        {% include "sys_settings.html" %}
         {% else %}
-            {% include "404.html" %}
-        {% endif %}
-    </div>
+        {% include "nav.html" with tab_title=title_view requireSideNav=True page_action=user_class %}
+        {% include "404.html" %}
+    {% endif %}
 
     {% include "modals.html" with user_role=page_type %}
     {% include "footer.html" %}
