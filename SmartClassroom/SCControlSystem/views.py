@@ -10,11 +10,15 @@ template_view = 'elem_inst_view.html'
 
 # ! A Class That Just Loads the Default "home.html"
 class HomeView(TemplateView):
-    title_page = "Welcome"
-    InstanceClassName = str(__qualname__)  # ! Qualified Class Name
+
+    view_context = {
+        "title_page": "Welcome",
+        "page_title": "Home",
+        "ClassInstance": str(__qualname__),
+    }
 
     def get(self, request):
-        return render(request, template_view, {"InstanceCaller": self.InstanceClassName, "page_title": "Home"})
+        return render(request, template_view, self.view_context)
 
     def sendMCUData(self):
         try:
@@ -26,13 +30,17 @@ class HomeView(TemplateView):
 
 
 class DashboardView(TemplateView):
-    title_page = 'Dashboard'
-    InstanceClassName = str(__qualname__)  # ! Qualified Class Name
+    view_context = {
+        "title_page": "Dashboard",
+        "page_title": "Dashboard",
+        "page_type": "Admin",
+        "ClassInstance": str(__qualname__),
+    }
 
     # ! User Instance Type is already passable so creating variable is useless.
 
     def get(self, request):
-        return render(request, template_view, {"InstanceCaller": self.InstanceClassName, "page_title": self.title_page, "page_type": "Admin"})
+        return render(request, template_view, self.view_context)
 
     def post(self, request):
         pass
@@ -47,85 +55,109 @@ class DashboardView(TemplateView):
 
 
 class ClassroomView(ListView):
-    page_title = "List of Classrooms"
-    # ! Optional, but mostly used. The 3rd part of URL is the one that is being used.
-    path_action = None
+    path_action = None  # ! Unknown Usage Yet.
     as_modular_view = None  # ! Optional and limited only to logs and info.
-    InstanceClassName = str(__qualname__)  # ! Qualified Class Name
+
+    view_context = {
+        "title_page": "Classroom List",
+        "page_title": "List of Classrooms",
+        "page_type": "Admin",
+        "ClassInstance": str(__qualname__),
+    }
+
 
     def get(self, request):
-        return render(request, template_view, {"InstanceCaller": self.InstanceClassName, "page_title": self.page_title, "page_type": "Admin"})
+        return render(request, template_view, self.view_context)
 
     def post(self, request):
         pass
 
 
 class SelectableClassroomView(TemplateView):
-
-    page_title = "Classroom"
-    InstanceClassName = str(__qualname__)
-    # *page_title_secondary is the classroom name.
-
     # ! Optional, but mostly used. The 3rd part of URL is the one that is being used.
     path_action = None
     as_modular_view = None  # ! Optional and limited only to logs and info.
 
+
+    view_context = {
+        "title_page": "Classroom",
+        "page_title": "Classroom",
+        "page_type": "Admin",
+        "ClassInstance": str(__qualname__),
+    }
+
+
     def get(self, request, classRoomID=None):
-        return render(request, template_view, {"InstanceCaller": self.InstanceClassName, "page_title": self.page_title, "page_type": "Admin"})
+        return render(request, template_view, self.view_context)
 
     def post(self, request, classRoomID=None):
         pass
 
 
 class ScheduleListView(ListView):
-    page_title = "Your Class Schedules"
-    # ! Optional, but mostly used. The 3rd part of URL is the one that is being used.
     path_action = None
     as_modular_view = None  # ! Optional and limited only to logs and info.
-    InstanceClassName = str(__qualname__)
+
+    view_context = {
+        "title_page": "Classroom",
+        "page_title": "Your Class Schedules",
+        "page_type": "Admin",
+        "ClassInstance": str(__qualname__),
+    }
 
     def get(self, request):
-        return render(request, template_view, {"InstanceCaller": self.InstanceClassName, "page_title": self.page_title, "page_type": "Admin"})
+        return render(request, template_view, self.view_context)
 
     def post(self, request):
         pass
 
 
 class OverrideControlView(TemplateView):
-    page_title = "Override System"
-    # ! Optional, but mostly used. The 3rd part of URL is the one that is being used.
     path_action = None
     as_modular_view = None  # ! Optional and limited only to logs and info.
-    InstanceClassName = str(__qualname__)
+
+    view_context = {
+        "title_page": "Override",
+        "page_title": "Override System",
+        "page_type": "Admin",
+        "ClassInstance": str(__qualname__),
+    }
 
     def get(self, request):
-        return render(request, template_view, {"InstanceCaller": self.InstanceClassName, "page_title": self.page_title, "page_type": "Admin"})
+        return render(request, template_view, self.view_context)
 
     def post(self, request):
         pass
 
 
 class SystemSettingsView(TemplateView):
-    page_title = "System Settings"
-    # ! Optional, but mostly used. The 3rd part of URL is the one that is being used.
     path_action = None
-    InstanceClassName = str(__qualname__)
+
+    view_context = {
+        "title_page": "System Overview",
+        "page_title": "System Settings",
+        "page_type": "Admin",
+        "ClassInstance": str(__qualname__),
+    }
 
     def get(self, request):
-        return render(request, template_view, {"InstanceCaller": self.InstanceClassName, "page_title": self.page_title, "page_type": "Admin"})
+        return render(request, template_view, self.view_context)
 
     def post(self, request):
         pass
 
 # ! Authentication Classes
 
-
 class AuthUserView(LoginView):
-    InstanceClassName = str(__qualname__)
-    page_title = "Login"
+    view_context = {
+        "title_page": "Login View",
+        "page_title": "Login",
+        "page_type": None,
+        "ClassInstance": str(__qualname__),
+    }
 
     def get(self, request, *args, **kwargs):
-        return render(request, template_view, {"InstanceCaller": self.InstanceClassName, "page_title": self.page_title})
+        return render(request, template_view, self.view_context)
 
 
     def post(self, request, *args, **kwargs):
@@ -133,8 +165,13 @@ class AuthUserView(LoginView):
 
 
 class DeauthUserView(LoginView):
-    template_view = 'logout.html'
 
+    view_context = {
+        "title_page": "Logout View",
+        "page_title": "Logout",
+        "page_type": None,
+        "ClassInstance": str(__qualname__),
+    }
     def get(self, request, *args, **kwargs):
         pass
 
@@ -143,8 +180,12 @@ class DeauthUserView(LoginView):
 
 
 class RedirectPerspective(RedirectView):
-    template_view = 'dashboard.html'
-
+    view_context = {
+        "title_page": "Redirect View",
+        "page_title": "Redirect",
+        "page_type": None,
+        "ClassInstance": str(__qualname__),
+    }
     def get(self, request, *args, **kwargs):
         pass
 
