@@ -12,8 +12,8 @@ template_view = 'elem_inst_view.html'
 class HomeView(TemplateView):
 
     view_context = {
-        "title_page": "Welcome",
-        "page_title": "Home",
+        "title_view": "Welcome",
+        "page_view": "Home",
         "ClassInstance": str(__qualname__),
     }
 
@@ -31,9 +31,9 @@ class HomeView(TemplateView):
 
 class DashboardView(TemplateView):
     view_context = {
-        "title_page": "Dashboard",
-        "page_title": "Dashboard",
-        "page_type": "Admin",
+        "title_view": "Dashboard",
+        "page_view": "Dashboard",
+        "user_class": "Admin",
         "ClassInstance": str(__qualname__),
     }
 
@@ -59,9 +59,9 @@ class ClassroomView(ListView):
     as_modular_view = None  # ! Optional and limited only to logs and info.
 
     view_context = {
-        "title_page": "Classroom List",
-        "page_title": "List of Classrooms",
-        "page_type": "Admin",
+        "title_view": "Classroom List",
+        "page_view": "List of Classrooms",
+        "user_class": "Admin",
         "ClassInstance": str(__qualname__),
     }
 
@@ -80,9 +80,9 @@ class SelectableClassroomView(TemplateView):
 
 
     view_context = {
-        "title_page": "Classroom",
-        "page_title": "Classroom",
-        "page_type": "Admin",
+        "title_view": "Classroom",
+        "page_view": "Classroom",
+        "user_class": "Admin",
         "ClassInstance": str(__qualname__),
     }
 
@@ -99,9 +99,9 @@ class ScheduleListView(ListView):
     as_modular_view = None  # ! Optional and limited only to logs and info.
 
     view_context = {
-        "title_page": "Classroom",
-        "page_title": "Your Class Schedules",
-        "page_type": "Admin",
+        "title_view": "Classroom",
+        "page_view": "Your Class Schedules",
+        "user_class": "Admin",
         "ClassInstance": str(__qualname__),
     }
 
@@ -117,9 +117,9 @@ class OverrideControlView(TemplateView):
     as_modular_view = None  # ! Optional and limited only to logs and info.
 
     view_context = {
-        "title_page": "Override",
-        "page_title": "Override System",
-        "page_type": "Admin",
+        "title_view": "Override",
+        "page_view": "Override System",
+        "user_class": "Admin",
         "ClassInstance": str(__qualname__),
     }
 
@@ -134,9 +134,9 @@ class SystemSettingsView(TemplateView):
     path_action = None
 
     view_context = {
-        "title_page": "System Overview",
-        "page_title": "System Settings",
-        "page_type": "Admin",
+        "title_view": "System Overview",
+        "page_view": "System Settings",
+        "user_class": "Admin",
         "ClassInstance": str(__qualname__),
     }
 
@@ -150,9 +150,9 @@ class SystemSettingsView(TemplateView):
 
 class AuthUserView(LoginView):
     view_context = {
-        "title_page": "Login View",
-        "page_title": "Login",
-        "page_type": None,
+        "title_view": "Login View",
+        "page_view": "Login",
+        "user_class": None,
         "ClassInstance": str(__qualname__),
     }
 
@@ -167,9 +167,9 @@ class AuthUserView(LoginView):
 class DeauthUserView(LoginView):
 
     view_context = {
-        "title_page": "Logout View",
-        "page_title": "Logout",
-        "page_type": None,
+        "title_view": "Logout View",
+        "page_view": "Logout",
+        "user_class": None,
         "ClassInstance": str(__qualname__),
     }
     def get(self, request, *args, **kwargs):
@@ -181,9 +181,9 @@ class DeauthUserView(LoginView):
 
 class RedirectPerspective(RedirectView):
     view_context = {
-        "title_page": "Redirect View",
-        "page_title": "Redirect",
-        "page_type": None,
+        "title_view": "Redirect View",
+        "page_view": "Redirect",
+        "user_class": None,
         "ClassInstance": str(__qualname__),
     }
     def get(self, request, *args, **kwargs):
