@@ -130,12 +130,10 @@ SubSectionUniqueKeys = (
 '''
 RoleDeclaredTypes = (
     ("Project Owner", "Project Owner"),
-    ("Project Members", "Project Members"),
+    ("Project Member", "Project Member"),
     ("ITSO Administrator", "ITSO Administrator"),
-    ("ITSO Assitant Administrator", "ITSO Assitant Administrator"),
-    ("ITSO Supervisor", "ITSO Supervisor"),
-    ("Department Staff", "Department Staff"),
-    ("Teacher Staff", "Teacher Staff"),
+    ("ITSO Member", "ITSO Member"),
+    ("Professor Staff", "Professor Staff"),
     ("Student Staff", "Student Staff"),
 )
 
@@ -143,7 +141,6 @@ RoleDeclaredTypes = (
 GroupDefinitionRoles = (
     "Project Owner",
     "Project Members",
-    "Project Debuggers",
     "ITSO Administrators",
     "ITSO Members",
     "Professors",
