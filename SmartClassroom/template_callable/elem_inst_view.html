@@ -9,7 +9,9 @@
 </head>
 
 <!-- ! Content Starts Here -->
-{% if ClassInstance == "AuthUserView" or ClassInstance == "DeauthUserView" %}
+{% if ClassInstance == "AuthUserView" %}
+<body class="log-backfill" style="background-image: url({% static 'rsrc/2ndLayerTriangleVector_ReEdited_Opacity.png' %})"></body>
+{% elif ClassInstance == "DeauthUserView" %}
 <body class="log-backfill" style="background-image: url({% static 'rsrc/2ndLayerTriangleVector_DarkMode_N100.png' %})"></body>
 {% else %}
 <body>
@@ -41,8 +43,8 @@
         {% include "nav.html" with inst_title=title_view %}
         {% include "login.html" %}
     {% elif ClassInstance == "DeauthUserView" %}
-        {% include "nav.html" with inst_title=title_view requireSideNav=True user_type=user_class %}
-        {% include "logout.html" %}
+        {% include "nav.html" with inst_title=title_view requireSideNav=False user_type=user_class %}
+        {% include "login.html" with isActionLogout=True %}
     {% else %}
         {% include "nav.html" with inst_title=title_view requireSideNav=True user_type=user_class %}
         {% include "404.html" %}
