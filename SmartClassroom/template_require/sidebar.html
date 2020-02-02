@@ -1,14 +1,15 @@
 {% load static %}
 {% if requireSideNav == True %}
 <div aria-hidden="true" class="navdrawer" id="navdrawer" tabindex="-1">
-  {% if user_inst_type == "Admin" or user_inst_type == "Teacher" %}
+  <!-- This one is too much, we can optimize it -->
+  {% if user_inst_type == "Project Owner" or user_inst_type == "Project Member" or user_inst_type == "ITSO Administrator" or user_inst_type == "ITSO Member" or user_inst_type == "Professor Staff" or user_inst_type == "Student Staff" %}
   <div class="navdrawer-content">
     <div class="sidebar-account container">
       <img class="primary-user-pic" src="{% static 'rsrc/avatar.jpg' %}">
       <div class="sidebar-primary-name-acc">
         <h6 class="text-black-primary primary-name-acc" href="javascript:void(0)">{{user_current_name}}</h6>
       </div>
-      <div class="sidebar-secondary-name-acc">
+      <div class="sidebar-secondary-name-acc d-flex justify-content-between align-items-center">
         <span class="text-black-secondary" href="javascript:void(0)">{{user_inst_type}} </span>
         <button class="btn btn-icon btn-sm text-white align-right" type="button" id="accountInfo" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false"><i
@@ -24,7 +25,7 @@
       </div>
     </div>
     <div class="navdrawer-divider special-type"></div>
-    {% if user_inst_type == "Admin" %}
+    {% if user_inst_type == "Project Owner" or user_inst_type == "Project Member" or user_inst_type == "ITSO Administrator" or user_inst_type == "ITSO Member" %}
     <div class="navdrawer-subheader">Main Menu</div>
     <ul class="navdrawer-nav">
       <li class="nav-item">
@@ -48,7 +49,7 @@
           Override</a>
       </li>
     </ul>
-    {% elif user_inst_type == "Teacher" %}
+    {% elif user_inst_type == "Professor Staff" or user_inst_type == "Student Staff" %}
     <div class="navdrawer-subheader">Main Menu</div>
     <ul class="navdrawer-nav">
       <li class="nav-item">
@@ -78,7 +79,7 @@
   </div>
   {% else %}
   {% endif %}
-  {% if user_inst_type == "Admin" %}
+  {% if user_inst_type == "Project Owner" or user_inst_type == "Project Member" or user_inst_type == "ITSO Administrator" or user_inst_type == "ITSO Member" %}
   <div class="navdrawer-divider"></div>
   <div class="navdrawer-subheader">System</div>
   <ul class="navdrawer-nav">
