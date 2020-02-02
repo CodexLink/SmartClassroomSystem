@@ -5,43 +5,10 @@
         <span class="navbar-toggler-icon"></span></button>
     {% endif %}
     <span class="navbar-brand mr-auto">{% if inst_title == "Welcome" %} Welcome to Smart Classroom {% else %} {{ inst_title }} | Smart Classroom {% endif %}</span>
-    <div class="align-right">
-        {% if user_type == "Home" %}
-        <button class="btn btn-flat-secondary text-white btn-icon-prepend" type="button" data-toggle="modal"
-            data-target="#register_ModalForm"><i class="material-icons text-white">create</i>Register</button>
-        <button class="btn btn-flat-primary text-white btn-icon-prepend" type="button" data-toggle="modal"
-            data-target="#login_ModalForm"><i class="material-icons text-white">favorite_border</i>Login</button>
-
-        {% elif user_type == "Admin" %}
-
-        <div class="dropdown">
-            <button class="btn btn-icon btn-sm text-white" type="button"><i
-                    class="material-icons">notifications_none</i></button>
-            <div class="dropdown-menu" aria-labelledby="accountInfo">
-                <h5 class="dropdown-header text-black-primary">Hello! Username Here</h5>
-                <h6 class="dropdown-header text-black-secondary">Currently Login as User Type</h6>
-                <div class="dropdown-divider"></div>
-                <span class="dropdown-header text-black-secondary">System</span>
-                <a class="dropdown-item btn-icon-prepend" href="#"><i class="material-icons">settings</i>System
-                    Settings</a>
-                <a class="dropdown-item btn-icon-prepend" href="#"><i class="material-icons">update</i>Reset Server</a>
-                <div class="dropdown-divider"></div>
-                <span class="dropdown-header text-black-secondary">Account</span>
-                <a class="dropdown-item btn-icon-prepend" href="#"><i class="material-icons">account_tree</i>Account
-                    Settings</a>
-                <a class="dropdown-item btn-icon-prepend" href="#"><i class="material-icons">swap_horiz</i>Change
-                    User</a>
-                <a class="dropdown-item btn-icon-prepend" href="#"><i
-                        class="material-icons">power_settings_new</i>Log-out</a>
-            </div>
-        </div>
-        {% else %}
-        {% endif %}
-    </div>
 </header>
 
 {% if requireSideNav == True %}
 {% include "sidebar.html" with requireSideNav=True user_current_name=user_session_name user_inst_type=user_type %}
 {% else %}
-{% include "sidebar.html" with requireSideNav=False user_current_name=user_session_name user_inst_type=user_type %}
+{% include "sidebar.html" with requireSideNav=False %}
 {% endif %}
