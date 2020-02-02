@@ -7,18 +7,27 @@
             <div class="card-body text-white">
                 <h2 class="card-title text-white">You're logged out already!</h2>
                 <h3 class="card-subtitle text-white">Did you just tried logging out by putting '/logout/' in URL!?</h3>
-                <p class="card-text text-white">You seem to be refreshing the page. You're already logged out now, so don't worry.</p>
+                <p class="card-text text-white">You seem to be refreshing the page. You're already logged out now, so
+                    don't worry.</p>
             </div>
         </div>
         {% elif message.message == "UserLoggedOut" %}
-            <div class="card bg-info align-self-center log-card">
-                <div class="card-body text-white">
-                    <h2 class="card-title text-white">You've been logout!</h2>
-                    <h3 class="card-subtitle text-white">Thank you for using our service and see you soon!</h3>
-                    <p class="card-text text-white">Your account session has been expired or you've been logout by someone
-                        or by yourself.</p>
-                </div>
+        <div class="card bg-info align-self-center log-card">
+            <div class="card-body text-white">
+                <h2 class="card-title text-white">You've been logout!</h2>
+                <h3 class="card-subtitle text-white">Thank you for using our service and see you soon!</h3>
+                <p class="card-text text-white">Your account session has been expired or you've been logout by someone
+                    or by yourself.</p>
             </div>
+        </div>
+        {% elif message.message == "PermissionAccessDenied" %}
+        <div class="card bg-info align-self-center log-card">
+            <div class="card-body text-white">
+                <h2 class="card-title text-white">Permission Access Denied!</h2>
+                <h3 class="card-subtitle text-white">You're not obligated to check this area!</h3>
+                <p class="card-text text-white">We suspect that you're not logged on. Please login.accordion</p>
+            </div>
+        </div>
         {% endif %}
         {% endfor %}
         {% endif %}
