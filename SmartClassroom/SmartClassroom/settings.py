@@ -137,3 +137,7 @@ STATICFILES_DIRS = [
 
 # ! User Model Extender
 AUTH_USER_MODEL = 'SCControlSystem.UserDataCredentials'
+
+# ! Login Redirection URL
+
+# ! Logout Redirection URL

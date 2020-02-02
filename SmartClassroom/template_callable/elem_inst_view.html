@@ -1,5 +1,6 @@
 <!-- ! Element Instance Viewer by Janrey "CodexLink" Licas -->
 <!-- * This is basically a Content Generator. We're trying to achieve DRY principles here. We'll keep using this template here -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,8 +9,11 @@
 </head>
 
 <!-- ! Content Starts Here -->
-
+{% if ClassInstance == "AuthUserView" or ClassInstance == "DeauthUserView" %}
+<body class="log-backfill" style="background-image: url({% static 'rsrc/2ndLayerTriangleVector_DarkMode_N100.png' %})"></body>
+{% else %}
 <body>
+{% endif %}
 
     <!-- ! Multiple Instance Content Here -->
     {% if ClassInstance == "HomeView" %}
@@ -33,6 +37,12 @@
     {% elif ClassInstance == "SystemSettingsView" %}
         {% include "nav.html" with inst_title=title_view requireSideNav=True user_type=user_class %}
         {% include "sys_settings.html" %}
+    {% elif ClassInstance == "AuthUserView" %}
+        {% include "nav.html" with inst_title=title_view %}
+        {% include "login.html" %}
+    {% elif ClassInstance == "DeauthUserView" %}
+        {% include "nav.html" with inst_title=title_view requireSideNav=True user_type=user_class %}
+        {% include "logout.html" %}
     {% else %}
         {% include "nav.html" with inst_title=title_view requireSideNav=True user_type=user_class %}
         {% include "404.html" %}
@@ -41,6 +51,6 @@
     {% include "modals.html" with user_role=page_type %}
     {% include "footer.html" %}
 </body>
-<!-- ! Content Ends Here -->
+    <!-- ! Content Ends Here -->
 
 </html>

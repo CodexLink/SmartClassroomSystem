@@ -1,3 +1,42 @@
-{% load static %}
-<div class="container content-offset">
+<div class="container-fluid h-100 content-offset">
+    <div class="row flex-column h-100 justify-content-center align-items-center">
+        {% if form.non_field_errors %}
+        <div class="card card-shaped bg-danger mb-3">
+            <div class="card-body text-white">
+                <h2 class="card-title text-white">Validation Error!</h2>
+                <h3 class="card-subtitle text-white">There's something wrong.</h3>
+                <p class="card-text text-white">Your account does not exist or your credentials mismatched. Please try again.</p>
+                <p class="card-text text-white">Technical Information: {{form.non_field_errors}}</p>
+            </div>
+        </div>
+        {% endif %}
+        <p>
+        <div class="card align-self-center log-card">
+            <div class="card-header border-0">
+                <h2 class="card-title">Login</h2>
+                <h3 class="card-subtitle text-black-secondary">Unauthorized Access! Please login your crendentials!</h3>
+            </div>
+            <div class="card-body card-form-action">
+                <form enctype="multipart/form-data" method="POST" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="floating-label textfield-box">
+                            <label for="validationUsername">Username</label>
+                            {{ form.username }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="floating-label textfield-box">
+                            <label for="validationPassword">Password</label>
+                            {{ form.password }}
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn btn-flat-primary" type="submit">Login</button>
+                        <button class="btn btn-flat-primary">Clear Fields</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

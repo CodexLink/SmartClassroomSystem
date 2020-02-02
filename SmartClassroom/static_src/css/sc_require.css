@@ -76,4 +76,28 @@ img.primary-user-pic
     padding: 80px 0 !important;
 }
 
+.container-fluid.content-offset
+{
+    padding: 80px 0 !important;
+}
+
+.card-body.card-form-action
+{
+    padding: 1rem 1rem 0 1rem !important;
+}
+
+.card.log-card {
+    width: 30% !important;
+}
 /* ! Card Compatibility CSS Rulesets - END */
+
+/* ! Body Visualization CSS Rulesets - START */
+
+body.log-backfill
+{
+    height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+/* ! Body Visualization CSS Rulesets - END */
