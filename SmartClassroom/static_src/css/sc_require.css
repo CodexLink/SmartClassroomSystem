@@ -28,6 +28,7 @@ img.primary-user-pic
     width: 64px;
     height: 64px;
     border-radius: 50%;
+    margin-bottom: 16px;
 }
 
 .primary-name-acc
