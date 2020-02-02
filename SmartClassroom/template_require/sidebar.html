@@ -28,30 +28,7 @@
     <div class="navdrawer-subheader">Main Menu</div>
     <ul class="navdrawer-nav">
       <li class="nav-item">
-        <a class="nav-link" href="/dashboard/"><i
-            class="material-icons mr-3 text-black-secondary">dashboard</i>Dashboard</a>
-      </li>
-    </ul>
-    <div class="navdrawer-subheader">Manage</div>
-    <ul class="navdrawer-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="/classroom/"><i
-            class="material-icons mr-3 text-black-secondary">meeting_room</i>Classrooms</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/logs/"><i
-            class="material-icons mr-3 text-black-secondary">assignment</i>Recent Logs</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/override/"><i class="material-icons mr-3 text-black-secondary">gavel</i>Control
-          Override</a>
-      </li>
-    </ul>
-    {% elif user_inst_type == "Teacher" %}
-    <div class="navdrawer-subheader">Main Menu</div>
-    <ul class="navdrawer-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="/dashboard/"><i
+        <a class="nav-link" href="{% url 'dashboard_user_view' %}"><i
             class="material-icons mr-3 text-black-secondary">dashboard</i>Dashboard</a>
       </li>
     </ul>
@@ -59,11 +36,35 @@
     <div class="navdrawer-subheader">Manage</div>
     <ul class="navdrawer-nav">
       <li class="nav-item">
-        <a class="nav-link" href="/schedule/"><i class="material-icons mr-3 text-black-secondary">schedule</i>Your
+        <a class="nav-link" href="{% url 'classroom_user_view' %}"><i
+            class="material-icons mr-3 text-black-secondary">meeting_room</i>Classrooms</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'classroom_log_extensible_view' %}"><i
+            class="material-icons mr-3 text-black-secondary">assignment</i>Recent Logs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'override_exclusive_view' %}"><i class="material-icons mr-3 text-black-secondary">gavel</i>Control
+          Override</a>
+      </li>
+    </ul>
+    {% elif user_inst_type == "Teacher" %}
+    <div class="navdrawer-subheader">Main Menu</div>
+    <ul class="navdrawer-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'dashboard_user_view' %}"><i
+            class="material-icons mr-3 text-black-secondary">dashboard</i>Dashboard</a>
+      </li>
+    </ul>
+    <div class="navdrawer-divider"></div>
+    <div class="navdrawer-subheader">Manage</div>
+    <ul class="navdrawer-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'schedule_exclusive_view' %}"><i class="material-icons mr-3 text-black-secondary">schedule</i>Your
           Schedule</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/classroom/"><i
+        <a class="nav-link" href="{% url 'classroom_user_view' %}"><i
             class="material-icons mr-3 text-black-secondary">meeting_room</i>Classrooms</a>
       </li>
       <div class="navdrawer-divider"></div>
@@ -82,7 +83,7 @@
   <div class="navdrawer-subheader">System</div>
   <ul class="navdrawer-nav">
     <li class="nav-item">
-      <a class="nav-link" href="/system/"><i class="material-icons mr-3 text-black-secondary">settings</i>System
+      <a class="nav-link" href="{% url 'syssettings_exclusive_view' %}"><i class="material-icons mr-3 text-black-secondary">settings</i>System
         Settings</a>
     </li>
     <li class="nav-item">
