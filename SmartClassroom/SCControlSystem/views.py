@@ -18,49 +18,60 @@ template_view = 'elem_inst_view.html'
 
 # ! A Class That Just Loads the Default "home.html"
 class HomeView(TemplateView):
+    template_name = template_view
 
     more_context = {
         "title_view": "Welcome",
         "ClassInstance": str(__qualname__),
     }
 
-    def get(self, request):
-        return render(request, template_view, self.more_context)
+    # ! Override Get_Context_Data by adding more data.
+    def get_context_data(self, **kwargs):
+        view_context = super(HomeView, self).get_context_data(**kwargs) # * Get the default context to override to.
+        view_context['title_view'] = self.more_context['title_view']
+        view_context['ClassInstance'] = self.more_context['ClassInstance']
 
-    def sendMCUData(self):
-        try:
-            return requests.get("http://192.168.100.41/RequestSens", timeout=.1)
-        except ConnectionError as Err:
-            return None
-            #self.response.text = None
-            pass
+        return view_context # ! Return the Context to be rendered later on.
 
 
-class DashboardView(LoginRequiredMixin, TemplateView):
+class DashboardView(PermissionRequiredMixin, TemplateView):
     login_url = reverse_lazy('auth_user_view')
+    template_name = template_view
+
+    permission_required = ('SCControlSystem.view_classroom',
+                          'SCControlSystem.view_classroomactionlog',
+                          'SCControlSystem.view_course',
+                          'SCControlSystem.view_courseschedule',
+                          'SCControlSystem.view_programbranch',
+                          'SCControlSystem.view_sectiongroup')
+
     more_context = {
         "title_view": "Dashboard",
-        "user_class": "Admin",
-        "user_instance_name": "Janrey Licas",
-        "ClassInstance": str(__qualname__),
+        "ClassInstance": str(__qualname__)
     }
 
-    # ! User Instance Type is already passable so creating variable is useless.
+    def get_context_data(self, **kwargs): # ! Override Get_Context_Data by adding more data.
+        current_user = self.request.user
+        view_context = super(DashboardView, self).get_context_data(**kwargs) # * Get the default context to override to.
+        view_context['title_view'] = self.more_context['title_view']
+        view_context['user_instance_name'] = '%s, %s %s' % (current_user.last_name, current_user.first_name, current_user.Middle_Name if current_user.Middle_Name is not None else '')
+        view_context['user_class'] = current_user.User_Role
+        view_context['ClassInstance'] = self.more_context['ClassInstance']
 
-    def get(self, request):
-        return render(request, template_view, self.more_context)
+        print(view_context)
 
-    def post(self, request):
-        pass
+        return view_context # ! Return the Context to be rendered later on.
 
-    def sendMCUData(self):
-        try:
-            return requests.get("http://192.168.100.41/RequestSens", timeout=.1)
-        except ConnectionError as Err:
-            return None
-            #self.response.text = None
-            pass
-
+    # ! Here, we have to determine if user is authenticated at this point.
+    # * If it is, then DO NOT redirect to login page.
+    # * Else, then DO redirect to login page.
+    def handle_no_permission(self):
+        self.raise_exception = self.request.user.is_authenticated
+        if self.raise_exception:
+            messages.error(self.request, "InsufficientPermission")
+        else:
+            messages.error(self.request, "PermissionAccessDenied")
+        return super(DashboardView, self).handle_no_permission()
 
 class ClassroomView(ListView):
     path_action = None  # ! Unknown Usage Yet.
@@ -72,13 +83,19 @@ class ClassroomView(ListView):
         "ClassInstance": str(__qualname__),
     }
 
-
     def get(self, request):
         return render(request, template_view, self.more_context)
 
     def post(self, request):
         pass
 
+    #def sendMCUData(self):
+    #    try:
+    #        return requests.get("http://192.168.100.41/RequestSens", timeout=.1)
+    #    except ConnectionError as Err:
+    #        return None
+    #        #self.response.text = None
+    #        pass
 
 class SelectableClassroomView(TemplateView):
     # ! Optional, but mostly used. The 3rd part of URL is the one that is being used.
@@ -181,29 +198,21 @@ class AuthUserView(LoginView):
 # ! This does not go back if user is not authenticated anymore, so this class is casted with LoginRequiredMixin.
 class DeauthUserView(LoginRequiredMixin, LogoutView):
     template_name = template_view # ! We use the same as always except we render it with different view.
+
+    # *Bit of redundant here, login_url used by LogoutView and next_page was used by LoginRequiredMixins
     login_url = reverse_lazy('auth_user_view')
     next_page = login_url
 
-    # ! We provide some minimal context to be displayed upon logout.
-    more_context = {
-        "title_view": "Session Logout",
-        "ClassInstance": str(__qualname__),
-    }
-
-    # We override it.
+    # ! We override this function upon page load.
     def dispatch(self, request):
+        # ! Message outputs the same when user tries to log out.
+        # * To filter things out, we have to check if user really is authenticated before outputting message that is added below.
         if request.user.is_authenticated:
             messages.success(self.request, "UserLoggedOut")
         return super(DeauthUserView, self).dispatch(request)
 
-    # ! We add some data in context by adding more_context to context.
-    def get_context_data(self, **kwargs):
-       view_context = super(DeauthUserView, self).get_context_data(**kwargs) # * Get the default context to override to.
-       view_context['title_view'] = self.more_context['title_view'] # ! Add Extra Field Called "TITLE_VIEW" and insert data to it.
-       view_context['ClassInstance'] = self.more_context['ClassInstance'] # ! And so on.
-       return view_context # ! Return the Context to be rendered later on
-
     # ! Handle This To Render from Login
     def handle_no_permission(self):
+        # ! We output message if user attempts to access this page.
         messages.error(self.request, "UserAlreadyLoggedOut")
         return super(DeauthUserView ,self).handle_no_permission()
