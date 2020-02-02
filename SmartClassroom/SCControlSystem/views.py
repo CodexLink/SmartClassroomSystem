@@ -1,13 +1,17 @@
-from django.views.generic.base import TemplateView
-from django.views.generic import ListView, RedirectView
-from django.contrib.auth.views import LoginView, LogoutView, logout_then_login
+from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.contrib.auth.mixins import (AccessMixin, LoginRequiredMixin,
+                                        PermissionRequiredMixin)
+from django.contrib.auth.views import LoginView, LogoutView, logout_then_login
 from django.shortcuts import render
-from requests import get
-from .models import UserDataCredentials
-from .forms import UserAuthForm
-from requests.exceptions import ConnectionError
 from django.urls import reverse_lazy
+from django.views.generic import ListView, RedirectView
+from django.views.generic.base import TemplateView
+from requests import get
+from requests.exceptions import ConnectionError
+
+from .forms import UserAuthForm
+from .models import UserDataCredentials
 
 # ! Global Variables !
 template_view = 'elem_inst_view.html'
@@ -32,7 +36,8 @@ class HomeView(TemplateView):
             pass
 
 
-class DashboardView(TemplateView):
+class DashboardView(LoginRequiredMixin, TemplateView):
+    login_url = reverse_lazy('auth_user_view')
     more_context = {
         "title_view": "Dashboard",
         "user_class": "Admin",
@@ -155,7 +160,7 @@ class AuthUserView(LoginView):
 
     # ! We provide more context to the form when it request by GET.
     more_context = {
-        "title_view": "Login View",
+        "title_view": "User Login",
         "ClassInstance": str(__qualname__),
     }
 
@@ -170,35 +175,35 @@ class AuthUserView(LoginView):
     def get_success_url(self):
         return self.success_url # * We get redirect to the value of this attribute.
 
-class DeauthUserView(LogoutView):
+# ! DeauthUserView Requires LogoutView To Provide Minimal Configuration
+# * This view is literally the same as AuthUserView except it is very minimal because it only displays few things.
+# * And it automatically logs out user that is currently logged in the session.
+# ! This does not go back if user is not authenticated anymore, so this class is casted with LoginRequiredMixin.
+class DeauthUserView(LoginRequiredMixin, LogoutView):
+    template_name = template_view # ! We use the same as always except we render it with different view.
+    login_url = reverse_lazy('auth_user_view')
+    next_page = login_url
 
+    # ! We provide some minimal context to be displayed upon logout.
     more_context = {
-        "title_view": "Logout View",
+        "title_view": "Session Logout",
         "ClassInstance": str(__qualname__),
     }
 
-    template_name = 'login.html'
-    login_url = reverse_lazy('dashboard_user_view')
+    # We override it.
+    def dispatch(self, request):
+        if request.user.is_authenticated:
+            messages.success(self.request, "UserLoggedOut")
+        return super(DeauthUserView, self).dispatch(request)
 
-    #def get_context_data(self, **kwargs):
-    #    view_context = super(DeauthUserView, self).get_context_data(**kwargs) # * Get the default context to override to.
-    #    view_context['title_view'] = self.more_context['title_view'] # ! Add Extra Field Called "TITLE_VIEW" and insert data to it.
-    #    view_context['ClassInstance'] = self.more_context['ClassInstance'] # ! And so on.
-#
-    #    return view_context # ! Return the Context to be rendered later on.
+    # ! We add some data in context by adding more_context to context.
+    def get_context_data(self, **kwargs):
+       view_context = super(DeauthUserView, self).get_context_data(**kwargs) # * Get the default context to override to.
+       view_context['title_view'] = self.more_context['title_view'] # ! Add Extra Field Called "TITLE_VIEW" and insert data to it.
+       view_context['ClassInstance'] = self.more_context['ClassInstance'] # ! And so on.
+       return view_context # ! Return the Context to be rendered later on
 
-    def logout_then_login(request, *args, **kwargs):
-        return super(DeauthUserView, self).logout_then_login(*args, **kwargs)
-
-
-class RedirectPerspective(RedirectView):
-    more_context = {
-        "title_view": "Redirect View",
-        "user_class": None,
-        "ClassInstance": str(__qualname__),
-    }
-    def get(self, request, *args, **kwargs):
-        pass
-
-    def post(self, request, *args, **kwargs):
-        pass
+    # ! Handle This To Render from Login
+    def handle_no_permission(self):
+        messages.error(self.request, "UserAlreadyLoggedOut")
+        return super(DeauthUserView ,self).handle_no_permission()

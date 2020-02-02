@@ -1,16 +1,37 @@
 <div class="container-fluid h-100 content-offset">
     <div class="row flex-column h-100 justify-content-center align-items-center">
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.message == "UserAlreadyLoggedOut" %}
+        <div class="card bg-danger align-self-center log-card">
+            <div class="card-body text-white">
+                <h2 class="card-title text-white">You're logged out already!</h2>
+                <h3 class="card-subtitle text-white">Did you just tried logging out by putting '/logout/' in URL!?</h3>
+                <p class="card-text text-white">You seem to be refreshing the page. You're already logged out now, so don't worry.</p>
+            </div>
+        </div>
+        {% elif message.message == "UserLoggedOut" %}
+            <div class="card bg-info align-self-center log-card">
+                <div class="card-body text-white">
+                    <h2 class="card-title text-white">You've been logout!</h2>
+                    <h3 class="card-subtitle text-white">Thank you for using our service and see you soon!</h3>
+                    <p class="card-text text-white">Your account session has been expired or you've been logout by someone
+                        or by yourself.</p>
+                </div>
+            </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
         {% if form.non_field_errors %}
-        <div class="card card-shaped bg-danger mb-3">
+        <div class="card bg-danger align-self-center log-card">
             <div class="card-body text-white">
                 <h2 class="card-title text-white">Validation Error!</h2>
                 <h3 class="card-subtitle text-white">There's something wrong.</h3>
-                <p class="card-text text-white">Your account does not exist or your credentials mismatched. Please try again.</p>
-                <p class="card-text text-white">Technical Information: {{form.non_field_errors}}</p>
+                <p class="card-text text-white">Your account does not exist or your credentials mismatched. Please try
+                    again.</p>
             </div>
         </div>
         {% endif %}
-        <p>
         <div class="card align-self-center log-card">
             <div class="card-header border-0">
                 <h2 class="card-title">Login</h2>
