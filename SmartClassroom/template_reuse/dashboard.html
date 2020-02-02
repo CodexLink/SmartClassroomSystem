@@ -1,7 +1,7 @@
 {% load static %}
 <div class="container content-offset">
     <div class="row row-cols-lg-2 row-cols-md-1 row-cols-sm-1 dashboard-grid">
-        {% if user_role == "Teacher" %}
+        {% if user_role == "Professor Staff" or user_role == "Student Staff" %}
         <div class="dashboard-item col mb-auto">
             <div class="card">
                 <div class="keep-content-top">
@@ -134,7 +134,7 @@
                 </div>
             </div>
         </div>
-        {% elif user_role == "Admin" %}
+        {% elif user_role == "Project Owner" or user_role == "Project Members" or user_role == "ITSO Administrators" or user_role == "ITSO Members" %}
         <div class="dashboard-item col mb-auto">
             <div class="card bg-dark-3">
                 <div class="card-header border-0">
