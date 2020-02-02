@@ -15,10 +15,10 @@ class UserRoleTypes(models.Model):
 # ! User DataSet Information
 class UserDataCredentials(AbstractUser):
     # ! These commented fields has been already existing in the User Model. So by extending it, we have only few fields to declare right now.
-    Middle_Name = models.CharField(max_length=20, null=True, blank=True)
-    Unique_ID = models.UUIDField(max_length=32, default=uuid4, editable=False)
-    Common_ID = models.CharField(max_length=32, null=False, blank=False, unique=True, default=get_random_string(32))
-    User_Role = models.CharField(max_length=27, null=False, blank=False, choices=RoleDeclaredTypes, default=RoleDeclaredTypes[0])
+    Middle_Name = models.CharField(max_length=20, null=True, blank=True, help_text="A Name that is not supplied by User Model. Added for Unique User Purposes.")
+    Unique_ID = models.UUIDField(max_length=32, default=uuid4, editable=False, help_text="A Unique Identifier for your Account. DO NOT SHARE IT OUTSIDE.")
+    Common_ID = models.CharField(max_length=32, null=False, blank=False, unique=True, default=get_random_string(32), help_text="A Common Idenfitier for your Account. This is used for DB authentication and references.")
+    User_Role = models.CharField(max_length=27, null=False, blank=False, choices=RoleDeclaredTypes, default=RoleDeclaredTypes[0], help_text="Roles Defined that gives users multiple actions to do. Pick one with RISK.")
     Last_User_Created = models.DateTimeField(auto_now_add=True)
 
 '''
