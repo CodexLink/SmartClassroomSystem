@@ -2,7 +2,7 @@
 {% if requireSideNav == True %}
 <div aria-hidden="true" class="navdrawer" id="navdrawer" tabindex="-1">
   <!-- This one is too much, we can optimize it -->
-  {% if user_inst_type == "Project Owner" or user_inst_type == "Project Member" or user_inst_type == "ITSO Administrator" or user_inst_type == "ITSO Member" or user_inst_type == "Professor Staff" or user_inst_type == "Student Staff" %}
+  {% if user_inst_type == "Project Owner" or user_inst_type == "Project Member" or user_inst_type == "ITSO Administrator" or user_inst_type == "ITSO Member" or user_inst_type == "Professor Staff" %}
   <div class="navdrawer-content">
     <div class="sidebar-account container">
       <img class="primary-user-pic" src="{% static 'rsrc/avatar.jpg' %}">
@@ -16,7 +16,7 @@
             class="material-icons text-black-secondary">arrow_drop_down</i></button>
         <div class="dropdown-menu" aria-labelledby="accountInfo">
           <span class="dropdown-header text-black-secondary">Account</span>
-          <a class="dropdown-item btn-icon-prepend" href="#"><i
+          <a class="dropdown-item btn-icon-prepend disabled" href="#"><i
               class="material-icons text-black-secondary">account_tree</i>Account
             Settings</a>
           <a class="dropdown-item btn-icon-prepend" href="{% url 'deauth_user_view' %}"><i
@@ -49,7 +49,7 @@
           Override</a>
       </li>
     </ul>
-    {% elif user_inst_type == "Professor Staff" or user_inst_type == "Student Staff" %}
+    {% elif user_inst_type == "Professor Staff" %}
     <div class="navdrawer-subheader">Main Menu</div>
     <ul class="navdrawer-nav">
       <li class="nav-item">
@@ -62,7 +62,10 @@
     <ul class="navdrawer-nav">
       <li class="nav-item">
         <a class="nav-link" href="{% url 'schedule_exclusive_view' %}"><i class="material-icons mr-3 text-black-secondary">schedule</i>Your
-          Schedule</a>
+          Schedules</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'schedule_exclusive_view' %}"><i class="material-icons mr-3 text-black-secondary">view_list</i>Actions Logs</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'classroom_user_view' %}"><i
