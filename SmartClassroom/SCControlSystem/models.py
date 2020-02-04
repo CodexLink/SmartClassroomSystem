@@ -149,6 +149,7 @@ class CourseSchedule(models.Model):
 
 class ClassroomActionLog(models.Model):
     UserActionTaken = models.CharField(max_length=255, null=False, blank=False, choices=ClassroomActionTypes)
+    ActionLevel = models.CharField(max_length=255, null=False, blank=False, choices=LevelAlert)
     ClassRoom_Reference = models.ForeignKey(Classroom, null=False, blank=False, to_field="Classroom_CompleteString", related_name="RoomClassReference", on_delete=models.CASCADE)
     Course_Reference = models.OneToOneField(CourseSchedule, null=False, blank=False,to_field="CourseSchedule_CourseCode", related_name="CourseAssociated", on_delete=models.CASCADE)
     Section_Reference = models.ForeignKey(SectionGroup, null=False, blank=False,to_field="Section_CompleteStringGroup", related_name="StudentGroupAssociate", on_delete=models.CASCADE)
