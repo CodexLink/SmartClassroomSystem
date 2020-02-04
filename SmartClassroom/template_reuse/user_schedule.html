@@ -1,2 +1,194 @@
 <div class="container content-offset">
+    <div class="schedule-item col mb-auto">
+        <div class="card bg-danger">
+            <div class="card-header border-0 text-white-primary">
+                <h1 class="card-title">Your Schedules are Displayed Here, But Seperated Accordingly</h1>
+            </div>
+            <div class="card-body text-white">
+                <p>At this point, we usually have to make things clear that you cannot modify or forcefully enable some
+                    rooms that is out of scope based from your schedule.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="seperate-section">
+        <ul class="nav nav-justified nav-tabs tab-card-filter" id="justifiedTab" role="tablist">
+            <li class="nav-item">
+                <a aria-selected="false" class="nav-link active" data-toggle="tab" data-filter="*" data-sort-by=".timestart" href="javascript:void(0)"role="tab">All</a>
+            </li>
+            <li class="nav-item">
+                <a aria-selected="true" class="nav-link" data-toggle="tab" data-filter=".room-allowed" data-sort-by=".timestart" href="javascript:void(0)"role="tab">On Schedule</a>
+            </li>
+            <li class="nav-item">
+                <a aria-selected="false" class="nav-link" data-toggle="tab" data-filter=".not-allowed" data-sort-by=".timestart" href="javascript:void(0)"role="tab">Not Allowed</a>
+            </li>
+        </ul>
+    </div>
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 schedule-grid">
+        <div class="schedule-item col mb-auto room-allowed" data-category="room-allowed" data-time-start="8:30AM">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">CPE 013 | Embedded Systems</h2>
+                    <h3 class="card-subtitle text-black-secondary">From 08:30AM to 11:30AM | M W F</h3>
+
+                        <li class="card-texttext-black-secondary">Lecture Type is Lab</li>
+                        <li class="card-texttext-black-secondary">Room: Q-5424</li>
+                        <li class="card-texttext-black-secondary">Section: CPE22FA1</li>
+                </div>
+                <div class="card-actions">
+                    <a class="card-link" href="#">Unlock</a>
+                    <a class="card-link" href="#">Lock</a>
+                    <a class="card-link" href="../classroom/1/control/">More Actions</a>
+                </div>
+            </div>
+        </div>
+        <div class="schedule-item col mb-auto not-allowed" data-category="not-allowed" data-time-start="9:30AM">
+            <div class="card disabled">
+                <div class="card-body">
+                    <h2 class="card-title">GEE002 | IT Era</h2>
+                    <h3 class="card-subtitle text-black-secondary">From 09:30AM to 11:30AM | TH Sat</h3>
+
+                        <li class="card-texttext-black-secondary">Lecture Type is Lab</li>
+                        <li class="card-texttext-black-secondary">Room: Q-5424</li>
+                        <li class="card-texttext-black-secondary">Section: CPE22FA1</li>
+                </div>
+                <div class="card-actions d-flex justify-content-between align-items-center">
+                    <a class="card-link disabled" href="#">Actions Disabled</a>
+                    <span class="text-muted">Not Available Today</span>
+                </div>
+            </div>
+        </div>
+        <div class="schedule-item col mb-auto room-allowed" data-category="room-allowed" data-time-start="8:00AM">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">CPE 013 | Embedded Systems</h2>
+                    <h3 class="card-subtitle text-black-secondary">From 08:00AM to 11:30AM | M W F</h3>
+
+                        <li class="card-texttext-black-secondary">Lecture Type is Lab</li>
+                        <li class="card-texttext-black-secondary">Room: Q-5424</li>
+                        <li class="card-texttext-black-secondary">Section: CPE22FA1</li>
+                </div>
+                <div class="card-actions">
+                    <a class="card-link" href="#">Unlock</a>
+                    <a class="card-link" href="#">Lock</a>
+                    <a class="card-link" href="#">More Actions</a>
+                </div>
+            </div>
+        </div>
+        <div class="schedule-item col mb-auto not-allowed" data-category="not-allowed" data-time-start="6:30AM">
+            <div class="card disabled">
+                <div class="card-body">
+                    <h2 class="card-title">GEE002 | IT Era</h2>
+                    <h3 class="card-subtitle text-black-secondary">From 06:30AM to 11:30AM | TH Sat</h3>
+
+                        <li class="card-texttext-black-secondary">Lecture Type is Lab</li>
+                        <li class="card-texttext-black-secondary">Room: Q-5424</li>
+                        <li class="card-texttext-black-secondary">Section: CPE22FA1</li>
+                </div>
+                <div class="card-actions d-flex justify-content-between align-items-center">
+                    <a class="card-link disabled" href="#">Actions Disabled</a>
+                    <span class="text-muted">Not Available Today</span>
+                </div>
+            </div>
+        </div>
+        <div class="schedule-item col mb-auto room-allowed" data-category="room-allowed" data-day-schedule="MWF" data-time-start="11:30AM">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">CPE 013 | Embedded Systems</h2>
+                    <h3 class="card-subtitle text-black-secondary">From 11:30AM to 11:30AM | M W F</h3>
+
+                        <li class="card-texttext-black-secondary">Lecture Type is Lab</li>
+                        <li class="card-texttext-black-secondary">Room: Q-5424</li>
+                        <li class="card-texttext-black-secondary">Section: CPE22FA1</li>
+                </div>
+                <div class="card-actions">
+                    <a class="card-link" href="#">Unlock</a>
+                    <a class="card-link" href="#">Lock</a>
+                    <a class="card-link" href="#">More Actions</a>
+                </div>
+            </div>
+        </div>
+        <div class="schedule-item col mb-auto not-allowed" data-category="not-allowed" data-day-schedule="TH" data-time-start="12:30AM">
+            <div class="card disabled">
+                <div class="card-body">
+                    <h2 class="card-title">GEE002 | IT Era</h2>
+                    <h3 class="card-subtitle text-black-secondary">From 12:30PM to 11:30AM | TH Sat</h3>
+
+                        <li class="card-texttext-black-secondary">Lecture Type is Lab</li>
+                        <li class="card-texttext-black-secondary">Room: Q-5424</li>
+                        <li class="card-texttext-black-secondary">Section: CPE22FA1</li>
+                </div>
+                <div class="card-actions d-flex justify-content-between align-items-center">
+                    <a class="card-link disabled" href="#">Actions Disabled</a>
+                    <span class="text-muted">Not Available Today</span>
+                </div>
+            </div>
+        </div>
+        <div class="schedule-item col mb-auto room-allowed" data-category="room-allowed" data-day-schedule="MWF" data-time-start="5:30AM">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">CPE 013 | Embedded Systems</h2>
+                    <h3 class="card-subtitle text-black-secondary">From 05:30AM to 11:30AM | M W F</h3>
+
+                        <li class="card-texttext-black-secondary">Lecture Type is Lab</li>
+                        <li class="card-texttext-black-secondary">Room: Q-5424</li>
+                        <li class="card-texttext-black-secondary">Section: CPE22FA1</li>
+                </div>
+                <div class="card-actions">
+                    <a class="card-link" href="#">Unlock</a>
+                    <a class="card-link" href="#">Lock</a>
+                    <a class="card-link" href="#">More Actions</a>
+                </div>
+            </div>
+        </div>
+        <div class="schedule-item col mb-auto not-allowed" data-category="not-allowed" data-day-schedule="Sat" data-time-start="2:30PM">
+            <div class="card disabled">
+                <div class="card-body">
+                    <h2 class="card-title">GEE002 | IT Era</h2>
+                    <h3 class="card-subtitle text-black-secondary">From 02:30PM to 11:30AM | S Sat</h3>
+
+                        <li class="card-texttext-black-secondary">Lecture Type is Lab</li>
+                        <li class="card-texttext-black-secondary">Room: Q-5424</li>
+                        <li class="card-texttext-black-secondary">Section: CPE22FA1</li>
+                </div>
+                <div class="card-actions d-flex justify-content-between align-items-center">
+                    <a class="card-link disabled" href="#">Actions Disabled</a>
+                    <span class="text-muted">Not Available Today</span>
+                </div>
+            </div>
+        </div>
+        <div class="schedule-item col mb-auto room-allowed" data-category="room-allowed" data-day-schedule="T TH" data-time-start="1:30PM">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">CPE 013 | Embedded Systems</h2>
+                    <h3 class="card-subtitle text-black-secondary">From 01:30PM to 11:30AM | M W F</h3>
+
+                        <li class="card-texttext-black-secondary">Lecture Type is Lab</li>
+                        <li class="card-texttext-black-secondary">Room: Q-5424</li>
+                        <li class="card-texttext-black-secondary">Section: CPE22FA1</li>
+                </div>
+                <div class="card-actions">
+                    <a class="card-link" href="#">Unlock</a>
+                    <a class="card-link" href="#">Lock</a>
+                    <a class="card-link" href="#">More Actions</a>
+                </div>
+            </div>
+        </div>
+        <div class="schedule-item col mb-auto not-allowed" data-category="not-allowed" data-day-schedule="Sun" data-time-start="07:30AM">
+            <div class="card disabled">
+                <div class="card-body">
+                    <h2 class="card-title">GEE002 | IT Era</h2>
+                    <h3 class="card-subtitle text-black-secondary">From 07:30AM to 11:30AM | TH Sat</h3>
+
+                        <li class="card-texttext-black-secondary">Lecture Type is Lab</li>
+                        <li class="card-texttext-black-secondary">Room: Q-5424</li>
+                        <li class="card-texttext-black-secondary">Section: CPE22FA1</li>
+                </div>
+                <div class="card-actions d-flex justify-content-between align-items-center">
+                    <a class="card-link disabled" href="#">Actions Disabled</a>
+                    <span class="text-muted">Not Available Today</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
