@@ -11,7 +11,7 @@ from requests import get
 from requests.exceptions import ConnectionError
 
 from .forms import UserAuthForm
-from .models import UserDataCredentials, CourseSchedule, ClassroomActionLog
+from .models import UserDataCredentials, CourseSchedule, ClassroomActionLog, Classroom
 
 # ! Global Variables !
 template_view = 'elem_inst_view.html'
@@ -73,20 +73,32 @@ class DashboardView(PermissionRequiredMixin, TemplateView):
             messages.error(self.request, "PermissionAccessDenied")
         return super(DashboardView, self).handle_no_permission()
 
-class ClassroomView(ListView):
-    path_action = None  # ! Unknown Usage Yet.
-    as_modular_view = None  # ! Optional and limited only to logs and info.
+class ClassroomView(PermissionRequiredMixin, ListView):
+    login_url = reverse_lazy('auth_user_view')
+    template_name = template_view
+    model = Classroom
+
+    permission_required = ('SCControlSystem.view_classroom',
+                          'SCControlSystem.view_classroomactionlog',
+                          'SCControlSystem.view_course',
+                          'SCControlSystem.view_courseschedule',
+                          'SCControlSystem.view_programbranch',
+                          'SCControlSystem.view_sectiongroup')
 
     more_context = {
         "title_view": "Classroom List",
         "ClassInstance": str(__qualname__),
     }
 
-    def get(self, request):
-        return render(request, template_view, self.more_context)
+    def get_context_data(self, **kwargs): # ! Override Get_Context_Data by adding more data.
+        current_user = self.request.user
+        view_context = super(ClassroomView, self).get_context_data(**kwargs) # * Get the default context to override to.
+        view_context['title_view'] = self.more_context['title_view']
+        view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.Middle_Name if current_user.Middle_Name is not None else '', current_user.last_name)
+        view_context['user_class'] = current_user.User_Role
+        view_context['ClassInstance'] = self.more_context['ClassInstance']
 
-    def post(self, request):
-        pass
+        return view_context
 
     #def sendMCUData(self):
     #    try:
@@ -97,10 +109,9 @@ class ClassroomView(ListView):
     #        pass
 
 class SelectableClassroomView(PermissionRequiredMixin, DetailView):
-    # ! Optional, but mostly used. The 3rd part of URL is the one that is being used.
-    path_action = None
-    as_modular_view = None  # ! Optional and limited only to logs and info.
-
+    login_url = reverse_lazy('auth_user_view')
+    template_name = template_view
+    model = Classroom
     permission_required = ('SCControlSystem.view_classroom',
                           'SCControlSystem.view_course',
                           'SCControlSystem.view_courseschedule',
@@ -108,14 +119,13 @@ class SelectableClassroomView(PermissionRequiredMixin, DetailView):
                           'SCControlSystem.view_sectiongroup')
 
     more_context = {
-        "title_view": "Classroom",
-        "user_class": "Admin",
+        "title_view": "Classroom Control View",
         "ClassInstance": str(__qualname__),
     }
 
     def get_context_data(self, **kwargs): # ! Override Get_Context_Data by adding more data.
         current_user = self.request.user
-        view_context = super(DashboardView, self).get_context_data(**kwargs) # * Get the default context to override to.
+        view_context = super(SelectableClassroomView, self).get_context_data(**kwargs) # * Get the default context to override to.
         view_context['title_view'] = self.more_context['title_view']
         view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.Middle_Name if current_user.Middle_Name is not None else '', current_user.last_name)
         view_context['user_class'] = current_user.User_Role
@@ -162,39 +172,6 @@ class ScheduleListView(PermissionRequiredMixin, ListView):
         print(view_context)
 
         return view_context # ! Return the Context to be rendered later on.
-
-
-class OverrideControlView(TemplateView):
-    path_action = None
-    as_modular_view = None  # ! Optional and limited only to logs and info.
-
-    more_context = {
-        "title_view": "Override",
-        "user_class": "Admin",
-        "ClassInstance": str(__qualname__),
-    }
-
-    def get(self, request):
-        return render(request, template_view, self.more_context)
-
-    def post(self, request):
-        pass
-
-
-class SystemSettingsView(TemplateView):
-    path_action = None
-
-    more_context = {
-        "title_view": "System Overview",
-        "user_class": "Admin",
-        "ClassInstance": str(__qualname__),
-    }
-
-    def get(self, request):
-        return render(request, template_view, self.more_context)
-
-    def post(self, request):
-        pass
 
 # ! Authentication Classes
 
@@ -248,7 +225,7 @@ class DeauthUserView(LoginRequiredMixin, LogoutView):
         return super(DeauthUserView ,self).handle_no_permission()
 
 # ! Contains multiple logs that can is subjected for review.
-class StaffActionsListView(ListView):
+class StaffActionsListView(PermissionRequiredMixin, ListView):
     login_url = reverse_lazy('auth_user_view')
     template_name = template_view
     model = ClassroomActionLog
@@ -260,7 +237,7 @@ class StaffActionsListView(ListView):
                       'SCControlSystem.view_sectiongroup')
 
     more_context = {
-        "title_view": "Your Actions Logger",
+        "title_view": "Actions Data Log",
         "ClassInstance": str(__qualname__),
     }
 
