@@ -90,6 +90,12 @@ img.primary-user-pic
 .card.log-card {
     width: 30% !important;
 }
+
+.card .container.progress-container
+{
+    padding: 0;
+}
+
 /* ! Card Compatibility CSS Rulesets - END */
 
 /* ! Body Visualization CSS Rulesets - START */
