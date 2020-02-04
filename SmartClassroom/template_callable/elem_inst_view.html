@@ -29,10 +29,13 @@
         {% include "classrooms.html" %}
     {% elif ClassInstance == "SelectableClassroomView" %}
         {% include "nav.html" with inst_title=title_view requireSideNav=True user_session_name=user_instance_name user_type=user_class %}
-        {% include "classrooms.html" %}
+        {% include "classroom_control.html" with isUserFullCtrl=False %}
     {% elif ClassInstance == "ScheduleListView" %}
         {% include "nav.html" with inst_title=title_view requireSideNav=True user_session_name=user_instance_name user_type=user_class %}
         {% include "user_schedule.html" %}
+    {% elif ClassInstance == "StaffActionsListView" %}
+        {% include "nav.html" with inst_title=title_view requireSideNav=True user_session_name=user_instance_name user_type=user_class %}
+        {% include "user_logs.html" %}
     {% elif ClassInstance == "OverrideControlView" %}
         {% include "nav.html" with inst_title=title_view requireSideNav=True user_session_name=user_instance_name user_type=user_class %}
         {% include "override_control.html" %}
