@@ -41,11 +41,11 @@
             class="material-icons mr-3 text-black-secondary">meeting_room</i>Classrooms</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'classroom_log_extensible_view' %}"><i
+        <a class="nav-link" href="{% url 'staff_action_logs_view' %}"><i
             class="material-icons mr-3 text-black-secondary">assignment</i>Recent Logs</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'override_exclusive_view' %}"><i class="material-icons mr-3 text-black-secondary">gavel</i>Control
+        <a class="nav-link" href="{% url 'admin:index' %}"><i class="material-icons mr-3 text-black-secondary">gavel</i>Control
           Override</a>
       </li>
     </ul>
@@ -83,7 +83,7 @@
   <div class="navdrawer-subheader">System</div>
   <ul class="navdrawer-nav">
     <li class="nav-item">
-      <a class="nav-link" href="{% url 'syssettings_exclusive_view' %}"><i class="material-icons mr-3 text-black-secondary">settings</i>System
+      <a class="nav-link disabled" href=""><i class="material-icons mr-3 text-black-secondary">settings</i>System
         Settings</a>
     </li>
     <li class="nav-item">
