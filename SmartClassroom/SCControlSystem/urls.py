@@ -24,7 +24,7 @@ urlpatterns = [
     path('dashboard/', DashboardView.as_view(), name='dashboard_user_view'),
     path('classroom/', ClassroomView.as_view(), name='classroom_user_view'),
     # ! Check for possible options here, URL Parameters.
-    path('logs/', SelectableClassroomView.as_view(), name='classroom_log_extensible_view'), # ! Extensible means usable as whole page or modular component.
+    path('logs/', StaffActionsListView.as_view(), name='staff_action_logs_view'),
     # ! Not confirmed yet.
     path('classroom/<str:classRoomID>/logs/', SelectableClassroomView.as_view(path_action='check_log', as_modular_view=False), name='classroom_log_extensible_view'), # ! Extensible means usable as whole page or modular component.
     path('classroom/<str:classRoomID>/info/', SelectableClassroomView.as_view(path_action='show_info'), name='classroom_info_view'),
