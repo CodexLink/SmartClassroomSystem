@@ -74,8 +74,8 @@ BuildingFloors = (
 
 # ! Classroom Action Logs
 ClassroomActionTypes = (
-    ('Opened Classroom', 'Opened Classroom'),
-    ('Closed Classroom', 'Closed Classroom'),
+    ('Classroom is Opened.', 'Classroom is Opened.'),
+    ('Classroom is Closed.', 'Classroom is Closed.'),
     ('Action: Automatically Set as Open on Time',
      'Action: Automatically Set as Open on Time'),
     ('Action: Automatically Set as Closed on Time',
@@ -91,6 +91,15 @@ ClassroomActionTypes = (
      'Forbidden Attempt To Entry Detected.'),
     ('Unauthorized Access Detected.', 'Unauthorized Access Detected.'),
 )
+
+# ! Logging Level Declarations
+LevelAlert = (
+    ("Info", "Info"),
+    ("Warning", "Warning"),
+    ("Danger", "Danger"),
+    ("Alert", "Alert")
+)
+
 
 # * Included Only Possible Class Occupation
 SubSectionUniqueKeys = (
@@ -136,7 +145,7 @@ RoleDeclaredTypes = (
     ("Professor Staff", "Professor Staff")
 )
 
-# ! Group Name Definition based Human Roles
+# ! Group Name Definition based Human Roles, Unrelated to Model ATM.
 GroupDefinitionRoles = (
     "Project Owner",
     "Project Members",
