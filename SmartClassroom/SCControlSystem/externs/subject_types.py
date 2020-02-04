@@ -133,8 +133,7 @@ RoleDeclaredTypes = (
     ("Project Member", "Project Member"),
     ("ITSO Administrator", "ITSO Administrator"),
     ("ITSO Member", "ITSO Member"),
-    ("Professor Staff", "Professor Staff"),
-    ("Student Staff", "Student Staff"),
+    ("Professor Staff", "Professor Staff")
 )
 
 # ! Group Name Definition based Human Roles
@@ -143,6 +142,5 @@ GroupDefinitionRoles = (
     "Project Members",
     "ITSO Administrators",
     "ITSO Members",
-    "Professors",
-    "Students"
+    "Professors"
 )
