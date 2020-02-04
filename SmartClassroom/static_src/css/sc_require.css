@@ -8,82 +8,70 @@
 
 /* ! Sidebar CSS Rulesets - START */
 
-.navdrawer.navdrawer-permanent-lg div.navdrawer-content
-{
+.navdrawer.navdrawer-permanent-lg div.navdrawer-content {
     padding: 70px 0 0 0 !important;
 }
 
-.navdrawer.navdrawer-permanent-lg.show div.navdrawer-content
-{
+.navdrawer.navdrawer-permanent-lg.show div.navdrawer-content {
     padding: unset !important;
 }
 
-.navdrawer-divider.special-type
-{
+.navdrawer-divider.special-type {
     margin: 8px 0 8px 0 !important;
 }
 
-img.primary-user-pic
-{
+img.primary-user-pic {
     width: 64px;
     height: 64px;
     border-radius: 50%;
     margin-bottom: 16px;
 }
 
-.primary-name-acc
-{
+.primary-name-acc {
     margin: 0 !important;
 }
 
-.sidebar-account
-{
- padding-top: 16px !important;
+.sidebar-account {
+    padding-top: 16px !important;
 }
 
 /* ! Sidebar CSS Rulesets - END */
 
 /* ! Card Compatibility CSS Rulesets - START */
 
-.card-img-overlay.keep-content-top
-{
+.card-img-overlay.keep-content-top {
     bottom: unset !important;
 }
-.card-img
-{
+
+.card-img {
     opacity: 0.7 !important;
 }
-.progress-label
-{
+
+.progress-label {
     margin: 8px 0 0 !important;
 }
-.dashboard-item
-{
+
+.dashboard-item,
+.schedule-item,
+.log-item,
+.actions-item {
     margin-bottom: 8px !important;
 }
 
-.unpadded-actions
-{
-    padding:unset !important;
+.unpadded-actions {
+    padding: unset !important;
 }
 
-.quick-actions.classroom
-{
+.quick-actions.classroom {
     padding: 8px 0 !important;
 }
 
-.container.content-offset
-{
+.container.content-offset,
+.container-fluid.content-offset {
     padding: 80px 0 !important;
 }
 
-.container-fluid.content-offset
-{
-    padding: 80px 0 !important;
-}
-
-.card-body.card-form-action
-{
+.card-body.card-form-action {
     padding: 1rem 1rem 0 1rem !important;
 }
 
@@ -91,8 +79,7 @@ img.primary-user-pic
     width: 30% !important;
 }
 
-.card .container.progress-container
-{
+.card .container.progress-container {
     padding: 0;
 }
 
@@ -100,11 +87,19 @@ img.primary-user-pic
 
 /* ! Body Visualization CSS Rulesets - START */
 
-body.log-backfill
-{
+body.log-backfill {
     height: 100vh;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 }
+
 /* ! Body Visualization CSS Rulesets - END */
+
+/* ! UX for User Schedule CSS Rulesets - START */
+
+.seperate-section {
+    padding: 16px 0;
+}
+
+/* ! UX for User Schedule CSS Rulesets - END */
