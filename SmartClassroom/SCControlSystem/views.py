@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import (AccessMixin, LoginRequiredMixin,
 from django.contrib.auth.views import LoginView, LogoutView, logout_then_login
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, RedirectView, DetailView
+from django.views.generic import ListView, RedirectView, DetailView, FormView
 from django.views.generic.base import TemplateView
 from requests import get
 from requests.exceptions import ConnectionError
@@ -177,8 +177,8 @@ class ScheduleListView(PermissionRequiredMixin, ListView):
 
 # ! AuthUserView Requires LoginView To Provide Minimal Configuration
 class AuthUserView(LoginView):
-    form = UserAuthForm # ! Declare Our Form To Be Used.
     template_name = template_view # * Use Global Variable Later
+    form_class = UserAuthForm # ! Declare Our Form To Be Used.
     success_url = reverse_lazy('dashboard_user_view') # ! This renders URL later when login is success.
     redirect_authenticated_user = True
 
@@ -188,6 +188,7 @@ class AuthUserView(LoginView):
         "ClassInstance": str(__qualname__),
     }
 
+
     # ! Override Get_Context_Data by adding more data.
     def get_context_data(self, **kwargs):
         view_context = super(AuthUserView, self).get_context_data(**kwargs) # * Get the default context to override to.
@@ -195,6 +196,7 @@ class AuthUserView(LoginView):
         view_context['ClassInstance'] = self.more_context['ClassInstance'] # ! And so on.
 
         return view_context # ! Return the Context to be rendered later on.
+
 
     def get_success_url(self):
         return self.success_url # * We get redirect to the value of this attribute.
