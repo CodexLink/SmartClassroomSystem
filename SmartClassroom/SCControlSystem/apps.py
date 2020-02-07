@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class SmartClassroomConfig(AppConfig):
-    name = 'SmartClassroom'
+    name = 'SCControlSystem'
+    verbose_name = 'Smart Classroom Database System'
