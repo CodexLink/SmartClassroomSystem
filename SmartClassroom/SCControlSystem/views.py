@@ -54,8 +54,8 @@ class DashboardView(PermissionRequiredMixin, TemplateView):
         current_user = self.request.user
         view_context = super(DashboardView, self).get_context_data(**kwargs) # * Get the default context to override to.
         view_context['title_view'] = self.more_context['title_view']
-        view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.Middle_Name if current_user.Middle_Name is not None else '', current_user.last_name)
-        view_context['user_class'] = current_user.User_Role
+        view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.middle_name if current_user.middle_name is not None else '', current_user.last_name)
+        view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
 
         print(view_context)
@@ -94,8 +94,8 @@ class ClassroomView(PermissionRequiredMixin, ListView):
         current_user = self.request.user
         view_context = super(ClassroomView, self).get_context_data(**kwargs) # * Get the default context to override to.
         view_context['title_view'] = self.more_context['title_view']
-        view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.Middle_Name if current_user.Middle_Name is not None else '', current_user.last_name)
-        view_context['user_class'] = current_user.User_Role
+        view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.middle_name if current_user.middle_name is not None else '', current_user.last_name)
+        view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
 
         return view_context
@@ -127,8 +127,8 @@ class SelectableClassroomView(PermissionRequiredMixin, DetailView):
         current_user = self.request.user
         view_context = super(SelectableClassroomView, self).get_context_data(**kwargs) # * Get the default context to override to.
         view_context['title_view'] = self.more_context['title_view']
-        view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.Middle_Name if current_user.Middle_Name is not None else '', current_user.last_name)
-        view_context['user_class'] = current_user.User_Role
+        view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.middle_name if current_user.middle_name is not None else '', current_user.last_name)
+        view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
 
         print(view_context)
@@ -165,8 +165,8 @@ class ScheduleListView(PermissionRequiredMixin, ListView):
         current_user = self.request.user
         view_context = super(ScheduleListView, self).get_context_data(**kwargs) # * Get the default context to override to.
         view_context['title_view'] = self.more_context['title_view']
-        view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.Middle_Name if current_user.Middle_Name is not None else '', current_user.last_name)
-        view_context['user_class'] = current_user.User_Role
+        view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.middle_name if current_user.middle_name is not None else '', current_user.last_name)
+        view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
 
         print(view_context)
@@ -247,8 +247,8 @@ class StaffActionsListView(PermissionRequiredMixin, ListView):
         current_user = self.request.user
         view_context = super(StaffActionsListView, self).get_context_data(**kwargs) # * Get the default context to override to.
         view_context['title_view'] = self.more_context['title_view']
-        view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.Middle_Name if current_user.Middle_Name is not None else '', current_user.last_name)
-        view_context['user_class'] = current_user.User_Role
+        view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.middle_name if current_user.middle_name is not None else '', current_user.last_name)
+        view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
 
         print(view_context)
