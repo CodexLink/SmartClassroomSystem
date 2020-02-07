@@ -142,7 +142,7 @@ RoleDeclaredTypes = (
     ("Project Member", "Project Member"),
     ("ITSO Administrator", "ITSO Administrator"),
     ("ITSO Member", "ITSO Member"),
-    ("Professor Staff", "Professor Staff")
+    ("Professor", "Professor")
 )
 
 # ! Group Name Definition based Human Roles, Unrelated to Model ATM.
