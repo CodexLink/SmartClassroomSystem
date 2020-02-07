@@ -5,7 +5,7 @@
   {% if user_inst_type == "Project Owner" or user_inst_type == "Project Member" or user_inst_type == "ITSO Administrator" or user_inst_type == "ITSO Member" or user_inst_type == "Professor Staff" %}
   <div class="navdrawer-content">
     <div class="sidebar-account container">
-      <img class="primary-user-pic" src="{% static 'rsrc/avatar.jpg' %}">
+      <img class="primary-user-pic" src="{% if user.avatar %} {{ user.avatar.url }} {% else %} {% static 'rsrc/avatar.jpg' %} {% endif %}">
       <div class="sidebar-primary-name-acc">
         <h6 class="text-black-primary primary-name-acc" href="javascript:void(0)">{{user_current_name}}</h6>
       </div>
