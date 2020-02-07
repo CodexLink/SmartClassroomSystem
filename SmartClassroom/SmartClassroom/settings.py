@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'SCControlSystem',
+    'SCControlSystem.apps.SmartClassroomConfig',
     'sass_processor',
-    'django_extensions'
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'SmartClassroom.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'SCDataCont',
+        'NAME': 'sc_db',
         'USER': 'root',
         'PASSWORD': None
     }
@@ -141,3 +141,5 @@ AUTH_USER_MODEL = 'SCControlSystem.UserDataCredentials'
 # ! Login Redirection URL
 
 # ! Logout Redirection URL
+
+MEDIA_URL = '/usersrc/'
