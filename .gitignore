@@ -63,7 +63,7 @@ db.sqlite3-journal
 # Custom Directories and Files Ignore Declarations for SmartClassroom
 media/
 /app_static_src/
-/usersrc/
+/SmartClassroom/usersrc/
 
 
 # Flask stuff:
