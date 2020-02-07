@@ -1,60 +1,119 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import *
+from .forms import UserAuthForm
 
-# Register your models here.
+"""
+    Admin.py
+    What the heck is this? What are those classes defined here?
+    Those class represents displays inside DJango-Admin.
+    For each object, we should configure them on what to include, what to filter, what to access, what fields to show, etc.
+    # Here in this case, we have alot!
 
+    The number of objects is equal to number class is defined here!
+    So keep that in mind.
 
-class ModelAttributes(admin.ModelAdmin):
-    # ! We use this to hide our data from django-admin. No one will edit this one but can view it.
-    model = UserDataCredentials
-    exclude = ('Classroom_CompleteString', 'Section_CompleteStringGroup')
-    # list_filter = ()  # Contain only fields in your `custom-user-model` intended for filtering. Do not include `groups`since you do not have it
-    # search_fields = ()  # Contain only fields in your `custom-user-model` intended for searching
-    # ordering = ()  # Contain only fields in your `custom-user-model` intended to ordering
-    # filter_horizontal = () # Leave it empty. You have neither `groups` or `user_permissions`
-    # fieldsets = UserAdmin.fieldsets + (
-    #        (None, {'fields': ('mobile',)}),
-    # )
+    Those subclass plays differently.
+    ModelAdmin renders a particular object INSIDE. When I say inside, what I meant is, rendering their fields when modifying or creating new data on it.
+    UserAdmin renders the Special Overidden User Model. Which means it does the same as ModelAdmin except that it is specially configured.
+"""
 
+class ClassroomActionLogAttributes(admin.ModelAdmin):
+    model = ClassroomActionLog
+    list_display = ('Course_Reference', 'ActionLevel', 'UserActionTaken')
+    list_filter = ('Course_Reference', 'ActionLevel', 'UserActionTaken')
+
+class ClassroomAttributes(admin.ModelAdmin):
+    model = Classroom
+    list_display = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_Type')
+    list_filter = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_Type')
+
+    readonly_fields = ('Classroom_CompleteString',)
+
+class CourseScheduleAttributes(admin.ModelAdmin):
+    model = CourseSchedule
+    list_display = ('CourseSchedule_CourseReference', 'CourseSchedule_Instructor', 'CourseSchedule_Room', 'CourseSchedule_Session_Start', 'CourseSchedule_Session_End', 'CourseSchedule_Lecture_Day',)
+    list_filter = ('CourseSchedule_CourseReference', 'CourseSchedule_Instructor', 'CourseSchedule_Room', 'CourseSchedule_Session_Start', 'CourseSchedule_Session_End', 'CourseSchedule_Lecture_Day',)
+
+class CourseAttributes(admin.ModelAdmin):
+    model = Course
+    list_display = ('Course_Name', 'Course_Code', 'Course_Units', 'Course_Capacity', 'Course_Type')
+    list_filter = ('Course_Name', 'Course_Code', 'Course_Units', 'Course_Capacity', 'Course_Type')
+
+class BranchAttributes(admin.ModelAdmin):
+    model = ProgramBranch
+    list_display = ('ProgramBranch_Code', 'ProgramBranch_Name')
+    list_filter = ('ProgramBranch_Code', 'ProgramBranch_Name')
+
+class SectionGroupAttributes(admin.ModelAdmin):
+    model = SectionGroup
+    list_display = ('Section_CompleteStringGroup', 'Section_Program', 'Section_Year', 'Section_Semester', 'Section_SubUniqueGroup')
+    list_filter = ('Section_CompleteStringGroup', 'Section_Program', 'Section_Year', 'Section_Semester', 'Section_SubUniqueGroup')
+
+    readonly_fields = ('Section_CompleteStringGroup',)
 
 class UserClassAttributes(UserAdmin):
-    model = UserDataCredentials # ! A Model or DB to reference at.
-
+    model = UserDataCredentials # ! A Model to reference at.
     """
         Types of Features in DJango-Admin
         List_Display makes you able to display their content by referencing a particular field.
         List_Filter is a feature exclusive based on referenced field. In short, you can filter on **that** field.
-
+        Search_Fields is a set of fields candidated to be searched / indexed when user is looking something by typing in the search bar.
     """
-    list_display = ('first_name', 'Middle_Name', 'last_name', 'User_Role', 'is_active' ,'is_staff', 'is_superuser', 'date_joined',)  # Contain only fields in your `custom-user-model`
-    list_filter = ('first_name', 'Middle_Name', 'last_name', 'User_Role', 'is_active' ,'is_staff', 'is_superuser', 'date_joined',)  # Contain only fields in your `custom-user-model`
-    search_fields = ('first_name', 'Middle_Name', 'last_name', 'User_Role', 'is_active' ,'is_staff', 'is_superuser', 'date_joined',)  # Contain only fields in your `custom-user-model`
+    list_display = ('username', 'first_name', 'middle_name', 'last_name', 'dept_residence', 'user_role', 'is_active' ,'is_staff', 'is_superuser', 'date_joined')
+    list_filter = ('first_name', 'middle_name', 'last_name', 'user_role', 'dept_residence', 'is_active' ,'is_staff', 'is_superuser', 'date_joined',)
+    search_fields = ('first_name', 'middle_name', 'last_name', 'user_role', 'dept_residence', 'is_active' ,'is_staff', 'is_superuser', 'date_joined',)
 
-    # ! Fieldsets is container that contains fields that can be read / modified.
-    # * The reason why we did UserAdmin.fieldsets + because we just want to have additional items.
-    # ! The default ones will be retained.
-
-    fieldsets = UserAdmin.fieldsets + (
-        ('Security Unique Assets', {
-            'fields': ('Common_ID', 'Unique_ID'),
+    # ! Fieldsets is a container that contains fields that can be displayed / read / modified. This fields are available when looking at them by CHANGING.
+    fieldsets =  (
+        ('User Credentials', {
+            'fields': ('username', 'password', 'user_role', 'dept_residence'),
             }
         ),
-        ('Additional Personal info', {
-            'fields': ('Middle_Name', 'User_Role'),
+        ('User Information', {
+            'fields': ('first_name', 'middle_name', 'last_name', 'avatar'),
+            }
+        ),
+        ('Permissions and Restrictions', {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups'),
+            }
+        ),
+        ('Dates | Last Login and Creation Time', {
+            'fields': ('last_login', 'date_joined'),
+            }
+        ),
+        ('Technical Information', {
+            'fields': ('unique_id',),
             }
         ),
     )
-    readonly_fields = ('Common_ID', 'Unique_ID',)
+    # ! Add_Fieldsets is a container that contains fields that is candidated to be filled on. This fields are available when CREATING / INSERTING NEW DATA.
+    add_fieldsets = (
+        ('User Credentials', {
+            'fields': ('username', 'password1', 'password2', 'user_role', 'dept_residence'),
+            }
+        ),
+        ('User Information', {
+            'fields': ('first_name', 'middle_name', 'last_name', 'avatar'),
+            }
+        ),
+        ('Permissions and Restrictions', {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups'),
+            }
+        ),
+        ('Technical Information', {
+            'fields': ('unique_id',),
+            }
+        ),
 
+    )
+    readonly_fields = ('unique_id', 'date_joined')
 
-
-admin.site.register((Classroom,
-                     Course,
-                     SectionGroup,
-                     ProgramBranch,
-                     CourseSchedule,
-                     ClassroomActionLog
-                     ), ModelAttributes)
-
+# ! Register All Customizations
+admin.site.register(Classroom, ClassroomAttributes)
+admin.site.register(Course,CourseAttributes)
+admin.site.register(SectionGroup, SectionGroupAttributes)
+admin.site.register(CourseSchedule, CourseScheduleAttributes)
+admin.site.register(ClassroomActionLog, ClassroomActionLogAttributes)
+admin.site.register(ProgramBranch, BranchAttributes)
 admin.site.register(UserDataCredentials, UserClassAttributes)
