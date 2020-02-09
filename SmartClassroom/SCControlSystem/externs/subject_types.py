@@ -160,3 +160,11 @@ DevDeclarationTypes = (
     ("Analog Device", "Analog Device"),
     ("Security Device", "Security Device")
 )
+
+ClassroomStates = (
+    ("Operational", "Operational"),
+    ("In-Use", "In-Use"),
+    ("Opened", "Opened"),
+    ("Closed", "Closed"),
+    ("Non-Operational", "Non-Operational")
+)
