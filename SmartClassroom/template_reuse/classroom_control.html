@@ -1,0 +1,57 @@
+<div class="container content-offset">
+    <div class="card-columns class-control-column">
+            <div class="col mb-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Classroom Information</h2>
+                        <h3 class="card-subtitle text-black-secondary">Subject Associated is CPE 013 | Embedded Systems</h3>
+                        <!-- Add some extra descriptions here for admin.-->
+                        <p class="card-text text-black-primary">This room is located at Q-5424 which is a lab type. Happens Every Monday, Wednesday, and Friday. From 08:30AM to 11:30AM</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-auto">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h2 class="card-title">Classroom Options</h2>
+                        <h3 class="card-subtitle text-black-secondary">Remember: For each actions that you execute, will be recorded by the system!</h3>
+                    </div>
+                    <!-- Insert some extra buttons for admin -->
+                    <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                        <a class="list-group-item d-flex justify-content-between align-items-center"
+                            id="list-home-list" data-toggle="list" href="#list-home" role="tab"
+                            aria-controls="home">Unlock / Lock The Room Immediately <span class="badge badge-primary badge-pill bg-danger">Currently Locked</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Automate Lock On Time <span class="badge badge-primary badge-pill bg-danger">Currently Disabled</span></a>
+                    </div>
+                    <div class="card-actions border-top d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Parameter Adjustment Updated as of 12:00AM — 02/08/2020.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-auto">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h2 class="card-title">Classroom Actions Logs</h2>
+                        <h3 class="card-subtitle text-black-secondary">A set of actions made by you, recently recorded by the system.
+                        </h3>
+                    </div>
+                    <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                        <a href="#" class="list-group-item list-group-item-action active">
+                            <div class="d-flex w-100">
+                                <h6 class="mb-1 text-dark-primary ">Classroom Electricity was opened.</h6>
+                            </div>
+                            <p class="mb-1 d-flex justify-content-between align-items-center">Happened at 8:05PM of January 24, 2020<span class="badge badge-primary badge-pill bg-success">Warning</span></p>
+                            <small class="text-muted">By You (Janrey Tuazon Licas)</small>
+                        </a>
+                    </div>
+                    <div class="card-actions border-top d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Recent Actions Updated as of 12:00AM — 02/08/2020.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+{%if not isUserFullCtrl %}
+{% else %}
+
+{% endif %}
