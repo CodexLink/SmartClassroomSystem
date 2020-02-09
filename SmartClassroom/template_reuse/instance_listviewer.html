@@ -50,10 +50,13 @@
                 <a aria-selected="true" class="nav-link" data-toggle="tab" data-filter=".sys-operational" href="javascript:void(0)" role="tab">Operational</a>
             </li>
             <li class="nav-item">
-                <a aria-selected="false" class="nav-link" data-toggle="tab" data-filter=".sys-failed" href="javascript:void(0)" role="tab">Failed</a>
+                <a aria-selected="false" class="nav-link" data-toggle="tab" data-filter=".sys-opened" href="javascript:void(0)" role="tab">Opened</a>
             </li>
             <li class="nav-item">
-                <a aria-selected="false" class="nav-link" data-toggle="tab" data-filter=".sys-disabled" href="javascript:void(0)" role="tab">Disabled</a>
+                <a aria-selected="false" class="nav-link" data-toggle="tab" data-filter=".sys-closed" href="javascript:void(0)" role="tab">Closed</a>
+            </li>
+            <li class="nav-item">
+                <a aria-selected="false" class="nav-link" data-toggle="tab" data-filter=".sys-disabled" href="javascript:void(0)" role="tab">Non-Operational</a>
             </li>
             {% elif current_view == "StaffActionsListView" %}
             <li class="nav-item">
