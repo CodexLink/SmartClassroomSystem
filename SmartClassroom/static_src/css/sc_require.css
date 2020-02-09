@@ -54,7 +54,8 @@ img.primary-user-pic {
 .dashboard-item,
 .schedule-item,
 .log-item,
-.actions-item {
+.actions-item,
+.auth-item {
     margin-bottom: 8px !important;
 }
 
@@ -81,6 +82,18 @@ img.primary-user-pic {
 
 .card .container.progress-container {
     padding: 0;
+}
+
+/* ! Card Classroom Actions Response Override ! */
+@media (min-width: 576px) {
+    .card-columns.class-control-column {
+        column-count: 1;
+    }
+}
+@media (min-width: 992px) {
+    .card-columns.class-control-column {
+        column-count: 2;
+    }
 }
 
 /* ! Card Compatibility CSS Rulesets - END */
