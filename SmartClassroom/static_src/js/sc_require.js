@@ -19,6 +19,20 @@ $('.dashboard-grid').isotope({
     percentPosition: true,
 });
 
+// ! Packery Login and Logout View
+$('.auth-grid').isotope({
+    itemSelector: '.auth-item',
+    layoutMode: 'packery',
+    resize: true,
+    packery: {
+        columnWidth: '.auth-item',
+        horizontal: false
+    },
+    sortAscending: true,
+    transistion: 300,
+    percentPosition: true,
+});
+
 // ! Mansory + Isotope View for Logs
 $('.log-grid').isotope({
     itemSelector: '.log-item',
@@ -86,14 +100,6 @@ $(document).ready(function (e)
     $('.schedule-grid').isotope({ sortBy: 'timestart' });
 });
 
-
-// ! Update View ACcording to Layout Changes Since Card is at Absolute Position
-$('.quick-actions-handler').click(function (event) {
-    setTimeout(function () {
-        $('.dashboard-grid').isotope("arrange");
-    }, 260);
-});
-
 // ! Close Sidebar Upon Click
 $('.close-sidebar').click(function (event) {
     $('#navdrawer').navdrawer('hide');
@@ -121,7 +127,7 @@ $(document).ready(function (e) {
     var meridian = (rawHour > 12) ? "PM" : "AM";
 
     var timeDiff = Math.abs(rawHour - 20); // This signifies all working time up until 8.
-    var strDiffLiteral = (rawHour == 19) ? " hour" : " hours";
+    var strDiffLiteral = (rawHour >= 19) ? " hour" : " hours";
     var strContent = strInitTemplate + processedHour + ":" + processedMin + ":" + processedSec + " " + meridian + strSeperator + timeDiff + strDiffLiteral + strLastTemplate;
 
     // Progress Bar Width Setter
@@ -155,7 +161,7 @@ if (document.querySelector('.local_time_display') !== null) {
         var meridian = (rawHour > 12) ? "PM" : "AM";
 
         var timeDiff = Math.abs(rawHour - 20); // This signifies all working time up until 8.
-        var strDiffLiteral = (rawHour == 19) ? " hour" : " hours";
+        var strDiffLiteral = (rawHour >= 19) ? " hour" : " hours";
         var strContent = strInitTemplate + processedHour + ":" + processedMin + ":" + processedSec + " " + meridian + strSeperator + timeDiff + strDiffLiteral + strLastTemplate;
 
         // Progress Bar Width Setter
@@ -166,3 +172,9 @@ if (document.querySelector('.local_time_display') !== null) {
         return $('.local_time_display').text(strContent);
     }, 1000);
 }
+
+// ! Clear Auth Credential Fields
+$('.auth-clear-entry').click(function (e)
+{
+    $('.form-control').val('');
+});
