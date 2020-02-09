@@ -19,7 +19,6 @@ choosing Architecture and assigned to CpE. That's pretty much stupid if you thin
 # ! Status: Completed
 '''
 
-
 class ProgramBranch(models.Model):
     class Meta:
         verbose_name = "Department Program"
@@ -37,6 +36,9 @@ class UserDataCredentials(AbstractUser):
     class Meta:
         verbose_name = "User Credential"
         db_table = "user_auth_crendentials"
+        permissions = [
+            ("dashboard_viewable", "Can view the dashboard itself. This must be allowed for everyone."),
+        ]
 
     # ! These commented fields has been already existing in the User Model. So by extending it, we have only few fields to declare right now.
     middle_name = models.CharField(max_length=20, null=True, blank=True, help_text="A Name that is not supplied by User Model. Added for Unique User Purposes.")
@@ -61,8 +63,11 @@ So, lets make things unique by their complete form instead of individually uniqu
 
 class Classroom(models.Model):
     class Meta:
-         verbose_name = "Classroom Declaration"
-         db_table = "classroom_decl"
+        verbose_name = "Classroom Declaration"
+        db_table = "classroom_decl"
+        permissions = [
+            ("classroom_viewable", "Can view the classroom window. Used for PermissionsRequiredMixin."),
+        ]
 
     Classroom_Name = models.CharField(max_length=50, null=False, blank=False, verbose_name='Classroom Name', help_text='', validators=[MinLengthValidator(5), MaxLengthValidator(50)])
     Classroom_Building = models.PositiveIntegerField(null=False, blank=False, verbose_name='Classroom Building Assignment', help_text='', default=BuildingClassification[0], choices=BuildingClassification)
@@ -86,17 +91,43 @@ class Classroom(models.Model):
 
 class Course(models.Model):
     class Meta:
-         verbose_name = "Course Declaration"
-         db_table = "course_decl"
+        verbose_name = "Course Declaration"
+        db_table = "course_decl"
 
-    Course_Name = models.CharField(max_length=100, null=False, blank=False, help_text='Please indicate. We need to know what type of room is it gonna be.', validators=[MinLengthValidator(5), MaxLengthValidator(100)])
-    Course_Code = models.CharField(max_length=10, null=False, blank=False, primary_key=True, unique=True, help_text='Provide Course Code with Probable In Relation to Course itself.', validators=[MinLengthValidator(4), MaxLengthValidator(10)])
-    Course_Units = models.PositiveIntegerField(help_text='Units is indenpendent and user should know it based on lecture time and classroom type to use.', validators=[MinValueValidator(1), MaxValueValidator(6)])
-    Course_Capacity = models.PositiveIntegerField(default=15, help_text='The number of students that can included in the class. Minimum is 15 and Maximum is 45', validators=[MinValueValidator(15), MaxValueValidator(60)])  # Capacity of Room for Students
-    Course_Type = models.CharField(max_length=29, null=False, blank=False, help_text='Course Type is dependent, if it needs Laboratory or Technological Only. Please pick properly.', validators=[MinLengthValidator(13), MaxLengthValidator(29)], default=CourseSessionTypes[0], choices=CourseSessionTypes)
+    Course_Name = models.CharField(max_length=100, null=False, blank=False, verbose_name='Course Name', help_text='Please indicate. We need to know what type of room is it gonna be.', validators=[MinLengthValidator(5), MaxLengthValidator(100)])
+    Course_Code = models.CharField(max_length=10, null=False, blank=False, primary_key=True, unique=True, verbose_name='Course Code', help_text='Provide Course Code with Probable In Relation to Course itself.', validators=[MinLengthValidator(4), MaxLengthValidator(10)])
+    Course_Units = models.PositiveIntegerField(verbose_name='Course Units', help_text='Units is indenpendent and user should know it based on lecture time and classroom type to use.', validators=[MinValueValidator(1), MaxValueValidator(6)])
+    Course_Capacity = models.PositiveIntegerField(default=15, verbose_name='Course Student Capacity', help_text='The number of students that can included in the class. Minimum is 15 and Maximum is 45', validators=[MinValueValidator(15), MaxValueValidator(60)])  # Capacity of Room for Students
+    Course_Type = models.CharField(max_length=29, null=False, blank=False, verbose_name='Course Type', help_text='Course Type is dependent, if it needs Laboratory or Technological Only. Please pick properly.', validators=[MinLengthValidator(13), MaxLengthValidator(29)], default=CourseSessionTypes[0], choices=CourseSessionTypes)
 
     def __str__(self):
         return '{0} — {1} | {2}'.format(self.Course_Code, self.Course_Name, self.get_Course_Type_display())
+
+class DeviceInfo(models.Model):
+    class Meta:
+        verbose_name = "Classroom MCU Device Information"
+        db_table = "dev_decl"
+
+    Device_Name = models.CharField(max_length=100, null=False, blank=False, verbose_name='Device Name', help_text='Please indicate. We need to know what kind of device is it gonna be to communicate with the app.', validators=[MinLengthValidator(5), MaxLengthValidator(100)])
+    Device_Class_Ref = models.OneToOneField(Classroom, verbose_name='Classroom Device Assignment', help_text='Indication of where the device resides.', null=False, blank=False, on_delete=models.CASCADE)
+    Device_Unique_ID = models.UUIDField(max_length=32, default=uuid4, editable=False, unique=True, verbose_name='Device Unique ID', help_text="A Unique Identifier for the Device. This is used classroom assignment unique identity of the device.")
+    Device_IP_Address = models.GenericIPAddressField(null=False, blank=False, protocol='ipv4')
+
+    def __str__(self):
+        return '%s | %s | %s' % (self.Device_Name, self.Device_IP_Address, self.Device_Class_Ref)
+
+class SensOutput(models.Model):
+    class Meta:
+        verbose_name = "Classroom Device Sensor Output"
+        db_table = "dev_sens_output"
+
+    Sens_Name = models.CharField(max_length=100, null=False, blank=False, verbose_name='Sensors Name', help_text='Please indicate. We need to know what kind of sensors is it gonna be to communicate with the app.', validators=[MinLengthValidator(5), MaxLengthValidator(100)])
+    Sens_Ref = models.ForeignKey(DeviceInfo, to_field='Device_Unique_ID', verbose_name='Sensors Unique Reference', help_text='Indication of where the data comes from.', null=False, blank=False, on_delete=models.CASCADE)
+    Sens_Type = models.CharField(max_length=29, null=False, blank=False, verbose_name='Sensors Type', help_text='The type of the sensors. This needs to be indicated to properly identify what kind of output it returns.', validators=[MinLengthValidator(13), MaxLengthValidator(15)], default=DevDeclarationTypes[0], choices=DevDeclarationTypes)
+    Sens_Output = models.CharField(max_length=255, verbose_name='Sensors Referred Output', help_text='The output of the sensors can be a string, integer, float, or boolean.', null=False, blank=False)
+
+    def __str__(self):
+        return '%s | %s | %s — %s' % (self.Sens_Name, self.Sens_Ref, self.Sens_Type, self.Sens_Output)
 
 '''
 # ! Integrity Information for SectionGroup Model
@@ -146,6 +177,9 @@ class CourseSchedule(models.Model):
     class Meta:
         verbose_name = "Enlisted Course Schedule"
         db_table = "enlisted_course_scheds"
+        permissions = [
+            ("course_schedule_viewable", "Can view the course schedule window. Used for PermissionRequiredMixin."),
+        ]
 
     CourseSchedule_CourseReference = models.OneToOneField(Course, verbose_name='Course Reference', help_text='Refers to a candidated subject from which allocates the time.', primary_key=True, to_field="Course_Code", null=False, blank=False, unique=True, on_delete=models.CASCADE)
     CourseSchedule_Instructor = models.OneToOneField(UserDataCredentials, verbose_name='Course Instructor', help_text='Refers to an instructor who teach the following course.', to_field="unique_id", null=False, blank=False, on_delete=models.CASCADE)
@@ -163,6 +197,9 @@ class ClassroomActionLog(models.Model):
     class Meta:
         verbose_name = "Classroom Recent Log"
         db_table = "classroom_action_logs"
+        permissions = [
+            ("classroom_action_log_viewable", "Can view the classroom action log window. Used for PermissionRequiredMixin."),
+        ]
 
     UserActionTaken = models.CharField(verbose_name='Staff / User Action Message', help_text='A set of action taken by the stuff and user that is recently recorded by the system.', max_length=255, null=False, blank=False, choices=ClassroomActionTypes)
     ActionLevel = models.CharField(verbose_name='Log Action Level', help_text='The level of log indication. This only benefit for actions being filtered.', max_length=255, null=False, blank=False, choices=LevelAlert)
