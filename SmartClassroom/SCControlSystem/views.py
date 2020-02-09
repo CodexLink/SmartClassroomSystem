@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import (AccessMixin, LoginRequiredMixin,
                                         PermissionRequiredMixin)
 from django.contrib.auth.views import LoginView, LogoutView, logout_then_login
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, RedirectView, DetailView, FormView
 from django.views.generic.base import TemplateView
@@ -37,13 +37,9 @@ class HomeView(TemplateView):
 class DashboardView(PermissionRequiredMixin, TemplateView):
     login_url = reverse_lazy('auth_user_view')
     template_name = template_view
+    redirect_field_name = reverse_lazy('deauth_user_view')
 
-    permission_required = ('SCControlSystem.view_classroom',
-                          'SCControlSystem.view_classroomactionlog',
-                          'SCControlSystem.view_course',
-                          'SCControlSystem.view_courseschedule',
-                          'SCControlSystem.view_programbranch',
-                          'SCControlSystem.view_sectiongroup')
+    permission_required = 'SCControlSystem.dashboard_viewable'
 
     more_context = {
         "title_view": "Dashboard",
@@ -71,19 +67,17 @@ class DashboardView(PermissionRequiredMixin, TemplateView):
             messages.error(self.request, "InsufficientPermission")
         else:
             messages.error(self.request, "PermissionAccessDenied")
+        print(self.get_permission_required())
         return super(DashboardView, self).handle_no_permission()
+
+        #return redirect(reverse_lazy('deauth_user_view'))
 
 class ClassroomView(PermissionRequiredMixin, ListView):
     login_url = reverse_lazy('auth_user_view')
     template_name = template_view
     model = Classroom
 
-    permission_required = ('SCControlSystem.view_classroom',
-                          'SCControlSystem.view_classroomactionlog',
-                          'SCControlSystem.view_course',
-                          'SCControlSystem.view_courseschedule',
-                          'SCControlSystem.view_programbranch',
-                          'SCControlSystem.view_sectiongroup')
+    permission_required = 'SCControlSystem.classroom_viewable'
 
     more_context = {
         "title_view": "Classroom List",
@@ -112,11 +106,9 @@ class SelectableClassroomView(PermissionRequiredMixin, DetailView):
     login_url = reverse_lazy('auth_user_view')
     template_name = template_view
     model = Classroom
-    permission_required = ('SCControlSystem.view_classroom',
-                          'SCControlSystem.view_course',
-                          'SCControlSystem.view_courseschedule',
-                          'SCControlSystem.view_programbranch',
-                          'SCControlSystem.view_sectiongroup')
+    permission_required = ('SCControlSystem.classroom_viewable',
+                          'SCControlSystem.classroom_action_log_viewable',
+                          )
 
     more_context = {
         "title_view": "Classroom Control View",
@@ -137,7 +129,7 @@ class SelectableClassroomView(PermissionRequiredMixin, DetailView):
 
 
 
-
+ # Temporarily place this one.
     def get(self, request, classRoomID=None):
         return render(request, template_view, self.more_context)
 
@@ -150,11 +142,7 @@ class ScheduleListView(PermissionRequiredMixin, ListView):
     template_name = template_view
     model = CourseSchedule
 
-    permission_required = ('SCControlSystem.view_classroom',
-                      'SCControlSystem.view_course',
-                      'SCControlSystem.view_courseschedule',
-                      'SCControlSystem.view_programbranch',
-                      'SCControlSystem.view_sectiongroup')
+    permission_required = 'SCControlSystem.course_schedule_viewable'
 
     more_context = {
         "title_view": "Your Schedules",
@@ -232,11 +220,7 @@ class StaffActionsListView(PermissionRequiredMixin, ListView):
     template_name = template_view
     model = ClassroomActionLog
 
-    permission_required = ('SCControlSystem.view_classroom',
-                      'SCControlSystem.view_course',
-                      'SCControlSystem.view_courseschedule',
-                      'SCControlSystem.view_programbranch',
-                      'SCControlSystem.view_sectiongroup')
+    permission_required = 'SCControlSystem.classroom_action_log_viewable'
 
     more_context = {
         "title_view": "Actions Data Log",
