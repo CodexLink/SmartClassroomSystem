@@ -25,8 +25,8 @@ class ClassroomActionLogAttributes(admin.ModelAdmin):
 
 class ClassroomAttributes(admin.ModelAdmin):
     model = Classroom
-    list_display = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_Type')
-    list_filter = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_Type')
+    list_display = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Status', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_Type')
+    list_filter = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Status', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_Type')
 
     readonly_fields = ('Classroom_CompleteString',)
 
