@@ -1,0 +1,1 @@
+manage.py dumpdata  --natural-foreign --natural-primary -e contenttypes > DataSetBackups/default_sets.json
