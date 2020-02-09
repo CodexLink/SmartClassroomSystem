@@ -69,12 +69,13 @@ class Classroom(models.Model):
             ("classroom_viewable", "Can view the classroom window. Used for PermissionsRequiredMixin."),
         ]
 
-    Classroom_Name = models.CharField(max_length=50, null=False, blank=False, verbose_name='Classroom Name', help_text='', validators=[MinLengthValidator(5), MaxLengthValidator(50)])
-    Classroom_Building = models.PositiveIntegerField(null=False, blank=False, verbose_name='Classroom Building Assignment', help_text='', default=BuildingClassification[0], choices=BuildingClassification)
-    Classroom_Floor = models.PositiveIntegerField(null=False, blank=False, verbose_name='Classroom Floor Assignment', help_text='', default=BuildingFloors[0], choices=BuildingFloors)
-    Classroom_Number = models.PositiveIntegerField(null=False, blank=False, verbose_name='Classroom Number', help_text='', default=1, validators=[MinValueValidator(1), MaxValueValidator(29)])
-    Classroom_Type = models.CharField(max_length=29, null=False, blank=False, verbose_name='Classroom Instructure Type', help_text='', validators=[MinLengthValidator(13), MaxLengthValidator(29)], default=CourseSessionTypes[0], choices=CourseSessionTypes)
-    Classroom_CompleteString = models.CharField(max_length=6, null=True, blank=True, unique=True, verbose_name='Classroom Complete CodeName', validators=[MinLengthValidator(6), MaxLengthValidator(6)], help_text="This field is automatically filled when you submit it. Putting any value result to it, being discarded.")
+    Classroom_Name = models.CharField(max_length=50, null=False, blank=False, verbose_name='Classroom Name', help_text='Name of the classroom. Can be same from any other classrooms as long as they are placed differently and uniquely.', validators=[MinLengthValidator(5), MaxLengthValidator(50)])
+    Classroom_Building = models.PositiveIntegerField(null=False, blank=False, verbose_name='Classroom Building Assignment', help_text='The building from where the classroom resides.', default=BuildingClassification[0], choices=BuildingClassification)
+    Classroom_Floor = models.PositiveIntegerField(null=False, blank=False, verbose_name='Classroom Floor Assignment', help_text='The floor of the building from where the classroom resides.', default=BuildingFloors[0], choices=BuildingFloors)
+    Classroom_Number = models.PositiveIntegerField(null=False, blank=False, verbose_name='Classroom Number', help_text='The room number assignment of the classroom.', default=1, validators=[MinValueValidator(1), MaxValueValidator(29)])
+    Classroom_Type = models.CharField(max_length=29, null=False, blank=False, verbose_name='Classroom Instructure Type', help_text='The type of the classroom.', validators=[MinLengthValidator(13), MaxLengthValidator(29)], default=CourseSessionTypes[0], choices=CourseSessionTypes)
+    Classroom_Status = models.CharField(max_length=15, null=False, blank=False, verbose_name='Classroom Instructure Status', help_text='Status Indication of the classroom. Required', validators=[MinLengthValidator(6), MaxLengthValidator(15)], default='Non-Operational', choices=ClassroomStates)
+    Classroom_CompleteString = models.CharField(max_length=6, null=True, blank=True, unique=True, verbose_name='Classroom Complete CodeName',  help_text="This field is automatically filled when you submit it. Putting any value result to it, being discarded.", validators=[MinLengthValidator(6), MaxLengthValidator(6)])
 
     def __str__(self):
         return '%s — %s | %s' % (self.Classroom_CompleteString, self.get_Classroom_Type_display(), self.Classroom_Name)
