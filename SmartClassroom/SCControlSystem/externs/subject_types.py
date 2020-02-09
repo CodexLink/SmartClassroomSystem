@@ -153,3 +153,10 @@ GroupDefinitionRoles = (
     "ITSO Members",
     "Professors"
 )
+
+# ! Device Types Declaration
+DevDeclarationTypes = (
+    ("Digital Device", "Digital Device"),
+    ("Analog Device", "Analog Device"),
+    ("Security Device", "Security Device")
+)
