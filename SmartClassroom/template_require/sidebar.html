@@ -2,10 +2,11 @@
 {% if requireSideNav == True %}
 <div aria-hidden="true" class="navdrawer" id="navdrawer" tabindex="-1">
   <!-- This one is too much, we can optimize it -->
-  {% if user_inst_type == "Project Owner" or user_inst_type == "Project Member" or user_inst_type == "ITSO Administrator" or user_inst_type == "ITSO Member" or user_inst_type == "Professor Staff" %}
+  {% if user_inst_type == "Project Owner" or user_inst_type == "Project Member" or user_inst_type == "ITSO Administrator" or user_inst_type == "ITSO Member" or user_inst_type == "Professor" %}
   <div class="navdrawer-content">
     <div class="sidebar-account container">
-      <img class="primary-user-pic" src="{% if user.avatar %} {{ user.avatar.url }} {% else %} {% static 'rsrc/avatar.jpg' %} {% endif %}">
+      <img class="primary-user-pic"
+        src="{% if user.avatar %} {{ user.avatar.url }} {% else %} {% static 'rsrc/avatar.jpg' %} {% endif %}">
       <div class="sidebar-primary-name-acc">
         <h6 class="text-black-primary primary-name-acc" href="javascript:void(0)">{{user_current_name}}</h6>
       </div>
@@ -44,12 +45,15 @@
         <a class="nav-link" href="{% url 'staff_action_logs_view' %}"><i
             class="material-icons mr-3 text-black-secondary">assignment</i>Recent Logs</a>
       </li>
+      {% if not user_inst_type == 'ITSO Member' %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'admin:index' %}"><i class="material-icons mr-3 text-black-secondary">gavel</i>Control
+        <a class="nav-link" href="{% url 'admin:index' %}"><i
+          class="material-icons mr-3 text-black-secondary">gavel</i>Control
           Override</a>
-      </li>
+        </li>
+      {% endif %}
     </ul>
-    {% elif user_inst_type == "Professor Staff" %}
+    {% elif user_inst_type == "Professor" %}
     <div class="navdrawer-subheader">Main Menu</div>
     <ul class="navdrawer-nav">
       <li class="nav-item">
@@ -61,46 +65,25 @@
     <div class="navdrawer-subheader">Manage</div>
     <ul class="navdrawer-nav">
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'schedule_exclusive_view' %}"><i class="material-icons mr-3 text-black-secondary">timelapse</i>Your
+        <a class="nav-link" href="{% url 'schedule_exclusive_view' %}"><i
+            class="material-icons mr-3 text-black-secondary">timelapse</i>Your
           Schedules</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'staff_action_logs_view' %}"><i class="material-icons mr-3 text-black-secondary">view_list</i>Actions Logs</a>
+        <a class="nav-link" href="{% url 'staff_action_logs_view' %}"><i
+            class="material-icons mr-3 text-black-secondary">view_list</i>Actions Logs</a>
       </li>
+      {% endif %}
       <div class="navdrawer-divider"></div>
       <div class="navdrawer-subheader">Information</div>
       <ul class="navdrawer-nav">
         <li class="nav-item">
-          <a class="nav-link close-sidebar" href="javascript:void(0)" data-toggle="modal" data-target="#actionAboutDeveloper"><i
-              class="material-icons mr-3 text-black-secondary">update</i>About Us</a>
+          <a class="nav-link close-sidebar" href="javascript:void(0)" data-toggle="modal"
+            data-target="#actionAboutDeveloper"><i class="material-icons mr-3 text-black-secondary">update</i>About
+            Us</a>
         </li>
       </ul>
   </div>
-  {% else %}
-  {% endif %}
-  {% if user_inst_type == "Project Owner" or user_inst_type == "Project Member" or user_inst_type == "ITSO Administrator" or user_inst_type == "ITSO Member" %}
-  <div class="navdrawer-divider"></div>
-  <div class="navdrawer-subheader">System</div>
-  <ul class="navdrawer-nav">
-    <li class="nav-item">
-      <a class="nav-link disabled" href=""><i class="material-icons mr-3 text-black-secondary">settings</i>System
-        Settings</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="javascript:void(0)"><i class="material-icons mr-3 text-black-secondary">update</i>Reset
-        Server</a>
-    </li>
-  </ul>
-  <div class="navdrawer-divider"></div>
-  <div class="navdrawer-subheader">Information</div>
-  <ul class="navdrawer-nav">
-    <li class="nav-item">
-      <a class="nav-link close-sidebar" href="javascript:void(0)" data-toggle="modal" data-target="#actionAboutDeveloper"><i
-          class="material-icons mr-3 text-black-secondary">update</i>About
-        Us</a>
-    </li>
-  </ul>
-  {% endif %}
 </div>
 {% endif %}
 </div>
