@@ -45,6 +45,18 @@ class BranchAttributes(admin.ModelAdmin):
     list_display = ('ProgramBranch_Code', 'ProgramBranch_Name')
     list_filter = ('ProgramBranch_Code', 'ProgramBranch_Name')
 
+class DeviceInfoAttributes(admin.ModelAdmin):
+    model = DeviceInfo
+    list_display = ('Device_Name', 'Device_IP_Address', 'Device_Class_Ref', 'Device_Unique_ID',)
+    list_filter = ('Device_Name', 'Device_IP_Address', 'Device_Class_Ref', 'Device_Unique_ID',)
+
+    readonly_fields = ('Device_Unique_ID',)
+
+class SensOutputAttributes(admin.ModelAdmin):
+    model = SensOutput
+    list_display = ('Sens_Name', 'Sens_Ref', 'Sens_Type', 'Sens_Output')
+    list_filter = ('Sens_Name', 'Sens_Ref', 'Sens_Type', 'Sens_Output')
+
 class SectionGroupAttributes(admin.ModelAdmin):
     model = SectionGroup
     list_display = ('Section_CompleteStringGroup', 'Section_Program', 'Section_Year', 'Section_Semester', 'Section_SubUniqueGroup')
@@ -114,6 +126,8 @@ admin.site.register(Classroom, ClassroomAttributes)
 admin.site.register(Course,CourseAttributes)
 admin.site.register(SectionGroup, SectionGroupAttributes)
 admin.site.register(CourseSchedule, CourseScheduleAttributes)
+admin.site.register(DeviceInfo, DeviceInfoAttributes)
+admin.site.register(SensOutput, SensOutputAttributes)
 admin.site.register(ClassroomActionLog, ClassroomActionLogAttributes)
 admin.site.register(ProgramBranch, BranchAttributes)
 admin.site.register(UserDataCredentials, UserClassAttributes)
