@@ -116,3 +116,27 @@ body.log-backfill {
 }
 
 /* ! UX for User Schedule CSS Rulesets - END */
+
+/* ! Custom Pill CSS Rulesets - START */
+
+.bg-alert {
+    background-color: #ff0026!important;
+}
+.bg-non-operational {
+    background-color: #212121!important;
+}
+.bg-operational {
+    background-color: #E65100!important;
+}
+.bg-in-use {
+    background-color: #0091EA!important;
+}
+.bg-opened {
+    background-color: #00E676!important;
+}
+.bg-closed {
+    background-color: #ff0026!important;
+}
+
+
+/* ! Custom Pill CSS Rulesets - END */
