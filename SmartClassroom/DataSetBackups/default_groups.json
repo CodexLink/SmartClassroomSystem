@@ -1,0 +1,554 @@
+[{
+    "model": "contenttypes.contenttype",
+    "pk": 1,
+    "fields": {
+        "app_label": "admin",
+        "model": "logentry"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 2,
+    "fields": {
+        "app_label": "auth",
+        "model": "permission"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 3,
+    "fields": {
+        "app_label": "auth",
+        "model": "group"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 4,
+    "fields": {
+        "app_label": "contenttypes",
+        "model": "contenttype"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 5,
+    "fields": {
+        "app_label": "sessions",
+        "model": "session"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 6,
+    "fields": {
+        "app_label": "SCControlSystem",
+        "model": "classroom"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 7,
+    "fields": {
+        "app_label": "SCControlSystem",
+        "model": "course"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 8,
+    "fields": {
+        "app_label": "SCControlSystem",
+        "model": "programbranch"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 9,
+    "fields": {
+        "app_label": "SCControlSystem",
+        "model": "userdatacredentials"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 10,
+    "fields": {
+        "app_label": "SCControlSystem",
+        "model": "sectiongroup"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 11,
+    "fields": {
+        "app_label": "SCControlSystem",
+        "model": "courseschedule"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 12,
+    "fields": {
+        "app_label": "SCControlSystem",
+        "model": "classroomactionlog"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 13,
+    "fields": {
+        "app_label": "SCControlSystem",
+        "model": "deviceinfo"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 14,
+    "fields": {
+        "app_label": "SCControlSystem",
+        "model": "deviceoutput"
+    }
+}, {
+    "model": "contenttypes.contenttype",
+    "pk": 15,
+    "fields": {
+        "app_label": "SCControlSystem",
+        "model": "sensoutput"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add log entry",
+        "content_type": ["admin", "logentry"],
+        "codename": "add_logentry"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change log entry",
+        "content_type": ["admin", "logentry"],
+        "codename": "change_logentry"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete log entry",
+        "content_type": ["admin", "logentry"],
+        "codename": "delete_logentry"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view log entry",
+        "content_type": ["admin", "logentry"],
+        "codename": "view_logentry"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add permission",
+        "content_type": ["auth", "permission"],
+        "codename": "add_permission"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change permission",
+        "content_type": ["auth", "permission"],
+        "codename": "change_permission"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete permission",
+        "content_type": ["auth", "permission"],
+        "codename": "delete_permission"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view permission",
+        "content_type": ["auth", "permission"],
+        "codename": "view_permission"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add group",
+        "content_type": ["auth", "group"],
+        "codename": "add_group"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change group",
+        "content_type": ["auth", "group"],
+        "codename": "change_group"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete group",
+        "content_type": ["auth", "group"],
+        "codename": "delete_group"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view group",
+        "content_type": ["auth", "group"],
+        "codename": "view_group"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add content type",
+        "content_type": ["contenttypes", "contenttype"],
+        "codename": "add_contenttype"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change content type",
+        "content_type": ["contenttypes", "contenttype"],
+        "codename": "change_contenttype"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete content type",
+        "content_type": ["contenttypes", "contenttype"],
+        "codename": "delete_contenttype"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view content type",
+        "content_type": ["contenttypes", "contenttype"],
+        "codename": "view_contenttype"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add session",
+        "content_type": ["sessions", "session"],
+        "codename": "add_session"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change session",
+        "content_type": ["sessions", "session"],
+        "codename": "change_session"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete session",
+        "content_type": ["sessions", "session"],
+        "codename": "delete_session"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view session",
+        "content_type": ["sessions", "session"],
+        "codename": "view_session"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add Classroom Declaration",
+        "content_type": ["SCControlSystem", "classroom"],
+        "codename": "add_classroom"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change Classroom Declaration",
+        "content_type": ["SCControlSystem", "classroom"],
+        "codename": "change_classroom"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete Classroom Declaration",
+        "content_type": ["SCControlSystem", "classroom"],
+        "codename": "delete_classroom"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view Classroom Declaration",
+        "content_type": ["SCControlSystem", "classroom"],
+        "codename": "view_classroom"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add Course Declaration",
+        "content_type": ["SCControlSystem", "course"],
+        "codename": "add_course"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change Course Declaration",
+        "content_type": ["SCControlSystem", "course"],
+        "codename": "change_course"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete Course Declaration",
+        "content_type": ["SCControlSystem", "course"],
+        "codename": "delete_course"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view Course Declaration",
+        "content_type": ["SCControlSystem", "course"],
+        "codename": "view_course"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add Department Program",
+        "content_type": ["SCControlSystem", "programbranch"],
+        "codename": "add_programbranch"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change Department Program",
+        "content_type": ["SCControlSystem", "programbranch"],
+        "codename": "change_programbranch"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete Department Program",
+        "content_type": ["SCControlSystem", "programbranch"],
+        "codename": "delete_programbranch"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view Department Program",
+        "content_type": ["SCControlSystem", "programbranch"],
+        "codename": "view_programbranch"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add User Credential",
+        "content_type": ["SCControlSystem", "userdatacredentials"],
+        "codename": "add_userdatacredentials"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change User Credential",
+        "content_type": ["SCControlSystem", "userdatacredentials"],
+        "codename": "change_userdatacredentials"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete User Credential",
+        "content_type": ["SCControlSystem", "userdatacredentials"],
+        "codename": "delete_userdatacredentials"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view User Credential",
+        "content_type": ["SCControlSystem", "userdatacredentials"],
+        "codename": "view_userdatacredentials"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add Student Section",
+        "content_type": ["SCControlSystem", "sectiongroup"],
+        "codename": "add_sectiongroup"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change Student Section",
+        "content_type": ["SCControlSystem", "sectiongroup"],
+        "codename": "change_sectiongroup"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete Student Section",
+        "content_type": ["SCControlSystem", "sectiongroup"],
+        "codename": "delete_sectiongroup"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view Student Section",
+        "content_type": ["SCControlSystem", "sectiongroup"],
+        "codename": "view_sectiongroup"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add Enlisted Course Schedule",
+        "content_type": ["SCControlSystem", "courseschedule"],
+        "codename": "add_courseschedule"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change Enlisted Course Schedule",
+        "content_type": ["SCControlSystem", "courseschedule"],
+        "codename": "change_courseschedule"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete Enlisted Course Schedule",
+        "content_type": ["SCControlSystem", "courseschedule"],
+        "codename": "delete_courseschedule"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view Enlisted Course Schedule",
+        "content_type": ["SCControlSystem", "courseschedule"],
+        "codename": "view_courseschedule"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add Classroom Recent Log",
+        "content_type": ["SCControlSystem", "classroomactionlog"],
+        "codename": "add_classroomactionlog"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change Classroom Recent Log",
+        "content_type": ["SCControlSystem", "classroomactionlog"],
+        "codename": "change_classroomactionlog"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete Classroom Recent Log",
+        "content_type": ["SCControlSystem", "classroomactionlog"],
+        "codename": "delete_classroomactionlog"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view Classroom Recent Log",
+        "content_type": ["SCControlSystem", "classroomactionlog"],
+        "codename": "view_classroomactionlog"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add Classroom Device Information",
+        "content_type": ["SCControlSystem", "deviceinfo"],
+        "codename": "add_deviceinfo"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change Classroom Device Information",
+        "content_type": ["SCControlSystem", "deviceinfo"],
+        "codename": "change_deviceinfo"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete Classroom Device Information",
+        "content_type": ["SCControlSystem", "deviceinfo"],
+        "codename": "delete_deviceinfo"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view Classroom Device Information",
+        "content_type": ["SCControlSystem", "deviceinfo"],
+        "codename": "view_deviceinfo"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add Classroom Device Outputs",
+        "content_type": ["SCControlSystem", "deviceoutput"],
+        "codename": "add_deviceoutput"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change Classroom Device Outputs",
+        "content_type": ["SCControlSystem", "deviceoutput"],
+        "codename": "change_deviceoutput"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete Classroom Device Outputs",
+        "content_type": ["SCControlSystem", "deviceoutput"],
+        "codename": "delete_deviceoutput"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view Classroom Device Outputs",
+        "content_type": ["SCControlSystem", "deviceoutput"],
+        "codename": "view_deviceoutput"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can add Classroom Device Sensor Output",
+        "content_type": ["SCControlSystem", "sensoutput"],
+        "codename": "add_sensoutput"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can change Classroom Device Sensor Output",
+        "content_type": ["SCControlSystem", "sensoutput"],
+        "codename": "change_sensoutput"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can delete Classroom Device Sensor Output",
+        "content_type": ["SCControlSystem", "sensoutput"],
+        "codename": "delete_sensoutput"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view Classroom Device Sensor Output",
+        "content_type": ["SCControlSystem", "sensoutput"],
+        "codename": "view_sensoutput"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view the classroom window. Used for PermissionsRequiredMixin.",
+        "content_type": ["SCControlSystem", "classroom"],
+        "codename": "classroom_viewable"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view the course schedule window. Used for PermissionRequiredMixin.",
+        "content_type": ["SCControlSystem", "courseschedule"],
+        "codename": "course_schedule_viewable"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view the classroom action log window. Used for PermissionRequiredMixin.",
+        "content_type": ["SCControlSystem", "classroomactionlog"],
+        "codename": "classroom_action_log_viewable"
+    }
+}, {
+    "model": "auth.permission",
+    "fields": {
+        "name": "Can view the dashboard itself. This must be allowed for everyone.",
+        "content_type": ["SCControlSystem", "userdatacredentials"],
+        "codename": "dashboard_viewable"
+    }
+}]
