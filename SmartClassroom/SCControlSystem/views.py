@@ -11,7 +11,8 @@ from requests import get
 from requests.exceptions import ConnectionError
 
 from .forms import UserAuthForm
-from .models import UserDataCredentials, CourseSchedule, ClassroomActionLog, Classroom
+from .models import UserDataCredentials, CourseSchedule, ClassroomActionLog, Classroom, DeviceInfo
+import datetime
 
 # ! Global Variables !
 template_view = 'elem_inst_view.html'
@@ -54,7 +55,30 @@ class DashboardView(PermissionRequiredMixin, TemplateView):
         view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
 
-        print(view_context)
+        # ! More Objects To Display at.
+        view_context['non_operational_count'] = DeviceInfo.objects.filter(Device_Status='Non-Operational').count()
+        view_context['operational_count'] = DeviceInfo.objects.filter(Device_Status='Operational').count()
+        view_context['opened_count'] = DeviceInfo.objects.filter(Device_Status='Opened').count()
+        view_context['in_use_count'] = DeviceInfo.objects.filter(Device_Status='In-Use').count()
+        view_context['closed_count'] = DeviceInfo.objects.filter(Device_Status='Closed').count()
+        view_context['refresh_recent_time'] = datetime.datetime.now().time().strftime('%I:%M%p')
+
+        # ! Admin View for Classroom Systems
+        view_context['dev_offline_closed'] = DeviceInfo.objects.filter(Device_Status='Closed')
+        view_context['dev_offline_non_operational'] = DeviceInfo.objects.filter(Device_Status='Non-Operational')
+        view_context['dev_online_operational'] = DeviceInfo.objects.filter(Device_Status='Operational')
+        view_context['dev_online_opened'] = DeviceInfo.objects.filter(Device_Status='Opened')
+        view_context['dev_online_in_use'] = DeviceInfo.objects.filter(Device_Status='In-Use')
+
+        if current_user.user_role in ("Project Owner",  "Project Member", "ITSO Administrator",  "ITSO Member"):
+            view_context['classroom_logs'] = ClassroomActionLog.objects.all().order_by('-TimeRecorded')[:5]
+            print("Triggered.")
+        elif current_user.user_role == "Professor":
+
+            view_context['classroom_logs'] = ClassroomActionLog.objects.filter().order_by('-TimeRecorded')[:5]
+        print(current_user.user_role)
+
+        #print(view_context)
 
         return view_context # ! Return the Context to be rendered later on.
 
