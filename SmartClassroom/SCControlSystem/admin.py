@@ -20,13 +20,15 @@ from .forms import UserAuthForm
 
 class ClassroomActionLogAttributes(admin.ModelAdmin):
     model = ClassroomActionLog
-    list_display = ('Course_Reference', 'ActionLevel', 'UserActionTaken')
-    list_filter = ('Course_Reference', 'ActionLevel', 'UserActionTaken')
+    list_display = ('Course_Reference', 'ActionLevel', 'UserActionTaken', 'TimeRecorded')
+    list_filter = ('Course_Reference', 'ActionLevel', 'UserActionTaken', 'TimeRecorded')
+
+    readonly_fields = ('TimeRecorded',)
 
 class ClassroomAttributes(admin.ModelAdmin):
     model = Classroom
-    list_display = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Status', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_Type')
-    list_filter = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Status', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_Type')
+    list_display = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_Type')
+    list_filter = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_Type')
 
     readonly_fields = ('Classroom_CompleteString',)
 
@@ -47,8 +49,8 @@ class BranchAttributes(admin.ModelAdmin):
 
 class DeviceInfoAttributes(admin.ModelAdmin):
     model = DeviceInfo
-    list_display = ('Device_Name', 'Device_IP_Address', 'Device_Class_Ref', 'Device_Unique_ID',)
-    list_filter = ('Device_Name', 'Device_IP_Address', 'Device_Class_Ref', 'Device_Unique_ID',)
+    list_display = ('Device_Name', 'Device_Status', 'Device_IP_Address', 'Device_Class_Ref', 'Device_Unique_ID',)
+    list_filter = ('Device_Name', 'Device_Status', 'Device_IP_Address', 'Device_Class_Ref', 'Device_Unique_ID',)
 
     readonly_fields = ('Device_Unique_ID',)
 
