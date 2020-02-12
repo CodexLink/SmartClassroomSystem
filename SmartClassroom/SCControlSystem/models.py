@@ -44,7 +44,7 @@ class UserDataCredentials(AbstractUser):
     middle_name = models.CharField(max_length=20, null=True, blank=True, help_text="A Name that is not supplied by User Model. Added for Unique User Purposes.")
     unique_id = models.UUIDField(max_length=32, default=uuid4, editable=False, unique=True, help_text="A Unique Identifier for your Account. This is used for DB authentication and references. Please DO NOT SHARE IT OUTSIDE.")
     user_role = models.CharField(max_length=27, null=False, blank=False, choices=RoleDeclaredTypes, default=RoleDeclaredTypes[0], help_text="Roles Defined that gives users multiple actions to do. Pick one with RISK.")
-    dept_residence = models.ForeignKey(ProgramBranch, to_field="ProgramBranch_Code", verbose_name='Staff Department Residence', help_text='Please refer the program code form where this staff resides.', null=False, blank=False, on_delete=models.CASCADE)
+    dept_residence = models.ForeignKey(ProgramBranch, to_field="ProgramBranch_Code", verbose_name='Staff Department Residence', help_text='Please refer the program code form where this staff resides.', null=True, blank=True, on_delete=models.CASCADE)
     avatar = models.ImageField(null=True, blank=True, upload_to=user_avatar_path)
 
     def __str__(self):
@@ -74,7 +74,6 @@ class Classroom(models.Model):
     Classroom_Floor = models.PositiveIntegerField(null=False, blank=False, verbose_name='Classroom Floor Assignment', help_text='The floor of the building from where the classroom resides.', default=BuildingFloors[0], choices=BuildingFloors)
     Classroom_Number = models.PositiveIntegerField(null=False, blank=False, verbose_name='Classroom Number', help_text='The room number assignment of the classroom.', default=1, validators=[MinValueValidator(1), MaxValueValidator(29)])
     Classroom_Type = models.CharField(max_length=29, null=False, blank=False, verbose_name='Classroom Instructure Type', help_text='The type of the classroom.', validators=[MinLengthValidator(13), MaxLengthValidator(29)], default=CourseSessionTypes[0], choices=CourseSessionTypes)
-    Classroom_Status = models.CharField(max_length=15, null=False, blank=False, verbose_name='Classroom Instructure Status', help_text='Status Indication of the classroom. Required', validators=[MinLengthValidator(6), MaxLengthValidator(15)], default='Non-Operational', choices=ClassroomStates)
     Classroom_CompleteString = models.CharField(max_length=6, null=True, blank=True, unique=True, verbose_name='Classroom Complete CodeName',  help_text="This field is automatically filled when you submit it. Putting any value result to it, being discarded.", validators=[MinLengthValidator(6), MaxLengthValidator(6)])
 
     def __str__(self):
@@ -112,7 +111,8 @@ class DeviceInfo(models.Model):
     Device_Name = models.CharField(max_length=100, null=False, blank=False, verbose_name='Device Name', help_text='Please indicate. We need to know what kind of device is it gonna be to communicate with the app.', validators=[MinLengthValidator(5), MaxLengthValidator(100)])
     Device_Class_Ref = models.OneToOneField(Classroom, verbose_name='Classroom Device Assignment', help_text='Indication of where the device resides.', null=False, blank=False, on_delete=models.CASCADE)
     Device_Unique_ID = models.UUIDField(max_length=32, default=uuid4, editable=False, unique=True, verbose_name='Device Unique ID', help_text="A Unique Identifier for the Device. This is used classroom assignment unique identity of the device.")
-    Device_IP_Address = models.GenericIPAddressField(null=False, blank=False, protocol='ipv4')
+    Device_Status = models.CharField(max_length=15, null=False, blank=False, verbose_name='Device Status', help_text='Status Indication of the device. Required. Basically this must match from the classroom status that is currently assigned with.', validators=[MinLengthValidator(6), MaxLengthValidator(15)], default='Non-Operational', choices=ClassroomStates)
+    Device_IP_Address = models.GenericIPAddressField(null=False, blank=False, protocol='ipv4', unique=True)
 
     def __str__(self):
         return '%s | %s | %s' % (self.Device_Name, self.Device_IP_Address, self.Device_Class_Ref)
@@ -151,7 +151,7 @@ class SectionGroup(models.Model):
     Section_Year = models.PositiveIntegerField(choices=YearBatchClasses, verbose_name='Section Year', help_text='Indicate the section level.', null=False, blank=False)
     Section_Semester = models.PositiveIntegerField(verbose_name='Section Semester', help_text='Indicate the section semester', null=False, blank=False, choices=SemClassification)
     Section_SubUniqueGroup = models.CharField(max_length=3, verbose_name='Section SubUnique Group', help_text='Subunique Group that distinct other section from one another.', null=False, blank=False, choices=SubSectionUniqueKeys, validators=[MinLengthValidator(3), MaxLengthValidator(3)])
-    Section_CompleteStringGroup = models.CharField(max_length=10, verbose_name='Section Complete Codename', help_text='Combined Information into one Codename. This cannot be modified nor replaced. This is submit-dependent content value.', null=False, blank=False, unique=True, validators=[MinLengthValidator(1), MaxLengthValidator(5)])
+    Section_CompleteStringGroup = models.CharField(max_length=10, primary_key=True, verbose_name='Section Complete Codename', help_text='Combined Information into one Codename. This cannot be modified nor replaced. This is submit-dependent content value.', null=False, blank=False, unique=True, validators=[MinLengthValidator(1), MaxLengthValidator(5)])
 
     def __str__(self):
         return 'Section %s' % (self.Section_CompleteStringGroup)
@@ -185,6 +185,7 @@ class CourseSchedule(models.Model):
     CourseSchedule_CourseReference = models.OneToOneField(Course, verbose_name='Course Reference', help_text='Refers to a candidated subject from which allocates the time.', primary_key=True, to_field="Course_Code", null=False, blank=False, unique=True, on_delete=models.CASCADE)
     CourseSchedule_Instructor = models.OneToOneField(UserDataCredentials, verbose_name='Course Instructor', help_text='Refers to an instructor who teach the following course.', to_field="unique_id", null=False, blank=False, on_delete=models.CASCADE)
     CourseSchedule_Room = models.ForeignKey(Classroom, verbose_name='Course Classroom Assignment', help_text='Refers to a classroom that is currently in vacant in which the session takes place.', null=False, blank=False, to_field="Classroom_CompleteString", related_name="ClassRoomMainReference", on_delete=models.CASCADE)
+    CourseSchedule_Section = models.OneToOneField(SectionGroup, verbose_name='Section Course Assignment', help_text='Refers to a section who partakes to this course.', null=True, blank=True, to_field="Section_CompleteStringGroup", on_delete=models.CASCADE)
     CourseSchedule_Session_Start = models.TimeField(verbose_name='Course Session Start Time', help_text='Refers to a time start session point.', null=False, blank=False, unique=True)
     CourseSchedule_Session_End = models.TimeField(verbose_name='Course Session End Time', help_text='Refers to a time end session point.', null=False, blank=False, unique=False)
     CourseSchedule_Lecture_Day = models.CharField(max_length=9, verbose_name='Course Lecture Day', help_text='Refers to a day in which the course session takes place.', null=False, blank=False, default=SessionDaysClassification[0], choices=SessionDaysClassification, unique=True, validators=[MinLengthValidator(6), MaxLengthValidator(9)])
@@ -204,7 +205,8 @@ class ClassroomActionLog(models.Model):
 
     UserActionTaken = models.CharField(verbose_name='Staff / User Action Message', help_text='A set of action taken by the stuff and user that is recently recorded by the system.', max_length=255, null=False, blank=False, choices=ClassroomActionTypes)
     ActionLevel = models.CharField(verbose_name='Log Action Level', help_text='The level of log indication. This only benefit for actions being filtered.', max_length=255, null=False, blank=False, choices=LevelAlert)
-    Course_Reference = models.OneToOneField(CourseSchedule, verbose_name='Schedule Instance Reference', help_text='The course with its schedule referenced into one.', null=False, blank=False, related_name="CourseAssociated", on_delete=models.CASCADE)
+    Course_Reference = models.ForeignKey(CourseSchedule, verbose_name='Schedule Instance Reference', help_text='The course with its schedule referenced into one.', null=False, blank=False, on_delete=models.CASCADE)
+    TimeRecorded = models.DateTimeField(auto_now_add=True, verbose_name='Log Action Recorded Time', help_text="Refers to a time from where the log recorded someone's actions.", null=False, blank=False, editable=False)
 
     def __str__(self):
         return 'Level %s | Action: %s | Session of %s ' % (self.ActionLevel, self.UserActionTaken, self.Course_Reference,)
