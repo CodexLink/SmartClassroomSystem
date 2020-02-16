@@ -27,15 +27,17 @@ class ClassroomActionLogAttributes(admin.ModelAdmin):
 
 class ClassroomAttributes(admin.ModelAdmin):
     model = Classroom
-    list_display = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_Type')
-    list_filter = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_Type')
+    list_display = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_Type', 'Classroom_Unique_ID')
+    list_filter = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_Type', 'Classroom_Unique_ID')
 
-    readonly_fields = ('Classroom_CompleteString',)
+    readonly_fields = ('Classroom_CompleteString', 'Classroom_Unique_ID')
 
 class CourseScheduleAttributes(admin.ModelAdmin):
     model = CourseSchedule
-    list_display = ('CourseSchedule_CourseReference', 'CourseSchedule_Instructor', 'CourseSchedule_Room', 'CourseSchedule_Session_Start', 'CourseSchedule_Session_End', 'CourseSchedule_Lecture_Day',)
-    list_filter = ('CourseSchedule_CourseReference', 'CourseSchedule_Instructor', 'CourseSchedule_Room', 'CourseSchedule_Session_Start', 'CourseSchedule_Session_End', 'CourseSchedule_Lecture_Day',)
+    list_display = ('CourseSchedule_CourseReference', 'CourseSchedule_Instructor', 'CourseSchedule_Room', 'CourseSchedule_Session_Start', 'CourseSchedule_Session_End', 'CourseSchedule_Lecture_Day')
+    list_filter = ('CourseSchedule_CourseReference', 'CourseSchedule_Instructor', 'CourseSchedule_Room', 'CourseSchedule_Session_Start', 'CourseSchedule_Session_End', 'CourseSchedule_Lecture_Day')
+
+    #readonly_fields = ('CourseSchedule_Unique_ID',)
 
 class CourseAttributes(admin.ModelAdmin):
     model = Course
@@ -49,15 +51,17 @@ class BranchAttributes(admin.ModelAdmin):
 
 class DeviceInfoAttributes(admin.ModelAdmin):
     model = DeviceInfo
-    list_display = ('Device_Name', 'Device_Status', 'Device_IP_Address', 'Device_Class_Ref', 'Device_Unique_ID',)
-    list_filter = ('Device_Name', 'Device_Status', 'Device_IP_Address', 'Device_Class_Ref', 'Device_Unique_ID',)
+    list_display = ('Device_Name', 'Device_Status', 'Device_IP_Address', 'Device_Unique_ID',)
+    list_filter = ('Device_Name', 'Device_Status', 'Device_IP_Address', 'Device_Unique_ID',)
 
     readonly_fields = ('Device_Unique_ID',)
 
 class SensOutputAttributes(admin.ModelAdmin):
     model = SensOutput
-    list_display = ('Sens_Name', 'Sens_Ref', 'Sens_Type', 'Sens_Output')
-    list_filter = ('Sens_Name', 'Sens_Ref', 'Sens_Type', 'Sens_Output')
+    list_display = ('Sens_Name', 'Sens_Ref', 'Sens_Type', 'Sens_Output', 'Sens_Date_Committed')
+    list_filter = ('Sens_Name', 'Sens_Ref', 'Sens_Type', 'Sens_Output', 'Sens_Date_Committed')
+
+    readonly_fields = ('Sens_Date_Committed',)
 
 class SectionGroupAttributes(admin.ModelAdmin):
     model = SectionGroup
