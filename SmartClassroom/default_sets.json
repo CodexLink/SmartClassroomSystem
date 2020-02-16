@@ -375,7 +375,6 @@
     "pk": 1,
     "fields": {
         "Device_Name": "NodeMCU",
-        "Device_Class_Ref": 1,
         "Device_Unique_ID": "98e9af78-adc2-4d39-9ddd-584d5084ba34",
         "Device_IP_Address": "192.168.1.1"
     }
@@ -386,7 +385,8 @@
         "Sens_Name": "DHT22 Temperature Sensor",
         "Sens_Ref": "98e9af78-adc2-4d39-9ddd-584d5084ba34",
         "Sens_Type": "Digital Device",
-        "Sens_Output": "27.1"
+        "Sens_Output": "27.1",
+        "Sens_Date_Committed": "2020-02-15"
     }
 }, {
     "model": "SCControlSystem.sectiongroup",
@@ -414,7 +414,8 @@
     "fields": {
         "UserActionTaken": "Classroom is Opened.",
         "ActionLevel": "Info",
-        "Course_Reference": "CPE 013"
+        "Course_Reference": "CPE 013",
+        "TimeRecorded": "2020-02-15 07:25:24"
     }
 }, {
     "model": "auth.permission",
