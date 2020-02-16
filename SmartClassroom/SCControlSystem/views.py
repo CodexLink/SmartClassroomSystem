@@ -11,7 +11,7 @@ from requests import get
 from requests.exceptions import ConnectionError
 
 from .forms import UserAuthForm
-from .models import UserDataCredentials, CourseSchedule, ClassroomActionLog, Classroom, DeviceInfo
+from .models import *
 import datetime
 
 # ! Global Variables !
@@ -34,7 +34,6 @@ class HomeView(TemplateView):
 
         return view_context # ! Return the Context to be rendered later on.
 
-
 class DashboardView(PermissionRequiredMixin, TemplateView):
     login_url = reverse_lazy('auth_user_view')
     template_name = template_view
@@ -54,31 +53,30 @@ class DashboardView(PermissionRequiredMixin, TemplateView):
         view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.middle_name if current_user.middle_name is not None else '', current_user.last_name)
         view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
-
-        # ! More Objects To Display at.
-        view_context['non_operational_count'] = DeviceInfo.objects.filter(Device_Status='Non-Operational').count()
-        view_context['operational_count'] = DeviceInfo.objects.filter(Device_Status='Operational').count()
-        view_context['opened_count'] = DeviceInfo.objects.filter(Device_Status='Opened').count()
-        view_context['in_use_count'] = DeviceInfo.objects.filter(Device_Status='In-Use').count()
-        view_context['closed_count'] = DeviceInfo.objects.filter(Device_Status='Closed').count()
         view_context['refresh_recent_time'] = datetime.datetime.now().time().strftime('%I:%M%p')
 
-        # ! Admin View for Classroom Systems
-        view_context['dev_offline_closed'] = DeviceInfo.objects.filter(Device_Status='Closed')
-        view_context['dev_offline_non_operational'] = DeviceInfo.objects.filter(Device_Status='Non-Operational')
-        view_context['dev_online_operational'] = DeviceInfo.objects.filter(Device_Status='Operational')
-        view_context['dev_online_opened'] = DeviceInfo.objects.filter(Device_Status='Opened')
-        view_context['dev_online_in_use'] = DeviceInfo.objects.filter(Device_Status='In-Use')
-
+        # ! More Objects To Display at.
         if current_user.user_role in ("Project Owner",  "Project Member", "ITSO Administrator",  "ITSO Member"):
+            view_context['cr_unlocked_count'] = DeviceInfo.objects.filter(Device_Status='Unlocked').count()
+            view_context['cr_locked_count'] = DeviceInfo.objects.filter(Device_Status='Locked').count()
+            view_context['cr_in_use_count'] = DeviceInfo.objects.filter(Device_Status='In-Use').count()
+
+            view_context['dev_offline_count'] = DeviceInfo.objects.filter(Device_Status='Offline').count()
+            view_context['dev_online_count'] = DeviceInfo.objects.filter(Device_Status='Locked').count()
+            view_context['dev_unknown_count'] = DeviceInfo.objects.filter(Device_Status='Unknown').count()
+
+            # ! Admin View for Classroom Systems
+            view_context['dev_offline_candidates'] = DeviceInfo.objects.filter(Device_Status='Offline').select_related('classroom')
+            view_context['dev_online_candidates'] = DeviceInfo.objects.filter(Device_Status='Online').select_related('classroom')
+            view_context['dev_unknown_candidates'] = DeviceInfo.objects.filter(Device_Status='Unknown').select_related('classroom')
+
             view_context['classroom_logs'] = ClassroomActionLog.objects.all().order_by('-TimeRecorded')[:5]
-            print("Triggered.")
+
         elif current_user.user_role == "Professor":
-
-            view_context['classroom_logs'] = ClassroomActionLog.objects.filter().order_by('-TimeRecorded')[:5]
-        print(current_user.user_role)
-
-        #print(view_context)
+            view_context['schedule_weekday_name'] = datetime.datetime.today().strftime('%A')
+            # ! We currently looking at foreign key here.
+            view_context['schedule_candidates'] = CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Lecture_Day=view_context['schedule_weekday_name']).order_by('-CourseSchedule_Session_Start')
+            view_context['classroom_logs'] = ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Instructor__first_name=current_user.first_name, Course_Reference__CourseSchedule_Instructor__middle_name=current_user.middle_name, Course_Reference__CourseSchedule_Instructor__last_name=current_user.last_name).order_by('-TimeRecorded')[:5]
 
         return view_context # ! Return the Context to be rendered later on.
 
@@ -94,14 +92,13 @@ class DashboardView(PermissionRequiredMixin, TemplateView):
         print(self.get_permission_required())
         return super(DashboardView, self).handle_no_permission()
 
-        #return redirect(reverse_lazy('deauth_user_view'))
-
 class ClassroomView(PermissionRequiredMixin, ListView):
     login_url = reverse_lazy('auth_user_view')
     template_name = template_view
     model = Classroom
+    queryset = Classroom.objects.all().order_by('Classroom_CompleteString')
 
-    permission_required = 'SCControlSystem.classroom_viewable'
+    permission_required = ('SCControlSystem.user_high_level_required', 'SCControlSystem.classroom_viewable')
 
     more_context = {
         "title_view": "Classroom List",
@@ -115,21 +112,16 @@ class ClassroomView(PermissionRequiredMixin, ListView):
         view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.middle_name if current_user.middle_name is not None else '', current_user.last_name)
         view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
-
         return view_context
-
-    #def sendMCUData(self):
-    #    try:
-    #        return requests.get("http://192.168.100.41/RequestSens", timeout=.1)
-    #    except ConnectionError as Err:
-    #        return None
-    #        #self.response.text = None
-    #        pass
 
 class SelectableClassroomView(PermissionRequiredMixin, DetailView):
     login_url = reverse_lazy('auth_user_view')
     template_name = template_view
     model = Classroom
+    slug_field = 'Classroom_Unique_ID'
+    slug_url_kwarg = 'classUniqueID'
+
+    # ! ADD SCHEDULE VIEWABLE
     permission_required = ('SCControlSystem.classroom_viewable',
                           'SCControlSystem.classroom_action_log_viewable',
                           )
@@ -147,19 +139,12 @@ class SelectableClassroomView(PermissionRequiredMixin, DetailView):
         view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
 
-        print(view_context)
-
+        # ! Classroom has technical diced complete string info and can use to get SensorInfo
+        # ! Course Schedule can get all teachers, subjects, section and time involved here.
+        view_context['CourseRelatedAttributes'] = CourseSchedule.objects.all().order_by('-CourseSchedule_CourseReference')
+        # ! We then can use filter by Classroom but we do it all.
+        view_context['ClassLogs'] = ClassroomActionLog.objects.all().order_by('-TimeRecorded')
         return view_context # ! Return the Context to be rendered later on.
-
-
-
- # Temporarily place this one.
-    def get(self, request, classRoomID=None):
-        return render(request, template_view, self.more_context)
-
-    def post(self, request, classRoomID=None):
-        pass
-
 
 class ScheduleListView(PermissionRequiredMixin, ListView):
     login_url = reverse_lazy('auth_user_view')
@@ -173,6 +158,9 @@ class ScheduleListView(PermissionRequiredMixin, ListView):
         "ClassInstance": str(__qualname__),
     }
 
+    def get_queryset(self):
+        return CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=self.request.user.first_name, CourseSchedule_Instructor__middle_name=self.request.user.middle_name, CourseSchedule_Instructor__last_name=self.request.user.last_name).order_by('-CourseSchedule_Session_Start')
+
     def get_context_data(self, **kwargs): # ! Override Get_Context_Data by adding more data.
         current_user = self.request.user
         view_context = super(ScheduleListView, self).get_context_data(**kwargs) # * Get the default context to override to.
@@ -180,9 +168,7 @@ class ScheduleListView(PermissionRequiredMixin, ListView):
         view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.middle_name if current_user.middle_name is not None else '', current_user.last_name)
         view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
-
-        print(view_context)
-
+        view_context['schedule_weekday_name'] = datetime.datetime.today().strftime('%A')
         return view_context # ! Return the Context to be rendered later on.
 
 # ! Authentication Classes
@@ -208,7 +194,6 @@ class AuthUserView(LoginView):
         view_context['ClassInstance'] = self.more_context['ClassInstance'] # ! And so on.
 
         return view_context # ! Return the Context to be rendered later on.
-
 
     def get_success_url(self):
         return self.success_url # * We get redirect to the value of this attribute.
@@ -247,9 +232,15 @@ class StaffActionsListView(PermissionRequiredMixin, ListView):
     permission_required = 'SCControlSystem.classroom_action_log_viewable'
 
     more_context = {
-        "title_view": "Actions Data Log",
+        "title_view": "Action Logs",
         "ClassInstance": str(__qualname__),
     }
+
+    def get_queryset(self):
+        if self.request.user.user_role in ("Project Owner",  "Project Member", "ITSO Administrator",  "ITSO Member"):
+            return ClassroomActionLog.objects.all().order_by('-TimeRecorded')
+        else:
+            return ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Instructor__first_name=self.request.user.first_name, Course_Reference__CourseSchedule_Instructor__middle_name=self.request.user.middle_name, Course_Reference__CourseSchedule_Instructor__last_name=self.request.user.last_name).order_by('-TimeRecorded')
 
     def get_context_data(self, **kwargs): # ! Override Get_Context_Data by adding more data.
         current_user = self.request.user
@@ -258,7 +249,4 @@ class StaffActionsListView(PermissionRequiredMixin, ListView):
         view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.middle_name if current_user.middle_name is not None else '', current_user.last_name)
         view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
-
-        print(view_context)
-
         return view_context # ! Return the Context to be rendered later on.
