@@ -96,7 +96,6 @@ ClassroomActionTypes = (
 LevelAlert = (
     ("Info", "Info"),
     ("Warning", "Warning"),
-    ("Danger", "Danger"),
     ("Alert", "Alert")
 )
 
@@ -162,9 +161,13 @@ DevDeclarationTypes = (
 )
 
 ClassroomStates = (
-    ("Operational", "Operational"),
     ("In-Use", "In-Use"),
-    ("Opened", "Opened"),
-    ("Closed", "Closed"),
-    ("Non-Operational", "Non-Operational")
+    ("Unlocked", "Unlocked"),
+    ("Locked", "Locked"),
+)
+
+DeviceStates = (
+    ("Online", "Online"),
+    ("Offline", "Offline"),
+    ("Unknown", "Unknown"),
 )
