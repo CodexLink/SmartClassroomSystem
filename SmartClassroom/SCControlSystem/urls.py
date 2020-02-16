@@ -25,7 +25,7 @@ urlpatterns = [
     path('dashboard/', DashboardView.as_view(), name='dashboard_user_view'),
     path('logs/', StaffActionsListView.as_view(), name='staff_action_logs_view'),
     # ! Staff Only Accesible URLs
-    path('classroom/<str:classRoomID>/control/', SelectableClassroomView.as_view(), name='classroom_info_view'),
+    path('classroom/<uuid:classUniqueID>/control/', SelectableClassroomView.as_view(), name='classroom_info_view'),
     path('schedule/', ScheduleListView.as_view(), name='schedule_exclusive_view'), # ! For teachers only.
     # ! Admin Only URLs
     path('classroom/', ClassroomView.as_view(), name='classroom_user_view'),
