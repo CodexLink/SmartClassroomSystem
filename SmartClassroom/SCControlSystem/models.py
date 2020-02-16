@@ -38,6 +38,7 @@ class UserDataCredentials(AbstractUser):
         db_table = "user_auth_crendentials"
         permissions = [
             ("dashboard_viewable", "Can view the dashboard itself. This must be allowed for everyone."),
+            ("user_high_level_required", "A custom permission that can be used to distinct users from their roles. Higher level are the only available to access a particualr view."),
         ]
 
     # ! These commented fields has been already existing in the User Model. So by extending it, we have only few fields to declare right now.
@@ -49,6 +50,34 @@ class UserDataCredentials(AbstractUser):
 
     def __str__(self):
         return '%s | %s %s %s | %s' % (self.username, self.first_name, self.middle_name, self.last_name, self.dept_residence)
+
+class DeviceInfo(models.Model):
+    class Meta:
+        verbose_name = "Classroom MCU Device"
+        db_table = "dev_decl"
+
+    Device_Name = models.CharField(max_length=100, null=False, blank=False, unique=True, verbose_name='Device Name', help_text='Please indicate. We need to know what kind of device is it gonna be to communicate with the server.', validators=[MinLengthValidator(5), MaxLengthValidator(100)])
+    Device_Unique_ID = models.UUIDField(max_length=32, default=uuid4, editable=False, unique=True, verbose_name='Device Unique ID', help_text="A Unique Identifier for the Device. This is used classroom assignment unique identity of the device.")
+    Device_Status = models.CharField(max_length=15, null=False, blank=False, verbose_name='Device Status', help_text='Status Indication of the device. Required. Basically this must match from the classroom status that is currently assigned with.', validators=[MinLengthValidator(6), MaxLengthValidator(15)], default='Unknown', choices=DeviceStates)
+    Device_IP_Address = models.GenericIPAddressField(null=False, blank=False, protocol='ipv4', unique=True)
+
+    def __str__(self):
+        return '%s | %s' % (self.Device_Name, self.Device_IP_Address)
+
+class SensOutput(models.Model):
+    class Meta:
+        verbose_name = "Classroom Device Sensor Output"
+        db_table = "dev_sens_output"
+
+    Sens_Name = models.CharField(max_length=100, null=False, blank=False, verbose_name='Sensors Name', help_text='Please indicate. We need to know what kind of sensors is it gonna be to communicate with the app.', validators=[MinLengthValidator(5), MaxLengthValidator(100)])
+    Sens_Ref = models.ForeignKey(DeviceInfo, to_field='Device_Unique_ID', verbose_name='Sensors Unique Reference', help_text='Indication of where the data comes from.', null=False, blank=False, on_delete=models.CASCADE)
+    Sens_Type = models.CharField(max_length=29, null=False, blank=False, verbose_name='Sensors Type', help_text='The type of the sensors. This needs to be indicated to properly identify what kind of output it returns.', validators=[MinLengthValidator(13), MaxLengthValidator(15)], default=DevDeclarationTypes[0], choices=DevDeclarationTypes)
+    Sens_Output = models.CharField(max_length=255, verbose_name='Sensors Referred Output', help_text='The output of the sensors can be a string, integer, float, or boolean.', null=False, blank=False)
+    Sens_Date_Committed = models.DateTimeField(verbose_name='Sensors Date Committed', help_text='The date and time from where the the output of the sensors is committed. ', null=False, blank=False, auto_now_add=True)
+
+    def __str__(self):
+        return '%s | %s | %s — %s' % (self.Sens_Name, self.Sens_Ref, self.Sens_Type, self.Sens_Output)
+
 '''
 # ! Integrity Information for Classroom Model
 Classroom has set Classroom_CompleteString as the primary key. No other such as unique at this point.
@@ -74,18 +103,26 @@ class Classroom(models.Model):
     Classroom_Floor = models.PositiveIntegerField(null=False, blank=False, verbose_name='Classroom Floor Assignment', help_text='The floor of the building from where the classroom resides.', default=BuildingFloors[0], choices=BuildingFloors)
     Classroom_Number = models.PositiveIntegerField(null=False, blank=False, verbose_name='Classroom Number', help_text='The room number assignment of the classroom.', default=1, validators=[MinValueValidator(1), MaxValueValidator(29)])
     Classroom_Type = models.CharField(max_length=29, null=False, blank=False, verbose_name='Classroom Instructure Type', help_text='The type of the classroom.', validators=[MinLengthValidator(13), MaxLengthValidator(29)], default=CourseSessionTypes[0], choices=CourseSessionTypes)
+    Classroom_Dev = models.OneToOneField(DeviceInfo, verbose_name='Classroom Assigned Device', help_text='Indication of where the device resides.', null=True, blank=True, on_delete=models.CASCADE)
+    Classroom_State = models.CharField(max_length=8, null=False, blank=False, verbose_name='Classroom State', help_text='The current state of the classroom. This is very different from classroom device status.', default='Locked', choices=ClassroomStates)
     Classroom_CompleteString = models.CharField(max_length=6, null=True, blank=True, unique=True, verbose_name='Classroom Complete CodeName',  help_text="This field is automatically filled when you submit it. Putting any value result to it, being discarded.", validators=[MinLengthValidator(6), MaxLengthValidator(6)])
+    Classroom_Unique_ID = models.UUIDField(max_length=32, default=uuid4, null=False, blank=False, unique=True, verbose_name='Classroom Unique ID', help_text="A Unique Identifier for the classrooms. Required for unique identity for the same subject instance with different properties.")
 
     def __str__(self):
         return '%s — %s | %s' % (self.Classroom_CompleteString, self.get_Classroom_Type_display(), self.Classroom_Name)
 
     def save(self, *args, **kwargs):
         self.Classroom_CompleteString = 'Q-%s%s%s' % (self.Classroom_Building, self.Classroom_Floor, str(self.Classroom_Number).zfill(2))
-        super(Classroom, self).save(*args, **kwargs)
+        return super(Classroom, self).save(*args, **kwargs)
+
 
     def clean(self):
         if Classroom.objects.filter(Classroom_Building=self.Classroom_Building, Classroom_Floor=self.Classroom_Floor, Classroom_Number=self.Classroom_Number, Classroom_Type=self.Classroom_Type).exists():
-            raise ValidationError("Error, you might be choosing an occupied room! Please choose another one. Or if you're attempting to change the room name and the form save state failed. Adjust any integer fields by 1 or something that doesn't exists and adjust the name then, revert it back to save the configuration.")
+            try:
+                Classroom.objects.filter(Classroom_Building=self.Classroom_Building, Classroom_Floor=self.Classroom_Floor, Classroom_Number=self.Classroom_Number, Classroom_Type=self.Classroom_Type).update(Classroom_CompleteString=self.Classroom_CompleteString)
+                return super(Classroom, self).clean()
+            except IntegrityError:
+                raise ValidationError("Error, you might be choosing an occupied room! Please choose another one. Or if you're attempting to change the room name and the form save state failed. Adjust any integer fields by 1 or something that doesn't exists and adjust the name then, revert it back to save the configuration.")
         else:
             return super(Classroom, self).clean()
 
@@ -102,34 +139,6 @@ class Course(models.Model):
 
     def __str__(self):
         return '{0} — {1} | {2}'.format(self.Course_Code, self.Course_Name, self.get_Course_Type_display())
-
-class DeviceInfo(models.Model):
-    class Meta:
-        verbose_name = "Classroom MCU Device Information"
-        db_table = "dev_decl"
-
-    Device_Name = models.CharField(max_length=100, null=False, blank=False, verbose_name='Device Name', help_text='Please indicate. We need to know what kind of device is it gonna be to communicate with the app.', validators=[MinLengthValidator(5), MaxLengthValidator(100)])
-    Device_Class_Ref = models.OneToOneField(Classroom, verbose_name='Classroom Device Assignment', help_text='Indication of where the device resides.', null=False, blank=False, on_delete=models.CASCADE)
-    Device_Unique_ID = models.UUIDField(max_length=32, default=uuid4, editable=False, unique=True, verbose_name='Device Unique ID', help_text="A Unique Identifier for the Device. This is used classroom assignment unique identity of the device.")
-    Device_Status = models.CharField(max_length=15, null=False, blank=False, verbose_name='Device Status', help_text='Status Indication of the device. Required. Basically this must match from the classroom status that is currently assigned with.', validators=[MinLengthValidator(6), MaxLengthValidator(15)], default='Non-Operational', choices=ClassroomStates)
-    Device_IP_Address = models.GenericIPAddressField(null=False, blank=False, protocol='ipv4', unique=True)
-
-    def __str__(self):
-        return '%s | %s | %s' % (self.Device_Name, self.Device_IP_Address, self.Device_Class_Ref)
-
-class SensOutput(models.Model):
-    class Meta:
-        verbose_name = "Classroom Device Sensor Output"
-        db_table = "dev_sens_output"
-
-    Sens_Name = models.CharField(max_length=100, null=False, blank=False, verbose_name='Sensors Name', help_text='Please indicate. We need to know what kind of sensors is it gonna be to communicate with the app.', validators=[MinLengthValidator(5), MaxLengthValidator(100)])
-    Sens_Ref = models.ForeignKey(DeviceInfo, to_field='Device_Unique_ID', verbose_name='Sensors Unique Reference', help_text='Indication of where the data comes from.', null=False, blank=False, on_delete=models.CASCADE)
-    Sens_Type = models.CharField(max_length=29, null=False, blank=False, verbose_name='Sensors Type', help_text='The type of the sensors. This needs to be indicated to properly identify what kind of output it returns.', validators=[MinLengthValidator(13), MaxLengthValidator(15)], default=DevDeclarationTypes[0], choices=DevDeclarationTypes)
-    Sens_Output = models.CharField(max_length=255, verbose_name='Sensors Referred Output', help_text='The output of the sensors can be a string, integer, float, or boolean.', null=False, blank=False)
-
-    def __str__(self):
-        return '%s | %s | %s — %s' % (self.Sens_Name, self.Sens_Ref, self.Sens_Type, self.Sens_Output)
-
 '''
 # ! Integrity Information for SectionGroup Model
 We have the same instance of integrity as Classroom Model.
@@ -182,13 +191,15 @@ class CourseSchedule(models.Model):
             ("course_schedule_viewable", "Can view the course schedule window. Used for PermissionRequiredMixin."),
         ]
 
-    CourseSchedule_CourseReference = models.OneToOneField(Course, verbose_name='Course Reference', help_text='Refers to a candidated subject from which allocates the time.', primary_key=True, to_field="Course_Code", null=False, blank=False, unique=True, on_delete=models.CASCADE)
-    CourseSchedule_Instructor = models.OneToOneField(UserDataCredentials, verbose_name='Course Instructor', help_text='Refers to an instructor who teach the following course.', to_field="unique_id", null=False, blank=False, on_delete=models.CASCADE)
+    #CourseSchedule_Unique_ID = models.UUIDField(max_length=32, default=uuid4, editable=False, primary_key=False, help_text="A Unique Identifier for the course schedules.")
+    CourseSchedule_CourseReference = models.ForeignKey(Course, verbose_name='Course Reference', help_text='Refers to a candidated subject from which allocates the time.', to_field="Course_Code", null=False, blank=False, on_delete=models.CASCADE)
+    CourseSchedule_Instructor = models.ForeignKey(UserDataCredentials, verbose_name='Course Instructor', help_text='Refers to an instructor who teach the following course.', to_field="unique_id", null=False, blank=False, on_delete=models.CASCADE)
     CourseSchedule_Room = models.ForeignKey(Classroom, verbose_name='Course Classroom Assignment', help_text='Refers to a classroom that is currently in vacant in which the session takes place.', null=False, blank=False, to_field="Classroom_CompleteString", related_name="ClassRoomMainReference", on_delete=models.CASCADE)
-    CourseSchedule_Section = models.OneToOneField(SectionGroup, verbose_name='Section Course Assignment', help_text='Refers to a section who partakes to this course.', null=True, blank=True, to_field="Section_CompleteStringGroup", on_delete=models.CASCADE)
-    CourseSchedule_Session_Start = models.TimeField(verbose_name='Course Session Start Time', help_text='Refers to a time start session point.', null=False, blank=False, unique=True)
-    CourseSchedule_Session_End = models.TimeField(verbose_name='Course Session End Time', help_text='Refers to a time end session point.', null=False, blank=False, unique=False)
-    CourseSchedule_Lecture_Day = models.CharField(max_length=9, verbose_name='Course Lecture Day', help_text='Refers to a day in which the course session takes place.', null=False, blank=False, default=SessionDaysClassification[0], choices=SessionDaysClassification, unique=True, validators=[MinLengthValidator(6), MaxLengthValidator(9)])
+    CourseSchedule_Section = models.ForeignKey(SectionGroup, verbose_name='Section Course Assignment', help_text='Refers to a section who partakes to this course.', null=True, blank=True, to_field="Section_CompleteStringGroup", on_delete=models.CASCADE)
+    CourseSchedule_Session_Start = models.TimeField(verbose_name='Course Session Start Time', help_text='Refers to a time start session point.', null=False, blank=False)
+    CourseSchedule_Session_End = models.TimeField(verbose_name='Course Session End Time', help_text='Refers to a time end session point.', null=False, blank=False)
+    CourseSchedule_Lecture_Day = models.CharField(max_length=9, verbose_name='Course Lecture Day', help_text='Refers to a day in which the course session takes place.', null=False, blank=False, default=SessionDaysClassification[0], choices=SessionDaysClassification, validators=[MinLengthValidator(6), MaxLengthValidator(9)])
+    #CourseSchedule_Unique_ID = models.OneToOneField(Classroom, max_length=32, null=True, blank=True, unique=True, to_field='Classroom_Unique_ID', verbose_name='Course Schedule Unique ID', help_text="A Unique Identifier for the course schedule. Required for the unique identity which will be referenced later.", on_delete=models.CASCADE)
 
     def __str__(self):
         return 'Schedule of %s | Handled by %s | Every %s | Time: %s-%s' % (self.CourseSchedule_CourseReference, self.CourseSchedule_Instructor, self.CourseSchedule_Lecture_Day, self.CourseSchedule_Session_Start, self.CourseSchedule_Session_End)
