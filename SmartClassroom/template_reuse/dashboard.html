@@ -45,154 +45,12 @@
         <div class="dashboard-item col mb-auto">
             <div class="card">
                 <div class="card-header border-0">
-                    <h2 class="card-title">Recent Action Logs</h2>
-                    <h3 class="card-subtitle text-black-secondary">As of 12/25/2020 12:00AM, here are some set of actions recently recorded.
+                    <h2 class="card-title">Your Actions</h2>
+                    <h3 class="card-subtitle text-black-secondary">As of {{ refresh_recent_time }} , here are your 5 recent actions currently recorded.
                     </h3>
                 </div>
                 <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                    <a href="#" class="list-group-item list-group-item-action active">
-                        <div class="d-flex w-100">
-                            <h6 class="mb-1 text-dark-primary ">CPE013 | Logic Circuits and Design | Lab</h6>
-                        </div>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Q-5424 | CPE22FA1 | 8:05PM of January 24, 2020 <span
-                                class="badge badge-primary badge-pill bg-success">Warning</span></p>
-                        <p class="mb-1">Classroom Electricy was opened by
-                            you.</p>
-                        <small class="text-muted"></small>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1 text-dark-primary">CPE 101 </h6>
-                        </div>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">CPE 101 | Internet of Things | Lecture
-                        </p>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Q-5411 | CPE22FA1 | 8:05PM of January 24, 2020
-                            <span class="badge badge-primary badge-pill">Info</span></p>
-                        <p class="mb-1">Classroom Electricy has been turned off and locked down.</p>
-
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1 text-dark-primary">CPE013</h6>
-                        </div>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Embedded Systems | Lecture</p>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Q-5424 | CPE22FB1
-                            <span class="badge badge-primary badge-pill bg-danger">Danger</span></p>
-                        <p class="mb-1">Classroom has been left opened for 24 minutes! Please turn it off.</p>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1 text-dark-primary">CPE013</h6>
-                        </div>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Embedded Systems | Lecture</p>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Q-5424 | CPE22FB1
-                            <span class="badge badge-primary badge-pill bg-danger">Alert</span></p>
-                        <p class="mb-1">Classroom has been left opened by another instructor. Please get in there!</p>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1 text-dark-primary">CPE013</h6>
-                        </div>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Embedded Systems | Lecture</p>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Q-5424 | CPE22FB1
-                            <span class="badge badge-primary badge-pill bg-danger">Info</span></p>
-                        <p class="mb-1">Classroom has been locked.</p>
-                    </a>
-                </div>
-                <div class="card-actions border-top d-flex justify-content-between align-items-center">
-                    <a class="btn btn-flat-primary" href="{% url 'staff_action_logs_view' %}">View More</a>
-                    <span class="text-muted">Recent Actions Updated as of 12:00AM.</span>
-                </div>
-            </div>
-        </div>
-        <div class="dashboard-grid dashboard-item col mb-auto">
-            <div class="card">
-                <div class="card-header border-0">
-                    <h2 class="card-title">Your Schedule for Today<h2>
-                            <h3 class="card-subtitle text-black-secondary">Today is Friday! Note that you can click on
-                                them to automate something.</h3>
-                </div>
-                <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                    <a href="#" class="list-group-item list-group-item-action active">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1 text-dark-primary">CPE013 | Logic Circuits and Design</h6>
-                        </div>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Lecture Type is Lab<span
-                                class="badge badge-primary badge-pill bg-primary">Current</span></p>
-                        <p class="mb-1 d-flex j
-                ustify-content-between align-items-center">Q-5424 | CPE22FA1 | M W F | 07:30AM to 11:30AM</p>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1 text-dark-primary">CPE013 | Lecture</h6>
-                        </div>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Logic Circuits and Design
-                            <span class="badge badge-primary badge-pill bg-secondary">Up Next</span></p>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Q-5411 | CPE22FA1 | M W F |
-                            04:30PM to 5:30PM</p>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1 text-dark-primary">CPE 101 | Lecture</h6>
-                        </div>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Internet of Things</p>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Q-5411 | CPE22FA1 | M W F |
-                            04:30PM to 5:30PM</p>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1 text-dark-primary">CPE013 | Lecture</h6>
-                        </div>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Embedded Systems</p>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Q-5424 | CPE22FB1 | M TH |
-                            07:30PM to 9:30PM</p>
-                    </a>
-                </div>
-                <div class="card-actions border-top">
-
-                    <a class="btn btn-flat-primary" href="{% url 'schedule_exclusive_view' %}">View More Schedules</a>
-                </div>
-            </div>
-        </div>
-        {% elif user_role == "Project Owner" or user_role == "Project Member" or user_role == "ITSO Administrator" or user_role == "ITSO Member" %}
-        <div class="dashboard-item col mb-auto">
-            <div class="card">
-                <div class="card-header border-0">
-                    <h1 class="card-title text-black-primary">Classrooms Status Counter</h1>
-                    <p class="card-text text-black-secondary">Check Classroom Statuses without going even further.</p>
-                </div>
-                <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                    <a class="list-group-item list-group-item-action active d-flex justify-content-between align-items-center"
-                        href="javascript:void(0)" role="tab" aria-controls="home">Non-Operational Status
-                        <span class="badge badge-primary badge-pill bg-danger">{{ non_operational_count }} Currently</span></a>
-                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-                        href="javascript:void(0)" role="tab" aria-controls="profile">Operational Classrooms<span
-                            class="badge badge-primary badge-pill bg-success">{{ operational_count }} Currently</span></a>
-                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-                        href="javascript:void(0)" role="tab" aria-controls="messages">In-Use Classrooms<span
-                            class="badge badge-primary badge-pill bg-dark">{{ in_use_count }} Currently</span></a>
-                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-                        href="javascript:void(0)" role="tab" aria-controls="messages">Opened Classrooms<span
-                            class="badge badge-primary badge-pill bg-info bg-warning">{{ opened_count }} Currently</span></a>
-                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-                        href="javascript:void(0)" role="tab" aria-controls="settings">Closed Classrooms<span
-                            class="badge badge-primary badge-pill bg-info">{{ closed_count }} Currently</span></a>
-                </div>
-                <div class="card-actions border-top d-flex justify-content-between align-items-center">
-
-                    <a class="btn btn-flat-primary" href="{% url 'staff_action_logs_view' %}">View More</a>
-                    <span class="text-muted">Updated as of {{ refresh_recent_time }}.</span>
-                </div>
-            </div>
-        </div>
-        <div class="dashboard-item col mb-auto">
-            <div class="card">
-                <div class="card-header border-0">
-                    <h2 class="card-title">Recent Action Logs</h2>
-                    <h3 class="card-subtitle text-black-secondary">As of {{ refresh_recent_time }} today, here are some set of actions recently recorded.
-                    </h3>
-                </div>
-                <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                    {% if classroom_logs.count %}
                     {% for AllActionLogs in classroom_logs %}
                     <a href="#" class="list-group-item list-group-item-action {%if AllActionLogs.first %} active {% endif %}">
                         <div class="d-flex w-100">
@@ -200,9 +58,111 @@
                         </div>
                         <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllActionLogs.Course_Reference.CourseSchedule_Section }} was handled by {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.first_name }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.middle_name }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.last_name }} <span
                                 class="badge badge-primary badge-pill bg-{{ AllActionLogs.ActionLevel | lower }}">{{ AllActionLogs.ActionLevel }}</span></p>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllActionLogs.UserActionTaken }} <small class="text-black-primary"> {{ AllActionLogs.TimeRecorded }}</small></p>
+                        <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllActionLogs.UserActionTaken }}<small class="text-black-primary"> {{ AllActionLogs.TimeRecorded }}</small></p>
                     </a>
                     {% endfor %}
+                    {% else %}
+                    <a href="#" class="list-group-item list-group-item-action disabled">
+                        <div class="d-flex w-100">
+                            <h6 class="mb-1 text-dark-primary ">No Data</h6>
+                        </div>
+                        <p class="mb-1 d-flex justify-content-between align-items-center">There are no classrooms touched by staffs and teachers!</p>
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="card-actions border-top d-flex justify-content-between align-items-center">
+                    <a class="btn btn-flat-primary" href="{% url 'staff_action_logs_view' %}">View More</a>
+                    <span class="text-muted">Your Actions were updated as of {{ refresh_recent_time }}.</span>
+                </div>
+            </div>
+        </div>
+        <div class="dashboard-grid dashboard-item col mb-auto">
+            <div class="card">
+                <div class="card-header border-0">
+                    <h2 class="card-title">Your Schedule for Today<h2>
+                            <h3 class="card-subtitle text-black-secondary">Today is {{ schedule_weekday_name }}! Note that you can click on
+                                them to automate something.</h3>
+                </div>
+                <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                    {% for ScheduleCandidates in schedule_candidates %}
+                    <a href="#" class="list-group-item list-group-item-action {% if forloop.last %}active{% endif %}">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1 text-dark-primary">{{ ScheduleCandidates.CourseSchedule_CourseReference.Course_Code }} | {{ ScheduleCandidates.CourseSchedule_CourseReference.Course_Name }}</h6>
+                        </div>
+                        <p class="mb-1 d-flex justify-content-between align-items-center">Course Type: {{ ScheduleCandidates.CourseSchedule_CourseReference.Course_Type }}<span
+                                class="badge badge-primary badge-pill bg-primary">Current</span></p>
+                        <p class="mb-1 d-flex justify-content-between align-items-center">{{ ScheduleCandidates.CourseSchedule_Room.Classroom_CompleteString }} | {{ ScheduleCandidates.CourseSchedule_Section.Section_CompleteStringGroup }} | {{ ScheduleCandidates.CourseSchedule_Lecture_Day }} | {{ ScheduleCandidates.CourseSchedule_Session_Start }} — {{ ScheduleCandidates.CourseSchedule_Session_End }}</p>
+                    </a>
+                    {% endfor %}
+                </div>
+                <div class="card-actions border-top d-flex justify-content-between align-items-center">
+
+                    <a class="btn btn-flat-primary" href="{% url 'schedule_exclusive_view' %}">View Detailed Schedules</a>
+                    <span class="text-muted">Your Actions were updated as of {{ refresh_recent_time }}.</span>
+                </div>
+            </div>
+        </div>
+        {% elif user_role == "Project Owner" or user_role == "Project Member" or user_role == "ITSO Administrator" or user_role == "ITSO Member" %}
+        <div class="dashboard-item col mb-auto">
+            <div class="card">
+                <div class="card-header border-0">
+                    <h1 class="card-title text-black-primary">Classroom and Device Counter</h1>
+                    <p class="card-text text-black-secondary">Check Classroom and Device States Counter without going even further.</p>
+                </div>
+                <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        href="javascript:void(0)" role="tab" aria-controls="messages">Classroom Currently In-Use<span
+                            class="badge badge-primary badge-pill bg-in-use">{{ cr_in_use_count }}</span></a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        href="javascript:void(0)" role="tab" aria-controls="home">Classroom at Unlocked State
+                        <span class="badge badge-primary badge-pill bg-unlocked">{{ cr_unlocked_count }}</span></a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        href="javascript:void(0)" role="tab" aria-controls="profile">Classroom at Locked State<span
+                            class="badge badge-primary badge-pill bg-locked">{{ cr_locked_count }}</span></a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        href="javascript:void(0)" role="tab" aria-controls="messages">Device at Online State<span
+                            class="badge badge-primary badge-pill bg-info bg-online">{{ dev_online_count }}</span></a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        href="javascript:void(0)" role="tab" aria-controls="settings">Device at Offline State<span
+                            class="badge badge-primary badge-pill bg-offline">{{ dev_offline_count }}</span></a>
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        href="javascript:void(0)" role="tab" aria-controls="settings">Device at Unknown State<span
+                            class="badge badge-primary badge-pill bg-unknown">{{ dev_unknown_count }}</span></a>
+                </div>
+                <div class="card-actions border-top d-flex justify-content-between align-items-center">
+
+                    <a class="btn btn-flat-primary" href="{% url 'classroom_user_view' %}">View More</a>
+                    <span class="text-muted">Updated as of {{ refresh_recent_time }}.</span>
+                </div>
+            </div>
+        </div>
+        <div class="dashboard-item col mb-auto">
+            <div class="card">
+                <div class="card-header border-0">
+                    <h2 class="card-title">Recent Staff Actions</h2>
+                    <h3 class="card-subtitle text-black-secondary">As of {{ refresh_recent_time }} today, here are some set of actions recently recorded.
+                    </h3>
+                </div>
+                <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                    {% if classroom_logs.count %}
+                    {% for AllActionLogs in classroom_logs %}
+                    <a href="#" class="list-group-item list-group-item-action {%if AllActionLogs.first %} active {% endif %}">
+                        <div class="d-flex w-100">
+                            <h6 class="mb-1 text-dark-primary ">{{ AllActionLogs.Course_Reference.CourseSchedule_Room.Classroom_CompleteString }} | {{ AllActionLogs.Course_Reference.CourseSchedule_CourseReference.Course_Code }} | {{ AllActionLogs.Course_Reference.CourseSchedule_Room.Classroom_Name }}</h6>
+                        </div>
+                        <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllActionLogs.Course_Reference.CourseSchedule_Section }} was handled by {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.first_name }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.middle_name }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.last_name }} <span
+                                class="badge badge-primary badge-pill bg-{{ AllActionLogs.ActionLevel | lower }}">{{ AllActionLogs.ActionLevel }}</span></p>
+                        <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllActionLogs.UserActionTaken }}<small class="text-black-primary"> {{ AllActionLogs.TimeRecorded }}</small></p>
+                    </a>
+                    {% endfor %}
+                    {% else %}
+                    <a href="#" class="list-group-item list-group-item-action disabled">
+                        <div class="d-flex w-100">
+                            <h6 class="mb-1 text-dark-primary ">No Data</h6>
+                        </div>
+                        <p class="mb-1 d-flex justify-content-between align-items-center">There are no classrooms touched by staffs and teachers!</p>
+                    </a>
+                    {% endif %}
                 </div>
                 <div class="card-actions border-top d-flex justify-content-between align-items-center">
                     <a class="btn btn-flat-primary" href="{% url 'staff_action_logs_view' %}">View More</a>
@@ -213,64 +173,56 @@
         <div class="dashboard-item col mb-auto">
             <div class="card">
                 <div class="card-header border-0">
-                    <h2 class="card-title">Classroom Systems States</h2>
-                    <h3 class="card-subtitle text-black-secondary">Check classrooms operational status. Click them for more information.</h3>
+                    <h2 class="card-title">Device Candidate States</h2>
+                    <h3 class="card-subtitle text-black-secondary">Check device operational states. Click them for more information.</h3>
                 </div>
                 <ul class="nav nav-justified nav-tabs" id="justifiedTab" role="tablist">
                     <li class="nav-item">
-                        <a aria-controls="home" aria-selected="true" class="nav-link {% if not dev_online_operational and not dev_online_opened and not dev_online_in_use %} disabled {% else %} active {% endif %}" data-toggle="tab"
+                        <a aria-controls="home" aria-selected="false" class="nav-link {% if not dev_online_candidates %} disabled {% endif %} {% if not dev_offline_candidates and not dev_unknown_candidates %} active {% endif %}" data-toggle="tab"
                             href="#online-dev" id="online-dev-tab" role="tab">Online Devices</a>
                     </li>
                     <li class="nav-item">
-                        <a aria-controls="profile" aria-selected="false" class="nav-link {% if not dev_offline_closed and not dev_offline_non_operational %} disabled {% endif %} {% if not dev_online_operational and not dev_online_opened and not dev_online_in_use %} active {% endif %}" data-toggle="tab"
+                        <a aria-controls="profile" aria-selected="false" class="nav-link {% if not dev_offline_candidates %} disabled {% endif %} {% if not dev_online_candidates  %} active {% endif %}" data-toggle="tab"
                             href="#offline-dev" id="profile-tab" role="tab">Offline Devices</a>
+                    </li>
+                    <li class="nav-item">
+                        <a aria-controls="profile" aria-selected="false" class="nav-link {% if not dev_unknown_candidates %} disabled {% endif %} {% if not dev_offline_candidates %} active {% endif %}" data-toggle="tab"
+                            href="#unknown-dev" id="profile-tab" role="tab">Unknown State</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="justifiedTabContent">
-                    <div aria-labelledby="home-tab" class="tab-pane fade show active" id="online-dev" role="tabpanel">
+                    <div aria-labelledby="home-tab" class="tab-pane fade {% if not dev_offline_candidates and not dev_unknown_candidates %} show active {% endif %}" id="online-dev" role="tabpanel">
                         <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                            {% for OnlineCandidates in dev_online_operational %}
-                            <a href="#" class="list-group-item list-group-item-action">
+                            {% for OnlineCandidates in dev_online_candidates %}
+                            <a href="{% url 'classroom_info_view' classUniqueID=OnlineCandidates.classroom.Classroom_Unique_ID %}" class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1 text-dark-primary">{{ OnlineCandidates.Device_Name }}</h6>
                                 </div>
-                                <p class="mb-1 d-flex justify-content-between align-items-center">Located at {{ OnlineCandidates.Device_Class_Ref.Classroom_CompleteString }} | {{ OnlineCandidates.Device_IP_Address }}<span class="badge badge-primary badge-pill bg-{{OnlineCandidates.Device_Status | lower }}">{{ OnlineCandidates.Device_Status }}</span></p>
-                            </a>
-                            {% endfor %}
-                            {% for OnlineCandidates in dev_online_opened %}
-                            <a href="#" class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1 text-dark-primary">{{ OnlineCandidates.Device_Name }}</h6>
-                                </div>
-                                <p class="mb-1 d-flex justify-content-between align-items-center">Located at {{ OnlineCandidates.Device_Class_Ref.Classroom_CompleteString }} | {{ OnlineCandidates.Device_IP_Address }}<span class="badge badge-primary badge-pill bg-{{OnlineCandidates.Device_Status | lower }}">{{ OnlineCandidates.Device_Status }}</span></p>
-                            </a>
-                            {% endfor %}
-                            {% for OnlineCandidates in dev_online_in_use %}
-                            <a href="#" class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1 text-dark-primary">{{ OnlineCandidates.Device_Name }}</h6>
-                                </div>
-                                <p class="mb-1 d-flex justify-content-between align-items-center">Located at {{ OnlineCandidates.Device_Class_Ref.Classroom_CompleteString }} | {{ OnlineCandidates.Device_IP_Address }}<span class="badge badge-primary badge-pill bg-{{OnlineCandidates.Device_Status | lower }}">{{ OnlineCandidates.Device_Status }}</span></p>
+                                <p class="mb-1 d-flex justify-content-between align-items-center">Located on {{ OnlineCandidates.classroom.Classroom_CompleteString }} with IP Address {{ OnlineCandidates.Device_IP_Address }}<span class="badge badge-primary badge-pill bg-{{OnlineCandidates.Device_Status | lower }}">{{ OnlineCandidates.Device_Status }}</span></p>
                             </a>
                             {% endfor %}
                         </div>
                     </div>
-                    <div aria-labelledby="offline-dev-tab" class="tab-pane fade" id="offline-dev" role="tabpanel">
+                    <div aria-labelledby="offline-dev-tab" class="tab-pane fade {% if not dev_online_candidates %} show active {% endif %}" id="offline-dev" role="tabpanel">
                         <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                            {% for OfflineCandidates in dev_offline_closed %}
+                            {% for OfflineCandidates in dev_offline_candidates %}
                             <a href="#" class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1 text-dark-primary">{{ OfflineCandidates.Device_Name }}</h6>
                                 </div>
-                                <p class="mb-1 d-flex justify-content-between align-items-center">Located at {{ OfflineCandidates.Device_Class_Ref.Classroom_CompleteString }} | {{ OfflineCandidates.Device_IP_Address }}<span class="badge badge-primary badge-pill bg-{{OfflineCandidates.Device_Status | lower }}">{{ OfflineCandidates.Device_Status }}</span></p>
+                                <p class="mb-1 d-flex justify-content-between align-items-center">Located on {{ OfflineCandidates.classroom.Classroom_CompleteString }} with IP Address {{ OfflineCandidates.Device_IP_Address }}<span class="badge badge-primary badge-pill bg-{{OfflineCandidates.Device_Status | lower }}">{{ OfflineCandidates.Device_Status }}</span></p>
                             </a>
                             {% endfor %}
-                            {% for OfflineCandidates in dev_offline_non_operational %}
-                            <a href="#" class="list-group-item list-group-item-action">
+                    </div>
+                </div>
+                    <div aria-labelledby="unknown-dev-tab" class="tab-pane fade {% if not dev_offline_candidates %} show active {% endif %}" id="unknown-dev" role="tabpanel">
+                        <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                            {% for UnknownCandidates in dev_unknown_candidates %}
+                            <a href="{% url 'classroom_info_view' classUniqueID=UnknownCandidates.classroom.Classroom_Unique_ID %}" class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1 text-dark-primary">{{ OfflineCandidates.Device_Name }}</h6>
+                                    <h6 class="mb-1 text-dark-primary">{{ UnknownCandidates.Device_Name }}</h6>
                                 </div>
-                                <p class="mb-1 d-flex justify-content-between align-items-center">Located at {{ OfflineCandidates.Device_Class_Ref.Classroom_CompleteString }} | {{ OfflineCandidates.Device_IP_Address }}<span class="badge badge-primary badge-pill bg-{{OfflineCandidates.Device_Status | lower }}">{{ OfflineCandidates.Device_Status }}</span></p>
+                                <p class="mb-1 d-flex justify-content-between align-items-center">Located on {{ UnknownCandidates.classroom.Classroom_CompleteString }} with IP Address {{ UnknownCandidates.Device_IP_Address }}<span class="badge badge-primary badge-pill bg-{{UnknownCandidates.Device_Status | lower }}">{{ UnknownCandidates.Device_Status }}</span></p>
                             </a>
                             {% endfor %}
                     </div>
