@@ -147,7 +147,7 @@ if (document.querySelector('.local_time_display') !== null) {
 
         var strInitTemplate = "Time is ";
         var strSeperator = " | ";
-        var strLastTemplate = " before dismissal.";
+        var strLast_SessionDone = "Work Dismissed.";
 
         var rawHour = TimeData.getHours();
         var processedHour = (rawHour > 12) ? rawHour - 12 : rawHour;
@@ -161,8 +161,8 @@ if (document.querySelector('.local_time_display') !== null) {
         var meridian = (rawHour > 12) ? "PM" : "AM";
 
         var timeDiff = Math.abs(rawHour - 20); // This signifies all working time up until 8.
-        var strDiffLiteral = (rawHour >= 19) ? " hour" : " hours";
-        var strContent = strInitTemplate + processedHour + ":" + processedMin + ":" + processedSec + " " + meridian + strSeperator + timeDiff + strDiffLiteral + strLastTemplate;
+        var strDiffLiteral = (rawHour >= 19) ? " hour before dismissal." : " hours before dismissal.";
+        var strContent = strInitTemplate + processedHour + ":" + processedMin + ":" + processedSec + " " + meridian + strSeperator + timeDiff + strDiffLiteral;
 
         // Progress Bar Width Setter
         progressWidth = ((Math.abs(TimeData.getHours() / 22) * 100))
