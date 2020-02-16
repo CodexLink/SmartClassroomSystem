@@ -1,1 +1,2 @@
-manage.py dumpdata  --natural-foreign --natural-primary -e contenttypes > DataSetBackups/default_sets.json
+python manage.py dumpdata --natural-foreign --natural-primary -e SCControlSystem.CourseSchedule > DataSetBackups/default_sets.json
+python manage.py dumpdata --natural-foreign --natural-primary  > DataSetBackups/latest_sets.json
