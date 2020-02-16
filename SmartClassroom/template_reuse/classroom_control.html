@@ -4,9 +4,16 @@
                 <div class="card">
                     <div class="card-body">
                         <h2 class="card-title">Classroom Information</h2>
-                        <h3 class="card-subtitle text-black-secondary">Subject Associated is CPE 013 | Embedded Systems</h3>
+                        <h3 class="card-subtitle text-black-secondary">Subject Associated is  | Embedded Systems</h3>
                         <!-- Add some extra descriptions here for admin.-->
-                        <p class="card-text text-black-primary">This room is located at Q-5424 which is a lab type. Happens Every Monday, Wednesday, and Friday. From 08:30AM to 11:30AM</p>
+                        <p class="card-text text-black-primary">This room is located at Q-5424</p>
+                        <p class="card-text text-black-primary">General Information</p>
+                        <ul>
+                            <li>Happens Every Monday, Wednesday, and Friday. From 08:30AM to 11:30AM</li>
+                        </ul>
+                        <p class="card-text text-black-primary">Subject Involved and Schedules</p>
+                        <p class="card-text text-black-primary">Professors Involved</p>
+
                     </div>
                 </div>
             </div>
@@ -14,7 +21,7 @@
                 <div class="card">
                     <div class="card-header border-0">
                         <h2 class="card-title">Classroom Options</h2>
-                        <h3 class="card-subtitle text-black-secondary">Remember: For each actions that you execute, will be recorded by the system!</h3>
+                        <h3 class="card-subtitle text-black-secondary">Remember: For each actions that you execute, will be recorded by th  e system!</h3>
                     </div>
                     <!-- Insert some extra buttons for admin -->
                     <div class="card-body list-group border-0" id="list-tab" role="tablist">
@@ -36,6 +43,18 @@
                         </h3>
                     </div>
                     <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                        {% if ClassLogs %}
+                        {% for AllUserActions in ClassLogs %}
+                        <a href="#" class="list-group-item list-group-item-action {%if AllActionLogs.first %} active {% endif %}">
+                            <div class="d-flex w-100">
+                                <h6 class="mb-1 text-dark-primary ">{{ AllUserActions.Course_Reference.CourseSchedule_Room.Classroom_CompleteString }} | {{ AllUserActions.Course_Reference.CourseSchedule_CourseReference.Course_Code }} | {{ AllUserActions.Course_Reference.CourseSchedule_Room.Classroom_Name }}</h6>
+                            </div>
+                            <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllUserActions.Course_Reference.CourseSchedule_Section }} was handled by {{ AllUserActions.Course_Reference.CourseSchedule_Instructor.first_name }} {{ AllUserActions.Course_Reference.CourseSchedule_Instructor.middle_name }} {{ AllUserActions.Course_Reference.CourseSchedule_Instructor.last_name }} <span
+                                    class="badge badge-primary badge-pill bg-{{ AllUserActions.ActionLevel | lower }}">{{ AllUserActions.ActionLevel }}</span></p>
+                            <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllUserActions.UserActionTaken }}<small class="text-black-primary"> {{ AllUserActions.TimeRecorded }}</small></p>
+                        </a>
+                        {% endfor %}
+                        {% else %}
                         <a href="#" class="list-group-item list-group-item-action active">
                             <div class="d-flex w-100">
                                 <h6 class="mb-1 text-dark-primary ">Classroom Electricity was opened.</h6>
@@ -43,6 +62,7 @@
                             <p class="mb-1 d-flex justify-content-between align-items-center">Happened at 8:05PM of January 24, 2020<span class="badge badge-primary badge-pill bg-success">Warning</span></p>
                             <small class="text-muted">By You (Janrey Tuazon Licas)</small>
                         </a>
+                        {% endif %}
                     </div>
                     <div class="card-actions border-top d-flex justify-content-between align-items-center">
                         <span class="text-muted">Recent Actions Updated as of 12:00AM — 02/08/2020.</span>
