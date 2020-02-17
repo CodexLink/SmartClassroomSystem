@@ -90,6 +90,7 @@ img.primary-user-pic {
         column-count: 1;
     }
 }
+
 @media (min-width: 992px) {
     .card-columns.class-control-column {
         column-count: 2;
@@ -119,19 +120,23 @@ body.log-backfill {
 
 /* ! Custom Pill CSS Rulesets - START */
 
-.bg-alert, .bg-locked, .bg-offline {
-    background-color: #ff2c14!important;
+.bg-alert,
+.bg-locked,
+.bg-offline {
+    background-color: #ff2c14 !important;
 }
 
 .bg-unknown {
-    background-color: #212121!important;
+    background-color: #212121 !important;
 }
 
 .bg-in-use {
-    background-color: #0091EA!important;
+    background-color: #0091EA !important;
 }
-.bg-unlocked, .bg-online {
-    background-color: #00E676!important;
+
+.bg-unlocked,
+.bg-online {
+    background-color: #00E676 !important;
 }
 
 /* ! Custom Pill CSS Rulesets - END */
