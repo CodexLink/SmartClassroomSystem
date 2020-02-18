@@ -56,7 +56,7 @@ class DashboardView(PermissionRequiredMixin, TemplateView):
         view_context['refresh_recent_time'] = datetime.datetime.now().time().strftime('%I:%M%p')
 
         # ! More Objects To Display at.
-        if current_user.user_role in ("Project Owner",  "Project Member", "ITSO Administrator",  "ITSO Member"):
+        if not current_user.user_role == "Professor":
             view_context['cr_unlocked_count'] = DeviceInfo.objects.filter(Device_Status='Unlocked').count()
             view_context['cr_locked_count'] = DeviceInfo.objects.filter(Device_Status='Locked').count()
             view_context['cr_in_use_count'] = DeviceInfo.objects.filter(Device_Status='In-Use').count()
@@ -75,7 +75,7 @@ class DashboardView(PermissionRequiredMixin, TemplateView):
         elif current_user.user_role == "Professor":
             view_context['schedule_weekday_name'] = datetime.datetime.today().strftime('%A')
             # ! We currently looking at foreign key here.
-            view_context['schedule_candidates'] = CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Lecture_Day=view_context['schedule_weekday_name']).order_by('-CourseSchedule_Session_Start')
+            view_context['schedule_candidates'] = CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Lecture_Day=view_context['schedule_weekday_name']).order_by('CourseSchedule_Session_Start')
             view_context['classroom_logs'] = ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Instructor__first_name=current_user.first_name, Course_Reference__CourseSchedule_Instructor__middle_name=current_user.middle_name, Course_Reference__CourseSchedule_Instructor__last_name=current_user.last_name).order_by('-TimeRecorded')[:5]
 
         return view_context # ! Return the Context to be rendered later on.
@@ -114,11 +114,11 @@ class ClassroomView(PermissionRequiredMixin, ListView):
         view_context['ClassInstance'] = self.more_context['ClassInstance']
         return view_context
 
-class SelectableClassroomView(PermissionRequiredMixin, DetailView):
+class SelectableClassroomView(PermissionRequiredMixin, ListView):
     login_url = reverse_lazy('auth_user_view')
     template_name = template_view
-    model = Classroom
-    slug_field = 'Classroom_Unique_ID'
+    model = CourseSchedule # ! We use CourseSchedule Model Instead of Classroom. Because Inheritance
+
     slug_url_kwarg = 'classUniqueID'
 
     # ! ADD SCHEDULE VIEWABLE
@@ -131,6 +131,9 @@ class SelectableClassroomView(PermissionRequiredMixin, DetailView):
         "ClassInstance": str(__qualname__),
     }
 
+    def get_queryset(self):
+        return CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID'])
+
     def get_context_data(self, **kwargs): # ! Override Get_Context_Data by adding more data.
         current_user = self.request.user
         view_context = super(SelectableClassroomView, self).get_context_data(**kwargs) # * Get the default context to override to.
@@ -138,12 +141,18 @@ class SelectableClassroomView(PermissionRequiredMixin, DetailView):
         view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.middle_name if current_user.middle_name is not None else '', current_user.last_name)
         view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
+        view_context['refresh_recent_time'] = datetime.datetime.now().time().strftime('%I:%M%p')
 
-        # ! Classroom has technical diced complete string info and can use to get SensorInfo
-        # ! Course Schedule can get all teachers, subjects, section and time involved here.
-        view_context['CourseRelatedAttributes'] = CourseSchedule.objects.all().order_by('-CourseSchedule_CourseReference')
-        # ! We then can use filter by Classroom but we do it all.
-        view_context['ClassLogs'] = ClassroomActionLog.objects.all().order_by('-TimeRecorded')
+        if not current_user.user_role == "Professor":
+            view_context['ClassLogs'] = ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-TimeRecorded')
+            view_context['SubjectsInvolved'] = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-CourseSchedule_Session_Start')
+        else:
+            # ! Add More Context. Do not really just on classlogs
+            view_context['ClassLogs'] = ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Instructor__first_name=current_user.first_name, Course_Reference__CourseSchedule_Instructor__middle_name=current_user.middle_name, Course_Reference__CourseSchedule_Instructor__last_name=current_user.last_name, Course_Reference__CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-TimeRecorded')
+
+
+        print(self.kwargs['classUniqueID']) # ! Return the Context to be rendered later on.
+        print(view_context['SubjectsInvolved']) # ! Return the Context to be rendered later on.
         return view_context # ! Return the Context to be rendered later on.
 
 class ScheduleListView(PermissionRequiredMixin, ListView):
@@ -237,7 +246,7 @@ class StaffActionsListView(PermissionRequiredMixin, ListView):
     }
 
     def get_queryset(self):
-        if self.request.user.user_role in ("Project Owner",  "Project Member", "ITSO Administrator",  "ITSO Member"):
+        if not self.request.user.user_role == "Professor":
             return ClassroomActionLog.objects.all().order_by('-TimeRecorded')
         else:
             return ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Instructor__first_name=self.request.user.first_name, Course_Reference__CourseSchedule_Instructor__middle_name=self.request.user.middle_name, Course_Reference__CourseSchedule_Instructor__last_name=self.request.user.last_name).order_by('-TimeRecorded')
