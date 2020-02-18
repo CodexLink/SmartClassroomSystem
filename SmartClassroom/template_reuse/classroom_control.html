@@ -1,74 +1,90 @@
 <div class="container content-offset">
     <div class="card-columns class-control-column">
+            {% for ClassroomAttr in object_list %}
+            {% if forloop.first %}
             <div class="col mb-auto">
                 <div class="card">
                     <div class="card-body">
-                        <h2 class="card-title">Classroom Information</h2>
-                        <h3 class="card-subtitle text-black-secondary">Subject Associated is  | Embedded Systems</h3>
-                        <!-- Add some extra descriptions here for admin.-->
-                        <p class="card-text text-black-primary">This room is located at Q-5424</p>
-                        <p class="card-text text-black-primary">General Information</p>
-                        <ul>
-                            <li>Happens Every Monday, Wednesday, and Friday. From 08:30AM to 11:30AM</li>
-                        </ul>
-                        <p class="card-text text-black-primary">Subject Involved and Schedules</p>
-                        <p class="card-text text-black-primary">Professors Involved</p>
-
+                        <h2 class="card-title">{{ ClassroomAttr.CourseSchedule_Room.Classroom_Name }}</h2>
+                        <h3 class="card-subtitle text-black-secondary">Some general information that is displayed earlier from the cards section.</h3>
+                        <p class="card-text text-black-primary">This classroom is currently associated with the device
+                            '{{ ClassroomAttr.CourseSchedule_Room.Classroom_Dev }}' that is currently in {{ ClassroomAttr.Classroom_Dev.Device_Status }}
+                            State.</p>
                     </div>
                 </div>
             </div>
             <div class="col mb-auto">
                 <div class="card">
                     <div class="card-header border-0">
-                        <h2 class="card-title">Classroom Options</h2>
-                        <h3 class="card-subtitle text-black-secondary">Remember: For each actions that you execute, will be recorded by th  e system!</h3>
+                        <h2 class="card-title">Classroom Device Options</h2>
+                        <h3 class="card-subtitle text-black-secondary">{% if ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' %}For each actions that you commit, will be recorded by the system!{% elif ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Offline'%}The device is not turned on! Please check!{% else %}The device associated with the classroom is not set up! Please check it!{% endif %}</h3>
                     </div>
                     <!-- Insert some extra buttons for admin -->
                     <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                        <a class="list-group-item d-flex justify-content-between align-items-center"
-                            id="list-home-list" data-toggle="list" href="#list-home" role="tab"
-                            aria-controls="home">Unlock / Lock The Room Immediately <span class="badge badge-primary badge-pill bg-danger">Currently Locked</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Automate Lock On Time <span class="badge badge-primary badge-pill bg-danger">Currently Disabled</span></a>
-                    </div>
-                    <div class="card-actions border-top d-flex justify-content-between align-items-center">
-                        <span class="text-muted">Parameter Adjustment Updated as of 12:00AM — 02/08/2020.</span>
+                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' %}disabled{% endif %}" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Unlock / Lock The Room Immediately <span class="badge badge-primary badge-pill bg-{{ ClassroomAttr.CourseSchedule_Room.Classroom_State }}">Currently {{ ClassroomAttr.CourseSchedule_Room.Classroom_State }}</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' %}disabled{% endif %}" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Turn Off / On Electricity<span class="badge badge-primary badge-pill bg-danger">Currently Disabled</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' %}disabled{% endif %}" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Restart Assigned IoT Device<span class="badge badge-primary badge-pill bg-{{ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status }}">Currently {{ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status }}</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' %}disabled{% endif %}" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Automate Room Behavior <span class="badge badge-primary badge-pill bg-danger">Currently ???</span></a>
                     </div>
                 </div>
             </div>
+            {% endif %}
+            {% empty %}
+            <div class="col mb-auto">
+                <div class="card bg-danger">
+                    <div class="card-body">
+                        <h2 class="card-title text-white-primary">No other information to show...</h2>
+                        <h3 class="card-subtitle text-white-secondary">TL;DR: No candidate courses are subjected to this room.</h3>
+                        <p class="card-text text-white-primary">We pressume that it has some records that can be displayed. But if there are no course assigned to this room for at least one, then we cannot provide you some controls and some general information about it. Make at least one course to assign here.</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
             <div class="col mb-auto">
                 <div class="card">
                     <div class="card-header border-0">
-                        <h2 class="card-title">Classroom Actions Logs</h2>
-                        <h3 class="card-subtitle text-black-secondary">A set of actions made by you, recently recorded by the system.
+                        <h2 class="card-title">Classroom Action Records</h2>
+                        <h3 class="card-subtitle text-black-secondary">A set of actions made by {% if not user_class == "Professor" %}people{% else %}you{% endif %}, recently recorded by the system.
                         </h3>
                     </div>
                     <div class="card-body list-group border-0" id="list-tab" role="tablist">
                         {% if ClassLogs %}
-                        {% for AllUserActions in ClassLogs %}
-                        <a href="#" class="list-group-item list-group-item-action {%if AllActionLogs.first %} active {% endif %}">
+                        {% for ActionCandidates in ClassLogs %}
+                        <a href="#" class="list-group-item list-group-item-action {% if forloop.first %} active {% endif %}">
                             <div class="d-flex w-100">
-                                <h6 class="mb-1 text-dark-primary ">{{ AllUserActions.Course_Reference.CourseSchedule_Room.Classroom_CompleteString }} | {{ AllUserActions.Course_Reference.CourseSchedule_CourseReference.Course_Code }} | {{ AllUserActions.Course_Reference.CourseSchedule_Room.Classroom_Name }}</h6>
+                                <h6 class="mb-1 text-dark-primary">{{ ActionCandidates.UserActionTaken }}</h6>
                             </div>
-                            <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllUserActions.Course_Reference.CourseSchedule_Section }} was handled by {{ AllUserActions.Course_Reference.CourseSchedule_Instructor.first_name }} {{ AllUserActions.Course_Reference.CourseSchedule_Instructor.middle_name }} {{ AllUserActions.Course_Reference.CourseSchedule_Instructor.last_name }} <span
-                                    class="badge badge-primary badge-pill bg-{{ AllUserActions.ActionLevel | lower }}">{{ AllUserActions.ActionLevel }}</span></p>
-                            <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllUserActions.UserActionTaken }}<small class="text-black-primary"> {{ AllUserActions.TimeRecorded }}</small></p>
+                            <p class="mb-1 d-flex justify-content-between align-items-center">By {{ ActionCandidates.Course_Reference.CourseSchedule_Instructor.first_name }} {{ ActionCandidates.CourseSchedule_Instructor.middle_name|default_if_none:"" }} {{ ActionCandidates.Course_Reference.CourseSchedule_Instructor.last_name }} along with {{ ActionCandidates.Course_Reference.CourseSchedule_Section }}<span
+                                    class="badge badge-primary badge-pill bg-{{ ActionCandidates.ActionLevel | lower }}">{{ ActionCandidates.ActionLevel }}</span></p>
+                            <p class="mb-1 d-flex justify-content-between align-items-center"><small class="text-black-primary"> {{ ActionCandidates.TimeRecorded }}</small></p>
                         </a>
                         {% endfor %}
-                        {% else %}
-                        <a href="#" class="list-group-item list-group-item-action active">
-                            <div class="d-flex w-100">
-                                <h6 class="mb-1 text-dark-primary ">Classroom Electricity was opened.</h6>
-                            </div>
-                            <p class="mb-1 d-flex justify-content-between align-items-center">Happened at 8:05PM of January 24, 2020<span class="badge badge-primary badge-pill bg-success">Warning</span></p>
-                            <small class="text-muted">By You (Janrey Tuazon Licas)</small>
-                        </a>
                         {% endif %}
-                    </div>
-                    <div class="card-actions border-top d-flex justify-content-between align-items-center">
-                        <span class="text-muted">Recent Actions Updated as of 12:00AM — 02/08/2020.</span>
                     </div>
                 </div>
             </div>
+            {% if not user_class == "Professor" %}
+            <div class="col mb-auto">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h2 class="card-title">Subjects Involved From This Room</h2>
+                        <h3 class="card-subtitle text-black-secondary">A list of subjects along with instructors who are uses this room.
+                        </h3>
+                    </div>
+                    <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                        {% for SubjectCandidates in SubjectsInvolved %}
+                        <a href="#" class="list-group-item list-group-item-action {% if forloop.first %} active {% endif %}">
+                            <div class="d-flex w-100">
+                                <h6 class="mb-1 text-dark-primary ">{{ SubjectCandidates.CourseSchedule_CourseReference.Course_Code }} | {{ SubjectCandidates.CourseSchedule_CourseReference.Course_Name }}</h6>
+                            </div>
+                            <p class="mb-1 d-flex justify-content-between align-items-center">{{ SubjectCandidates.CourseSchedule_Section }} handled by {{ SubjectCandidates.CourseSchedule_Instructor.first_name }} {{ SubjectCandidates.CourseSchedule_Instructor.middle_name|default_if_none:"" }} {{ SubjectCandidates.CourseSchedule_Instructor.last_name }} <span></span></p>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
 </div>
 {%if not isUserFullCtrl %}
