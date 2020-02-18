@@ -50,7 +50,7 @@
                     </h3>
                 </div>
                 <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                    {% if classroom_logs.count %}
+                    {% if classroom_logs %}
                     {% for AllActionLogs in classroom_logs %}
                     <a href="#" class="list-group-item list-group-item-action {%if AllActionLogs.first %} active {% endif %}">
                         <div class="d-flex w-100">
@@ -71,7 +71,7 @@
                     {% endif %}
                 </div>
                 <div class="card-actions border-top d-flex justify-content-between align-items-center">
-                    <a class="btn btn-flat-primary" href="{% url 'staff_action_logs_view' %}">View More</a>
+                    <a class="btn btn-flat-primary" href="{% url 'staff_action_logs_view' %}">View More Recorded Actions</a>
                     <span class="text-muted">Your Actions were updated as of {{ refresh_recent_time }}.</span>
                 </div>
             </div>
@@ -85,13 +85,16 @@
                 </div>
                 <div class="card-body list-group border-0" id="list-tab" role="tablist">
                     {% for ScheduleCandidates in schedule_candidates %}
-                    <a href="#" class="list-group-item list-group-item-action {% if forloop.last %}active{% endif %}">
+                    <a href="{% if ScheduleCandidates.CourseSchedule_Room.Classroom_State != 'Locked' %}{% url 'classroom_info_view' classUniqueID=ScheduleCandidates.CourseSchedule_Room.Classroom_Unique_ID %}{% else %}#{% endif %}" class="list-group-item list-group-item-action {% if forloop.first %}active{% endif %} {% if ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Offline' or ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Unknown' %}disabled{% endif %}">
                         <div class="d-flex w-100 justify-content-between">
                             <h6 class="mb-1 text-dark-primary">{{ ScheduleCandidates.CourseSchedule_CourseReference.Course_Code }} | {{ ScheduleCandidates.CourseSchedule_CourseReference.Course_Name }}</h6>
                         </div>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">Course Type: {{ ScheduleCandidates.CourseSchedule_CourseReference.Course_Type }}<span
-                                class="badge badge-primary badge-pill bg-primary">Current</span></p>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">{{ ScheduleCandidates.CourseSchedule_Room.Classroom_CompleteString }} | {{ ScheduleCandidates.CourseSchedule_Section.Section_CompleteStringGroup }} | {{ ScheduleCandidates.CourseSchedule_Lecture_Day }} | {{ ScheduleCandidates.CourseSchedule_Session_Start }} — {{ ScheduleCandidates.CourseSchedule_Session_End }}</p>
+                        <p class="mb-1 d-flex justify-content-between align-items-center">Course Type: {{ ScheduleCandidates.CourseSchedule_CourseReference.Course_Type }}
+                            <span class="badge badge-primary badge-pill bg-{{ ScheduleCandidates.CourseSchedule_Room.Classroom_State|lower }}">Currently {{ ScheduleCandidates.CourseSchedule_Room.Classroom_State }}</span>
+                        </p>
+                        <p class="mb-1 d-flex justify-content-between align-items-center">{{ ScheduleCandidates.CourseSchedule_Room.Classroom_CompleteString }} | {{ ScheduleCandidates.CourseSchedule_Section.Section_CompleteStringGroup }} | {{ ScheduleCandidates.CourseSchedule_Lecture_Day }} | {{ ScheduleCandidates.CourseSchedule_Session_Start }} — {{ ScheduleCandidates.CourseSchedule_Session_End }}
+                            <span class="badge badge-primary badge-pill bg-{{ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status|lower}}">{{ ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status }} State</span>
+                        </p>
                     </a>
                     {% endfor %}
                 </div>
@@ -106,7 +109,7 @@
         <div class="dashboard-item col mb-auto">
             <div class="card">
                 <div class="card-header border-0">
-                    <h1 class="card-title text-black-primary">Classroom and Device Counter</h1>
+                    <h1 class="card-title text-black-primary">Classroom and Device Counter States</h1>
                     <p class="card-text text-black-secondary">Check Classroom and Device States Counter without going even further.</p>
                 </div>
                 <div class="card-body list-group border-0" id="list-tab" role="tablist">
@@ -131,7 +134,7 @@
                 </div>
                 <div class="card-actions border-top d-flex justify-content-between align-items-center">
 
-                    <a class="btn btn-flat-primary" href="{% url 'classroom_user_view' %}">View More</a>
+                    <a class="btn btn-flat-primary" href="{% url 'classroom_user_view' %}">View More Classrooms</a>
                     <span class="text-muted">Updated as of {{ refresh_recent_time }}.</span>
                 </div>
             </div>
@@ -150,7 +153,7 @@
                         <div class="d-flex w-100">
                             <h6 class="mb-1 text-dark-primary ">{{ AllActionLogs.Course_Reference.CourseSchedule_Room.Classroom_CompleteString }} | {{ AllActionLogs.Course_Reference.CourseSchedule_CourseReference.Course_Code }} | {{ AllActionLogs.Course_Reference.CourseSchedule_Room.Classroom_Name }}</h6>
                         </div>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllActionLogs.Course_Reference.CourseSchedule_Section }} was handled by {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.first_name }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.middle_name }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.last_name }} <span
+                        <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllActionLogs.Course_Reference.CourseSchedule_Section }} was handled by {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.first_name }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.middle_name|default_if_none:"" }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.last_name }} <span
                                 class="badge badge-primary badge-pill bg-{{ AllActionLogs.ActionLevel | lower }}">{{ AllActionLogs.ActionLevel }}</span></p>
                         <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllActionLogs.UserActionTaken }}<small class="text-black-primary"> {{ AllActionLogs.TimeRecorded }}</small></p>
                     </a>
@@ -165,7 +168,7 @@
                     {% endif %}
                 </div>
                 <div class="card-actions border-top d-flex justify-content-between align-items-center">
-                    <a class="btn btn-flat-primary" href="{% url 'staff_action_logs_view' %}">View More</a>
+                    <a class="btn btn-flat-primary" href="{% url 'staff_action_logs_view' %}">View More Recorded Actions</a>
                     <span class="text-muted">Recent Actions Updated as of {{ refresh_recent_time }}.</span>
                 </div>
             </div>
