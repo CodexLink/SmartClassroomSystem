@@ -54,10 +54,10 @@ Here lies, the protocols set about how much query should we have done at a minut
 
 ## DJango Server Context
 Raspberry Pi Django Server usually needs the following views:
-- Login, ITSO Staff and Teachers
-- - Dashboard, Both for (1) ITSO Staff and (2) Teachers
+- Login, ITSO Supervisor and Teachers
+- - Dashboard, Both for (1) ITSO Supervisor and (2) Teachers
 - - - Usually contains the following:
-- - - - (1) ITSO Staff
+- - - - (1) ITSO Supervisor
 - - - - - See Classroom Logs | Recent Activity
 - - - - - See Classroom Information and Sensors
 - - - - - See Classroom Schedules (I guess?)
