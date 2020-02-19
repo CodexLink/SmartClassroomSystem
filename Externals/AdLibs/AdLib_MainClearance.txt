@@ -1,7 +1,7 @@
-PRoject Members - has all access to everything. Except they cannot change anything in DJango-Panel.
+Project Administrators - has all access to everything. Except they cannot change anything in DJango-Panel.
 Project Owners - has all access to everything.
 ITSO Administrator - they can trigger devices and edit and delete but cannot classrooms and other such.
-ITSO Member - they can view only logs and classrooms but cannot change their states. (Assistants, students, some shit.)
+ITSO Supervisor - they can view only logs and classrooms but cannot change their states. (Assistants, students, some shit.)
 Professor - Normal View, they can trigger classrooms but cannot change all states of everything.
 
 
@@ -12,7 +12,7 @@ Student Sections
 Classroom Declaa
 
 
-Difference between ITSO member and admin?
+Difference between ITSO Supervisor and admin?
 member cannot change anything, while admin can do anything. And override is accessible for admin while member is not.
 
 Combine schedules / action logs or logs / classrooms into one HTML
