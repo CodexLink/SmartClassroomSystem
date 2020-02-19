@@ -1,7 +1,7 @@
 {% load static %}
 <div class="container content-offset">
     <div class="row row-cols-lg-2 row-cols-md-1 row-cols-sm-1 dashboard-grid">
-        {% if user_role == "Project Owner" or user_role == "Project Member" or user_role == "ITSO Administrator" or user_role == "ITSO Member" or user_role == "Professor" %}
+        {% if not user_role == "Professor" %}
         <div class="dashboard-item col mb-auto">
             <div class="card">
                 <div class="keep-content-top">
@@ -105,12 +105,12 @@
                 </div>
             </div>
         </div>
-        {% elif user_role == "Project Owner" or user_role == "Project Member" or user_role == "ITSO Administrator" or user_role == "ITSO Member" %}
+        {% elif not user_role == "Professor" %}
         <div class="dashboard-item col mb-auto">
             <div class="card">
                 <div class="card-header border-0">
                     <h1 class="card-title text-black-primary">Classroom and Device Counter States</h1>
-                    <p class="card-text text-black-secondary">Check Classroom and Device States Counter without going even further.</p>
+                    <p class="card-text text-black-secondary">Check those Classroom and Device States Counter without going even further.</p>
                 </div>
                 <div class="card-body list-group border-0" id="list-tab" role="tablist">
                     <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
@@ -147,7 +147,7 @@
                     </h3>
                 </div>
                 <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                    {% if classroom_logs.count %}
+                    {% if classroom_logs %}
                     {% for AllActionLogs in classroom_logs %}
                     <a href="#" class="list-group-item list-group-item-action {%if AllActionLogs.first %} active {% endif %}">
                         <div class="d-flex w-100">
@@ -177,11 +177,11 @@
             <div class="card">
                 <div class="card-header border-0">
                     <h2 class="card-title">Device Candidate States</h2>
-                    <h3 class="card-subtitle text-black-secondary">Check device operational states. Click them for more information.</h3>
+                    <h3 class="card-subtitle text-black-secondary">Check those device operational states. Click them for more information.</h3>
                 </div>
                 <ul class="nav nav-justified nav-tabs" id="justifiedTab" role="tablist">
                     <li class="nav-item">
-                        <a aria-controls="home" aria-selected="false" class="nav-link {% if not dev_online_candidates %} disabled {% endif %} {% if not dev_offline_candidates and not dev_unknown_candidates %} active {% endif %}" data-toggle="tab"
+                        <a aria-controls="home" aria-selected="false" class="nav-link {% if not dev_online_candidates %} disabled {% endif %} {% if not dev_offline_candidates and not dev_unknown_candidates or dev_offline_candidates and dev_unknown_candidates and dev_online_candidates  %}active{% endif %}" data-toggle="tab"
                             href="#online-dev" id="online-dev-tab" role="tab">Online Devices</a>
                     </li>
                     <li class="nav-item">
@@ -194,7 +194,7 @@
                     </li>
                 </ul>
                 <div class="tab-content" id="justifiedTabContent">
-                    <div aria-labelledby="home-tab" class="tab-pane fade {% if not dev_offline_candidates and not dev_unknown_candidates %} show active {% endif %}" id="online-dev" role="tabpanel">
+                    <div aria-labelledby="home-tab" class="tab-pane fade {% if not dev_offline_candidates and not dev_unknown_candidates %}show active{% elif dev_offline_candidates and dev_unknown_candidates and dev_online_candidates %}show active{% endif %}" id="online-dev" role="tabpanel">
                         <div class="card-body list-group border-0" id="list-tab" role="tablist">
                             {% for OnlineCandidates in dev_online_candidates %}
                             <a href="{% url 'classroom_info_view' classUniqueID=OnlineCandidates.classroom.Classroom_Unique_ID %}" class="list-group-item list-group-item-action">
