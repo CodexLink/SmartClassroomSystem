@@ -17,23 +17,6 @@ import datetime
 # ! Global Variables !
 template_view = 'elem_inst_view.html'
 
-# ! A Class That Just Loads the Default "home.html"
-class HomeView(TemplateView):
-    template_name = template_view
-
-    more_context = {
-        "title_view": "Welcome",
-        "ClassInstance": str(__qualname__),
-    }
-
-    # ! Override Get_Context_Data by adding more data.
-    def get_context_data(self, **kwargs):
-        view_context = super(HomeView, self).get_context_data(**kwargs) # * Get the default context to override to.
-        view_context['title_view'] = self.more_context['title_view']
-        view_context['ClassInstance'] = self.more_context['ClassInstance']
-
-        return view_context # ! Return the Context to be rendered later on.
-
 class DashboardView(PermissionRequiredMixin, TemplateView):
     login_url = reverse_lazy('auth_user_view')
     template_name = template_view
@@ -52,6 +35,8 @@ class DashboardView(PermissionRequiredMixin, TemplateView):
         view_context['title_view'] = self.more_context['title_view']
         view_context['user_instance_name'] = '%s %s %s' % (current_user.first_name, current_user.middle_name if current_user.middle_name is not None else '', current_user.last_name)
         view_context['user_class'] = current_user.user_role
+        view_context['user_branch'] = current_user.dept_residence
+
         view_context['ClassInstance'] = self.more_context['ClassInstance']
         view_context['refresh_recent_time'] = datetime.datetime.now().time().strftime('%I:%M%p')
 
@@ -150,9 +135,6 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
             # ! Add More Context. Do not really just on classlogs
             view_context['ClassLogs'] = ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Instructor__first_name=current_user.first_name, Course_Reference__CourseSchedule_Instructor__middle_name=current_user.middle_name, Course_Reference__CourseSchedule_Instructor__last_name=current_user.last_name, Course_Reference__CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-TimeRecorded')
 
-
-        print(self.kwargs['classUniqueID']) # ! Return the Context to be rendered later on.
-        print(view_context['SubjectsInvolved']) # ! Return the Context to be rendered later on.
         return view_context # ! Return the Context to be rendered later on.
 
 class ScheduleListView(PermissionRequiredMixin, ListView):
@@ -168,7 +150,7 @@ class ScheduleListView(PermissionRequiredMixin, ListView):
     }
 
     def get_queryset(self):
-        return CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=self.request.user.first_name, CourseSchedule_Instructor__middle_name=self.request.user.middle_name, CourseSchedule_Instructor__last_name=self.request.user.last_name).order_by('-CourseSchedule_Session_Start')
+        return CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=self.request.user.first_name, CourseSchedule_Instructor__middle_name=self.request.user.middle_name, CourseSchedule_Instructor__last_name=self.request.user.last_name).order_by('CourseSchedule_Session_Start')
 
     def get_context_data(self, **kwargs): # ! Override Get_Context_Data by adding more data.
         current_user = self.request.user
