@@ -19,10 +19,9 @@ from .views import *
 
 urlpatterns = [
     # ! Universal Accesible URLs
-    path('', HomeView.as_view(), name='front_project_view'),
+    path('', DashboardView.as_view(), name='dashboard_user_view'),
     path('login/', AuthUserView.as_view(), name='auth_user_view'),
     path('logout/', DeauthUserView.as_view(), name='deauth_user_view'),
-    path('dashboard/', DashboardView.as_view(), name='dashboard_user_view'),
     path('logs/', StaffActionsListView.as_view(), name='staff_action_logs_view'),
     # ! Staff Only Accesible URLs
     path('classroom/<uuid:classUniqueID>/control/', SelectableClassroomView.as_view(), name='classroom_info_view'),
