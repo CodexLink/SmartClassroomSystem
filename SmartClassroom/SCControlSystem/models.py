@@ -169,16 +169,13 @@ class SectionGroup(models.Model):
         self.Section_CompleteStringGroup = '%s%s%s%s' % (self.Section_Program.ProgramBranch_Code, self.Section_Year, self.Section_Semester, self.Section_SubUniqueGroup)
         super(SectionGroup, self).save(*args, **kwargs)
 
-    def checkSGDuplicates(self, program, year, semester, unique_group):
-        if SectionGroup.objects.filter(Section_Program=program, Section_Year=year, Section_Semester=semester, Section_SubUniqueGroup=unique_group).exists():
-            return True
-        else:
-            return False
-
     def clean(self):
-        if self.checkSGDuplicates(self.Section_Program, self.Section_Year, self.Section_Semester, self.Section_SubUniqueGroup):
-            raise ValidationError("Error, you might be choosing a section that is already declared! Please choose another one. Or if you're attempting to change the room name and the form save state failed. Adjust any integer fields by 1 or something that doesn't exists and adjust the name then, revert it back to save the configuration.")
-
+        if SectionGroup.objects.filter(Section_Program=self.Section_Program, Section_Year=self.Section_Year, Section_Semester=self.Section_Semester, Section_SubUniqueGroup=self.Section_SubUniqueGroup).exists():
+            try:
+                SectionGroup.objects.filter(Section_Program=self.Section_Program, Section_Year=self.Section_Year, Section_Semester=self.Section_Semester, Section_SubUniqueGroup=self.Section_SubUniqueGroup).update()
+                return super(SectionGroup, self).clean()
+            except IntegrityError:
+                raise ValidationError("Error, you might be choosing a section that is already declared! Please choose another one. Or if you're attempting to change the room name and the form save state failed. Adjust any integer fields by 1 or something that doesn't exists and adjust the name then, revert it back to save the configuration.")
         else:
             return super(SectionGroup, self).clean()
 
@@ -193,7 +190,7 @@ class CourseSchedule(models.Model):
 
     #CourseSchedule_Unique_ID = models.UUIDField(max_length=32, default=uuid4, editable=False, primary_key=False, help_text="A Unique Identifier for the course schedules.")
     CourseSchedule_CourseReference = models.ForeignKey(Course, verbose_name='Course Reference', help_text='Refers to a candidated subject from which allocates the time.', to_field="Course_Code", null=False, blank=False, on_delete=models.CASCADE)
-    CourseSchedule_Instructor = models.ForeignKey(UserDataCredentials, verbose_name='Course Instructor', help_text='Refers to an instructor who teach the following course.', to_field="unique_id", null=False, blank=False, on_delete=models.CASCADE)
+    CourseSchedule_Instructor = models.ForeignKey(UserDataCredentials, verbose_name='Course Instructor', help_text='Refers to an instructor who teach the following course.', to_field="unique_id", null=False, blank=False, on_delete=models.CASCADE, limit_choices_to={'user_role': 'Professor'})
     CourseSchedule_Room = models.ForeignKey(Classroom, verbose_name='Course Classroom Assignment', help_text='Refers to a classroom that is currently in vacant in which the session takes place.', null=False, blank=False, to_field="Classroom_CompleteString", related_name="ClassRoomMainReference", on_delete=models.CASCADE)
     CourseSchedule_Section = models.ForeignKey(SectionGroup, verbose_name='Section Course Assignment', help_text='Refers to a section who partakes to this course.', null=True, blank=True, to_field="Section_CompleteStringGroup", on_delete=models.CASCADE)
     CourseSchedule_Session_Start = models.TimeField(verbose_name='Course Session Start Time', help_text='Refers to a time start session point.', null=False, blank=False)
