@@ -22,7 +22,7 @@ YearBatchClasses = (
 
 # ! Based from https://www.tip.edu.ph/Engineering_and_Architecture_QC_Branch
 # ! CEA Only, I'm doing over-effort, please stop thanks.
-CEAProgamCCode = (
+CEAProgramCCode = (
     ('ARch', 'Architecture'),
     ('CE', 'Civil Engineering'),
     ('CpE', 'Computer Engineering'),
@@ -30,7 +30,8 @@ CEAProgamCCode = (
     ('ECE', 'Electronics Engineering'),
     ('EnSE', 'Environment and Sanitary Engineering'),
     ('IE', 'Industrial Engineering'),
-    ('ME', 'Mechanical Engineering')
+    ('ME', 'Mechanical Engineering'),
+    ('NA', 'Administrative Account')
 )
 
 # * For Semester Indication Only.
@@ -138,18 +139,18 @@ SubSectionUniqueKeys = (
 '''
 RoleDeclaredTypes = (
     ("Project Owner", "Project Owner"),
-    ("Project Member", "Project Member"),
+    ("Project Administrator", "Project Administrator"),
     ("ITSO Administrator", "ITSO Administrator"),
-    ("ITSO Member", "ITSO Member"),
+    ("ITSO Supervisor", "ITSO Supervisor"),
     ("Professor", "Professor")
 )
 
 # ! Group Name Definition based Human Roles, Unrelated to Model ATM.
 GroupDefinitionRoles = (
-    "Project Owner",
-    "Project Members",
+    "Project Owners",
+    "Project Administrators",
     "ITSO Administrators",
-    "ITSO Members",
+    "ITSO Supervisors",
     "Professors"
 )
 
