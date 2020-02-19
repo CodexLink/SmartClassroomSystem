@@ -2,7 +2,7 @@
 {% if requireSideNav == True %}
 <div aria-hidden="true" class="navdrawer" id="navdrawer" tabindex="-1">
   <!-- This one is too much, we can optimize it -->
-  {% if user_inst_type == "Project Owner" or user_inst_type == "Project Member" or user_inst_type == "ITSO Administrator" or user_inst_type == "ITSO Member" or user_inst_type == "Professor" %}
+  {% if user_inst_type %}
   <div class="navdrawer-content">
     <div class="sidebar-account container">
       <img class="primary-user-pic"
@@ -11,7 +11,7 @@
         <h6 class="text-black-primary primary-name-acc" href="javascript:void(0)">{{user_current_name}}</h6>
       </div>
       <div class="sidebar-secondary-name-acc d-flex justify-content-between align-items-center">
-        <span class="text-black-secondary" href="javascript:void(0)">{{user_inst_type}} </span>
+        <span class="text-black-secondary" href="javascript:void(0)">{{user_inst_type}} | {% if not user_class == "Professor" %}Administrative{% else %}{{ user_branch.ProgramBranch_Name|default_if_none:"Unassigned Branch." }}{% endif %}</span>
         <button class="btn btn-icon btn-sm text-white align-right" type="button" id="accountInfo" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false"><i
             class="material-icons text-black-secondary">arrow_drop_down</i></button>
@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="navdrawer-divider special-type"></div>
-    {% if user_inst_type == "Project Owner" or user_inst_type == "Project Member" or user_inst_type == "ITSO Administrator" or user_inst_type == "ITSO Member" %}
+    {% if not user_inst_type == "Professor" %}
     <div class="navdrawer-subheader">Main Menu</div>
     <ul class="navdrawer-nav">
       <li class="nav-item">
@@ -45,7 +45,7 @@
         <a class="nav-link" href="{% url 'staff_action_logs_view' %}"><i
             class="material-icons mr-3 text-black-secondary">assignment</i>Staff Recent Actions</a>
       </li>
-      {% if not user_inst_type == 'ITSO Member' %}
+      {% if not user_inst_type == 'ITSO Supervisor' %}
       <li class="nav-item">
         <a class="nav-link" href="{% url 'admin:index' %}"><i
           class="material-icons mr-3 text-black-secondary">gavel</i>Control
