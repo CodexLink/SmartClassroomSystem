@@ -84,7 +84,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sc_db',
         'USER': 'root',
-        'PASSWORD': None
+        'PASSWORD': None,
+        'OPTIONS': {
+                'sql_mode': 'STRICT_TRANS_TABLES',
+                'isolation_level': 'read committed',
+            },
     }
 }
 
