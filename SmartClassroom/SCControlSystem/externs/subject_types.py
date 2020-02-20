@@ -75,22 +75,14 @@ BuildingFloors = (
 
 # ! Classroom Action Logs
 ClassroomActionTypes = (
-    ('Classroom is Opened.', 'Classroom is Opened.'),
-    ('Classroom is Closed.', 'Classroom is Closed.'),
-    ('Action: Automatically Set as Open on Time',
-     'Action: Automatically Set as Open on Time'),
-    ('Action: Automatically Set as Closed on Time',
-     'Action: Automatically Set as Closed on Time'),
-    ('Authorized Staff Entry', 'Authorized Staff Entry'),
-    ('Authorized Teacher Entry', 'Authorized Teacher Entry'),
-    ('Disabled Access Entry', 'Disabled Access Entry'),
-    ('Enabled Access Entry', 'Enabled Access Entry'),
-    ('Classroom Access is set to Disabled.',
-     'Classroom Access is set to Disabled.'),
-    ('Classroom Access is Disabled.', 'Classroom Access is Disabled.'),
-    ('Forbidden Attempt To Entry Detected.',
-     'Forbidden Attempt To Entry Detected.'),
+    ('Classroom was Opened by Toggle Lock.', 'Classroom was Opened by Toggle Lock.'),
+    ('Classroom was Closed by Toggle Lock.', 'Classroom was Closed by Toggle Lock.'),
+    ('Action: Set Room Automate to ON.', 'Action: Set Room Automate to ON.'),
+    ('Action: Set Room Automate to OFF.', 'Action: Set Room Automate to OFF.'),
     ('Unauthorized Access Detected.', 'Unauthorized Access Detected.'),
+    ('Authorized Access Passed.', 'Authorized Access Passed.'),
+    ('Classroom Access was set to Disabled.', 'Classroom Access was set to Disabled.'),
+    ('Classroom Access was set to Enabled.', 'Classroom Access was set to Enabled.'),
 )
 
 # ! Logging Level Declarations
@@ -162,13 +154,16 @@ DevDeclarationTypes = (
 )
 
 ClassroomStates = (
-    ("In-Use", "In-Use"),
     ("Unlocked", "Unlocked"),
     ("Locked", "Locked"),
+)
+
+ClassroomAccessStates = (
+    ("Enabled", "Enabled"),
+    ("Disabled", "Disabled"),
 )
 
 DeviceStates = (
     ("Online", "Online"),
     ("Offline", "Offline"),
-    ("Unknown", "Unknown"),
 )
