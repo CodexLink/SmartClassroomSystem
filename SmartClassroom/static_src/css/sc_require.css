@@ -122,20 +122,20 @@ body.log-backfill {
 
 .bg-alert,
 .bg-locked,
-.bg-offline {
+.bg-disabled {
     background-color: #ff2c14 !important;
 }
 
-.bg-unknown {
+.bg-offline {
     background-color: #212121 !important;
 }
 
-.bg-in-use {
+.bg-online {
     background-color: #0091EA !important;
 }
 
 .bg-unlocked,
-.bg-online {
+.bg-enabled {
     background-color: #00E676 !important;
 }
 
