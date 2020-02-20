@@ -1,7 +1,7 @@
 {% load static %}
 <div class="container content-offset">
     <div class="row row-cols-lg-2 row-cols-md-1 row-cols-sm-1 dashboard-grid">
-        {% if not user_role == "Professor" %}
+        {% if user_role %}
         <div class="dashboard-item col mb-auto">
             <div class="card">
                 <div class="keep-content-top">
@@ -46,7 +46,7 @@
             <div class="card">
                 <div class="card-header border-0">
                     <h2 class="card-title">Your Actions</h2>
-                    <h3 class="card-subtitle text-black-secondary">As of {{ refresh_recent_time }} , here are your 5 recent actions currently recorded.
+                    <h3 class="card-subtitle text-black-secondary">As of {{ refresh_recent_time }}, here are your 5 recent actions currently recorded.
                     </h3>
                 </div>
                 <div class="card-body list-group border-0" id="list-tab" role="tablist">
@@ -85,7 +85,7 @@
                 </div>
                 <div class="card-body list-group border-0" id="list-tab" role="tablist">
                     {% for ScheduleCandidates in schedule_candidates %}
-                    <a href="{% if ScheduleCandidates.CourseSchedule_Room.Classroom_State != 'Locked' %}{% url 'classroom_info_view' classUniqueID=ScheduleCandidates.CourseSchedule_Room.Classroom_Unique_ID %}{% else %}#{% endif %}" class="list-group-item list-group-item-action {% if forloop.first %}active{% endif %} {% if ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Offline' or ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Unknown' %}disabled{% endif %}">
+                    <a href="{% if ScheduleCandidates.CourseSchedule_Room.Classroom_State != 'Locked' %}{% url 'classroom_info_view' classUniqueID=ScheduleCandidates.CourseSchedule_Room.Classroom_Unique_ID %}{% else %}#{% endif %}" class="list-group-item list-group-item-action {% if forloop.first %}active{% endif %} {% if ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Offline' %}disabled{% endif %}">
                         <div class="d-flex w-100 justify-content-between">
                             <h6 class="mb-1 text-dark-primary">{{ ScheduleCandidates.CourseSchedule_CourseReference.Course_Code }} | {{ ScheduleCandidates.CourseSchedule_CourseReference.Course_Name }}</h6>
                         </div>
@@ -128,9 +128,6 @@
                     <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                         href="javascript:void(0)" role="tab" aria-controls="settings">Device at Offline State<span
                             class="badge badge-primary badge-pill bg-offline">{{ dev_offline_count }}</span></a>
-                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
-                        href="javascript:void(0)" role="tab" aria-controls="settings">Device at Unknown State<span
-                            class="badge badge-primary badge-pill bg-unknown">{{ dev_unknown_count }}</span></a>
                 </div>
                 <div class="card-actions border-top d-flex justify-content-between align-items-center">
 
@@ -181,20 +178,16 @@
                 </div>
                 <ul class="nav nav-justified nav-tabs" id="justifiedTab" role="tablist">
                     <li class="nav-item">
-                        <a aria-controls="home" aria-selected="false" class="nav-link {% if not dev_online_candidates %} disabled {% endif %} {% if not dev_offline_candidates and not dev_unknown_candidates or dev_offline_candidates and dev_unknown_candidates and dev_online_candidates  %}active{% endif %}" data-toggle="tab"
+                        <a aria-controls="home" aria-selected="false" class="nav-link {% if not dev_online_candidates %} disabled {% elif not dev_offline_candidates %}active{% elif not dev_offline_candidates and not dev_online_candidates %}{% else %}active{% endif %}" data-toggle="tab"
                             href="#online-dev" id="online-dev-tab" role="tab">Online Devices</a>
                     </li>
                     <li class="nav-item">
-                        <a aria-controls="profile" aria-selected="false" class="nav-link {% if not dev_offline_candidates %} disabled {% endif %} {% if not dev_online_candidates  %} active {% endif %}" data-toggle="tab"
+                        <a aria-controls="profile" aria-selected="false" class="nav-link {% if not dev_offline_candidates %} disabled {% elif not dev_online_candidates %}active{% elif not dev_offline_candidates and not dev_online_candidates %}{% else %}active{% endif %}" data-toggle="tab"
                             href="#offline-dev" id="profile-tab" role="tab">Offline Devices</a>
-                    </li>
-                    <li class="nav-item">
-                        <a aria-controls="profile" aria-selected="false" class="nav-link {% if not dev_unknown_candidates %} disabled {% endif %} {% if not dev_offline_candidates %} active {% endif %}" data-toggle="tab"
-                            href="#unknown-dev" id="profile-tab" role="tab">Unknown State</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="justifiedTabContent">
-                    <div aria-labelledby="home-tab" class="tab-pane fade {% if not dev_offline_candidates and not dev_unknown_candidates %}show active{% elif dev_offline_candidates and dev_unknown_candidates and dev_online_candidates %}show active{% endif %}" id="online-dev" role="tabpanel">
+                    <div aria-labelledby="home-tab" class="tab-pane fade {% if not dev_offline_candidates %}show active{% elif dev_offline_candidates and dev_online_candidates %}show active{% endif %}" id="online-dev" role="tabpanel">
                         <div class="card-body list-group border-0" id="list-tab" role="tablist">
                             {% for OnlineCandidates in dev_online_candidates %}
                             <a href="{% url 'classroom_info_view' classUniqueID=OnlineCandidates.classroom.Classroom_Unique_ID %}" class="list-group-item list-group-item-action">
@@ -214,18 +207,6 @@
                                     <h6 class="mb-1 text-dark-primary">{{ OfflineCandidates.Device_Name }}</h6>
                                 </div>
                                 <p class="mb-1 d-flex justify-content-between align-items-center">Located on {{ OfflineCandidates.classroom.Classroom_CompleteString }} with IP Address {{ OfflineCandidates.Device_IP_Address }}<span class="badge badge-primary badge-pill bg-{{OfflineCandidates.Device_Status | lower }}">{{ OfflineCandidates.Device_Status }}</span></p>
-                            </a>
-                            {% endfor %}
-                    </div>
-                </div>
-                    <div aria-labelledby="unknown-dev-tab" class="tab-pane fade {% if not dev_offline_candidates %} show active {% endif %}" id="unknown-dev" role="tabpanel">
-                        <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                            {% for UnknownCandidates in dev_unknown_candidates %}
-                            <a href="{% url 'classroom_info_view' classUniqueID=UnknownCandidates.classroom.Classroom_Unique_ID %}" class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1 text-dark-primary">{{ UnknownCandidates.Device_Name }}</h6>
-                                </div>
-                                <p class="mb-1 d-flex justify-content-between align-items-center">Located on {{ UnknownCandidates.classroom.Classroom_CompleteString }} with IP Address {{ UnknownCandidates.Device_IP_Address }}<span class="badge badge-primary badge-pill bg-{{UnknownCandidates.Device_Status | lower }}">{{ UnknownCandidates.Device_Status }}</span></p>
                             </a>
                             {% endfor %}
                     </div>
