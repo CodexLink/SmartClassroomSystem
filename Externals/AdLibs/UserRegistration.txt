@@ -1,0 +1,16 @@
+User Registration
+
+Normally at this point, registration will be a bit tedious.
+Because for each room that you access most of the time, needs an individual scan of your fingerprint.
+
+The library that is currently in use, does not support the use of uploading and extracting the user fingerprints.
+We also cannot get the database of the Fingerprint due to some memory restrictions as per they say.
+
+
+So what can we do is, make user register from the DJango Admin with Administrator Account
+Then make those NodeMCU reflash with Enroller Sketch FOR EACH room that is needed to access.
+
+The approximate time to do this is 1 minute + n of rooms in minutes.
+
+Let's say we need to register in DJango then we need to have at least our fingerprint to 4 rooms.
+Then, 1 minute + 4 minutes = 5 minutes approximate process time.

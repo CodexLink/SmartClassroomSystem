@@ -1,0 +1,20 @@
+NodeMCUs - Gives Information | No Request from Devices
+
+It gives info respectively on the following:
+
++ When new data is updated. | Registered in 3 Minutes
++ When Authentication Change State was detected. | Instant Update
+    - The problem
+        - We cannot detect what user it is. I think the only solution to this is to depend from the schedule.
+        - Since there is only one person that can unlock it. We make spaces from the admin and the user.
+
+        - Let Admins from ID=0 to 200
+        - Let Profs from ID=201 to 3000
+
+
++ When Motion is detected. | 3 Minutes
+
+
+RPi / Computer / Server / ETC - Gets The Information | POST REQUESTs to NodeMCU
+
+NodeMCU will react
