@@ -16,15 +16,36 @@
             <div class="col mb-auto">
                 <div class="card">
                     <div class="card-header border-0">
+                        <h2 class="card-title">Scanner Device Outputs</h2>
+                        <h3 class="card-subtitle text-black-secondary">Sensors available in the device. Last readings were saved and in the database.</h3>
+                    </div>
+                    <!-- Insert some extra buttons for admin -->
+                    <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Temperature Celcius<span class="badge badge-primary badge-pill bg-{{ ClassroomAttr.CourseSchedule_Room.Classroom_State }}">123 °C</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Humidity Percentage<span class="badge badge-primary badge-pill bg-danger">100%</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Relay Channel Outputs <span class="badge badge-primary badge-pill bg-danger">R1: On | R2: Off | R3: On | R4: Off</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Recent Motion Detection<span class="badge badge-primary badge-pill bg-danger">02/19/2020 11:19PM</span></a>
+                    </div>
+                    <div class="card-actions border-top d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Updated as of {{ refresh_recent_time }}.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col mb-auto">
+                <div class="card">
+                    <div class="card-header border-0">
                         <h2 class="card-title">Classroom Device Options</h2>
                         <h3 class="card-subtitle text-black-secondary">{% if user_class == "ITSO Supervisor" %}You're not allowed to touch these controls! Contact your administrator!{% else %}{% if ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' %}For each actions that you commit, will be recorded by the system!{% elif ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Offline'%}The device is not turned on! Please check!{% else %}The device associated with the classroom is not set up! Please check it!{% endif %}{% endif %}</h3>
                     </div>
                     <!-- Insert some extra buttons for admin -->
                     <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}disabled{% endif %}" id="list-home-list" data-toggle="list" href="{% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}#{% else %}Add some URL here.{% endif %}" role="tab" aria-controls="home">Unlock / Lock The Room Immediately <span class="badge badge-primary badge-pill bg-{{ ClassroomAttr.CourseSchedule_Room.Classroom_State }}">Currently {{ ClassroomAttr.CourseSchedule_Room.Classroom_State }}</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}disabled{% endif %}" id="list-profile-list" data-toggle="list" href="{% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}#{% else %}Add some URL here.{% endif %}" role="tab" aria-controls="profile">Turn Off / On Electricity<span class="badge badge-primary badge-pill bg-danger">Currently Disabled</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}disabled{% endif %}" id="list-profile-list" data-toggle="list" href="{% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}#{% else %}Add some URL here.{% endif %}" role="tab" aria-controls="profile">Restart Assigned IoT Device<span class="badge badge-primary badge-pill bg-{{ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status }}">Currently {{ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status }}</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}disabled{% endif %}" id="list-profile-list" data-toggle="list" href="{% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}#{% else %}Add some URL here.{% endif %}" role="tab" aria-controls="profile">Automate Room Behavior <span class="badge badge-primary badge-pill bg-danger">Currently ???</span></a>
+                        {% if user_class == "ITSO Administrator" or user_class == "Project Owner" or user_class == "Project Administrator" %}
+                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' %}disabled{% endif %}" id="list-home-list" href="{% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}#{% else %}Add some URL here.{% endif %}" role="tab" aria-controls="home">Toggle Classroom Access<span class="badge badge-primary badge-pill bg-{{ ClassroomAttr.CourseSchedule_Room.Classroom_AccessState|lower }}">{{ ClassroomAttr.CourseSchedule_Room.Classroom_AccessState }}</span></a>
+                        {% endif %}
+                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}disabled{% endif %}"  data-toggle="list" href="{% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}#{% else %}Add some URL here.{% endif %}" role="tab" aria-controls="home">Toggle Lock<span class="badge badge-primary badge-pill bg-{{ ClassroomAttr.CourseSchedule_Room.Classroom_State }}">{{ ClassroomAttr.CourseSchedule_Room.Classroom_State }}</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}disabled{% endif %}"  data-toggle="list" href="{% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}#{% else %}Add some URL here.{% endif %}" role="tab" aria-controls="profile">Toggle Electricity<span class="badge badge-primary badge-pill bg-danger">Disabled</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}disabled{% endif %}"  data-toggle="list" href="{% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}#{% else %}Add some URL here.{% endif %}" role="tab" aria-controls="profile">Restart Scanner Device<span class="badge badge-primary badge-pill bg-{{ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status }}">{{ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status }}</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}disabled{% endif %}"  data-toggle="list" href="{% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}#{% else %}Add some URL here.{% endif %}" role="tab" aria-controls="profile">Room Automate<span class="badge badge-primary badge-pill bg-danger">???</span></a>
                     </div>
                 </div>
             </div>
@@ -35,7 +56,7 @@
                     <div class="card-body">
                         <h2 class="card-title text-white-primary">Classroom Controls Are Not Viable</h2>
                         <h3 class="card-subtitle text-white-secondary">TL;DR: No candidate courses are subjected to this room to control.</h3>
-                        <p class="card-text text-white-primary">There might be some records that can be displayed. But if there are no course assigned to this room, then we cannot provide you some controls. What's the point though.</p>
+                        <p class="card-text text-white-primary">There might be some records that can be displayed. But if there are no course assigned to this room, then we cannot provide you some controls and sensor readings. What's the point though!?</p>
                     </div>
                 </div>
             </div>
@@ -75,9 +96,9 @@
                         {% for SubjectCandidates in SubjectsInvolved %}
                         <a href="#" class="list-group-item list-group-item-action {% if forloop.first %} active {% endif %}">
                             <div class="d-flex w-100">
-                                <h6 class="mb-1 text-dark-primary ">{{ SubjectCandidates.CourseSchedule_CourseReference.Course_Code }} | {{ SubjectCandidates.CourseSchedule_CourseReference.Course_Name }}</h6>
+                                <h6 class="mb-1 text-dark-primary ">{{ SubjectCandidates.CourseSchedule_CourseReference__Course_Code }} | {{ SubjectCandidates.CourseSchedule_CourseReference__Course_Name }}</h6>
                             </div>
-                            <p class="mb-1 d-flex justify-content-between align-items-center">{{ SubjectCandidates.CourseSchedule_Section }} handled by {{ SubjectCandidates.CourseSchedule_Instructor.first_name }} {{ SubjectCandidates.CourseSchedule_Instructor.middle_name|default_if_none:"" }} {{ SubjectCandidates.CourseSchedule_Instructor.last_name }} <span></span></p>
+                            <p class="mb-1 d-flex justify-content-between align-items-center">{{ SubjectCandidates.CourseSchedule_Section__Section_CompleteStringGroup }} handled by {{ SubjectCandidates.CourseSchedule_Instructor__first_name }} {{ SubjectCandidates.CourseSchedule_Instructor__middle_name|default_if_none:"" }} {{ SubjectCandidates.CourseSchedule_Instructor__last_name }} <span></span></p>
                         </a>
                         {% endfor %}
                     </div>
