@@ -42,22 +42,20 @@ class DashboardView(PermissionRequiredMixin, TemplateView):
 
         # ! More Objects To Display at.
         if not current_user.user_role == "Professor":
-            view_context['cr_unlocked_count'] = DeviceInfo.objects.filter(Device_Status='Unlocked').count()
-            view_context['cr_locked_count'] = DeviceInfo.objects.filter(Device_Status='Locked').count()
-            view_context['cr_in_use_count'] = DeviceInfo.objects.filter(Device_Status='In-Use').count()
+            view_context['cr_unlocked_count'] = Classroom.objects.filter(Classroom_State='Unlocked').count()
+            view_context['cr_locked_count'] = Classroom.objects.filter(Classroom_State='Locked').count()
+            view_context['cr_in_use_count'] = Classroom.objects.filter(Classroom_State='In-Use').count()
 
             view_context['dev_offline_count'] = DeviceInfo.objects.filter(Device_Status='Offline').count()
             view_context['dev_online_count'] = DeviceInfo.objects.filter(Device_Status='Locked').count()
-            view_context['dev_unknown_count'] = DeviceInfo.objects.filter(Device_Status='Unknown').count()
 
             # ! Admin View for Classroom Systems
             view_context['dev_offline_candidates'] = DeviceInfo.objects.filter(Device_Status='Offline').select_related('classroom')
             view_context['dev_online_candidates'] = DeviceInfo.objects.filter(Device_Status='Online').select_related('classroom')
-            view_context['dev_unknown_candidates'] = DeviceInfo.objects.filter(Device_Status='Unknown').select_related('classroom')
 
             view_context['classroom_logs'] = ClassroomActionLog.objects.all().order_by('-TimeRecorded')[:5]
 
-        elif current_user.user_role == "Professor":
+        else:
             view_context['schedule_weekday_name'] = datetime.datetime.today().strftime('%A')
             # ! We currently looking at foreign key here.
             view_context['schedule_candidates'] = CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Lecture_Day=view_context['schedule_weekday_name']).order_by('CourseSchedule_Session_Start')
@@ -74,7 +72,6 @@ class DashboardView(PermissionRequiredMixin, TemplateView):
             messages.error(self.request, "InsufficientPermission")
         else:
             messages.error(self.request, "PermissionAccessDenied")
-        print(self.get_permission_required())
         return super(DashboardView, self).handle_no_permission()
 
 class ClassroomView(PermissionRequiredMixin, ListView):
@@ -98,6 +95,14 @@ class ClassroomView(PermissionRequiredMixin, ListView):
         view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
         return view_context
+
+    def handle_no_permission(self):
+        self.raise_exception = self.request.user.is_authenticated
+        if self.raise_exception:
+            messages.error(self.request, "InsufficientPermission")
+        else:
+            messages.error(self.request, "PermissionAccessDenied")
+        return super(ClassroomView, self).handle_no_permission()
 
 class SelectableClassroomView(PermissionRequiredMixin, ListView):
     login_url = reverse_lazy('auth_user_view')
@@ -130,12 +135,20 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
 
         if not current_user.user_role == "Professor":
             view_context['ClassLogs'] = ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-TimeRecorded')
-            view_context['SubjectsInvolved'] = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-CourseSchedule_Session_Start')
+            view_context['SubjectsInvolved'] = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-CourseSchedule_Session_Start').values('CourseSchedule_Instructor__first_name', 'CourseSchedule_Instructor__middle_name', 'CourseSchedule_Instructor__last_name', 'CourseSchedule_CourseReference__Course_Name', 'CourseSchedule_CourseReference__Course_Code' , 'CourseSchedule_Section__Section_CompleteStringGroup').distinct()
         else:
             # ! Add More Context. Do not really just on classlogs
             view_context['ClassLogs'] = ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Instructor__first_name=current_user.first_name, Course_Reference__CourseSchedule_Instructor__middle_name=current_user.middle_name, Course_Reference__CourseSchedule_Instructor__last_name=current_user.last_name, Course_Reference__CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-TimeRecorded')
 
         return view_context # ! Return the Context to be rendered later on.
+
+    def handle_no_permission(self):
+        self.raise_exception = self.request.user.is_authenticated
+        if self.raise_exception:
+            messages.error(self.request, "InsufficientPermission")
+        else:
+            messages.error(self.request, "PermissionAccessDenied")
+        return super(SelectableClassroomView, self).handle_no_permission()
 
 class ScheduleListView(PermissionRequiredMixin, ListView):
     login_url = reverse_lazy('auth_user_view')
@@ -162,6 +175,13 @@ class ScheduleListView(PermissionRequiredMixin, ListView):
         view_context['schedule_weekday_name'] = datetime.datetime.today().strftime('%A')
         return view_context # ! Return the Context to be rendered later on.
 
+    def handle_no_permission(self):
+        self.raise_exception = self.request.user.is_authenticated
+        if self.raise_exception:
+            messages.error(self.request, "InsufficientPermission")
+        else:
+            messages.error(self.request, "PermissionAccessDenied")
+        return super(ScheduleListView, self).handle_no_permission()
 # ! Authentication Classes
 
 # ! AuthUserView Requires LoginView To Provide Minimal Configuration
@@ -241,3 +261,11 @@ class StaffActionsListView(PermissionRequiredMixin, ListView):
         view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
         return view_context # ! Return the Context to be rendered later on.
+
+    def handle_no_permission(self):
+        self.raise_exception = self.request.user.is_authenticated
+        if self.raise_exception:
+            messages.error(self.request, "InsufficientPermission")
+        else:
+            messages.error(self.request, "PermissionAccessDenied")
+        return super(StaffActionsListView, self).handle_no_permission()
