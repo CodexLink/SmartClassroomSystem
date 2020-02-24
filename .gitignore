@@ -64,7 +64,7 @@ db.sqlite3-journal
 media/
 /app_static_src/
 /SmartClassroom/usersrc/
-
+.vscode/
 
 # Flask stuff:
 instance/
