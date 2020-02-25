@@ -24,8 +24,16 @@ urlpatterns = [
     path('logout/', DeauthUserView.as_view(), name='deauth_user_view'),
     path('logs/', StaffActionsListView.as_view(), name='staff_action_logs_view'),
     # ! Staff Only Accesible URLs
-    path('classroom/<uuid:classUniqueID>/control/', SelectableClassroomView.as_view(), name='classroom_info_view'),
-    path('schedule/', ScheduleListView.as_view(), name='schedule_exclusive_view'), # ! For teachers only.
+    path('classroom/<uuid:classUniqueID>/', include([
+        path('control/', SelectableClassroomView.as_view(), name='classroom_info_view'),
+        path('control/crUpdate/', SelectableClassroomView.as_view(ActionState='CRAccess'), name='classroom_take_action_cr_access'),
+        path('control/lockInitiate/', SelectableClassroomView.as_view(ActionState='LockState'), name='classroom_take_action_lock_state'),
+        path('control/electricStateUpdate/', SelectableClassroomView.as_view(ActionState='ElectricState'), name='classroom_take_action_electric_state'),
+        path('control/devReset/', SelectableClassroomView.as_view(ActionState='DevRestart'), name='classroom_take_action_device_reset'),
+        path('control/roomAutomate/', SelectableClassroomView.as_view(ActionState='RoomAutomation'), name='classroom_take_action_automate'),
+        ])),
+
+    path('classroom/<uuid:classUniqueID>/schedule/', ScheduleListView.as_view(), name='schedule_exclusive_view'), # ! For teachers only.
     # ! Admin Only URLs
     path('classroom/', ClassroomView.as_view(), name='classroom_user_view'),
     path('override/', admin.site.urls),
