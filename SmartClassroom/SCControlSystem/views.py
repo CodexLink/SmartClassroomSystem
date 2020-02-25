@@ -1,18 +1,21 @@
+import datetime
+from json import loads as DictSerialize
+
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import (AccessMixin, LoginRequiredMixin,
                                         PermissionRequiredMixin)
 from django.contrib.auth.views import LoginView, LogoutView, logout_then_login
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.views.generic import ListView, RedirectView, DetailView, FormView
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy, reverse
+from django.views.generic import DetailView, FormView, ListView, RedirectView
 from django.views.generic.base import TemplateView
-from requests import get
-from requests.exceptions import ConnectionError
+from requests import get as FetchLiveData
+from django.http import HttpResponseRedirect
+from requests.exceptions import ConnectionError, ConnectTimeout
 
 from .forms import UserAuthForm
 from .models import *
-import datetime
 
 # ! Global Variables !
 template_view = 'elem_inst_view.html'
@@ -107,6 +110,7 @@ class ClassroomView(PermissionRequiredMixin, ListView):
 class SelectableClassroomView(PermissionRequiredMixin, ListView):
     login_url = reverse_lazy('auth_user_view')
     template_name = template_view
+    ActionState = None
     model = CourseSchedule # ! We use CourseSchedule Model Instead of Classroom. Because Inheritance
 
     slug_url_kwarg = 'classUniqueID'
@@ -121,9 +125,6 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
         "ClassInstance": str(__qualname__),
     }
 
-    def get_queryset(self):
-        return CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID'])
-
     def get_context_data(self, **kwargs): # ! Override Get_Context_Data by adding more data.
         current_user = self.request.user
         view_context = super(SelectableClassroomView, self).get_context_data(**kwargs) # * Get the default context to override to.
@@ -132,15 +133,80 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
         view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
         view_context['refresh_recent_time'] = datetime.datetime.now().time().strftime('%I:%M%p')
+        view_context['Class_UID_Literal'] = self.kwargs['classUniqueID']
+
+        # We wanna set the status of the device with its live sensor literally.
+        Device_MetaData_Name = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).values('CourseSchedule_Room__Classroom_Dev__Device_Name')[0]
+        Device_MetaData_IP = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).values('CourseSchedule_Room__Classroom_Dev__Device_IP_Address')[0]
+        passUniqueID = str(self.kwargs['classUniqueID']).replace('-', '')
+
+        try:
+            dev_metadata = FetchLiveData('http://%s/RequestData' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address']), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
+            if dev_metadata.ok:
+                view_context['ResponseMessage'] = 'DeviceRequestSuccess'
+                finalMetaData = DictSerialize((dev_metadata.content).decode('utf-8').replace("'", "\""))
+                view_context['TempOutput'] = finalMetaData['DATA_SENS']['CR_TEMP']
+                view_context['HumidOutput'] = finalMetaData['DATA_SENS']['CR_HUMD']
+                view_context['HeatInxOutput'] = finalMetaData['DATA_SENS']['CR_HTINX']
+                view_context['PIRTTOutput'] = finalMetaData['DATA_SENS']['PIR_MOTION']['PIR_OTPT_TIME_TRIGGER'] # Time Trigger Output
+
+                view_context['ClassAccessState'] = 'Enabled' if int(finalMetaData['DATA_STATE']['ACCESS_STATE']) else 'Disabled'
+                view_context['LockState'] = 'Locked' if int(finalMetaData['DATA_STATE']['DOOR_STATE']) else 'Unlocked'
+                view_context['ElectricityState'] = 'On' if int(finalMetaData['DATA_STATE']['ELECTRIC_STATE']) else 'Off'
+                #view_context['AuthCRState'] = 'On' if int(finalMetaData['DATA_STATE']['ELECTRIC_STATE']) else 'Off'
+                view_context['DeviceState'] = "Online"
+                view_context['AutomateState'] = "Not Available"
+
+                # ! We also send message here as well
+            else:
+                view_context['ResponseMessage'] = 'DeviceRequestFailed'
+
+        except (ConnectTimeout, ConnectionError, TypeError):
+            view_context['ResponseMessage'] = 'DeviceRequestFailed'
+            pass
 
         if not current_user.user_role == "Professor":
             view_context['ClassLogs'] = ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-TimeRecorded')
             view_context['SubjectsInvolved'] = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-CourseSchedule_Session_Start').values('CourseSchedule_Instructor__first_name', 'CourseSchedule_Instructor__middle_name', 'CourseSchedule_Instructor__last_name', 'CourseSchedule_CourseReference__Course_Name', 'CourseSchedule_CourseReference__Course_Code' , 'CourseSchedule_Section__Section_CompleteStringGroup').distinct()
         else:
-            # ! Add More Context. Do not really just on classlogs
+            # ! Add More Context. Do not really output all, just on classlogs
             view_context['ClassLogs'] = ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Instructor__first_name=current_user.first_name, Course_Reference__CourseSchedule_Instructor__middle_name=current_user.middle_name, Course_Reference__CourseSchedule_Instructor__last_name=current_user.last_name, Course_Reference__CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-TimeRecorded')
 
-        return view_context # ! Return the Context to be rendered later on.
+        if self.ActionState:
+            if self.ActionState == "CRAccess":
+                StateResponseContext = False if view_context['ClassAccessState'] == 'Enabled' else True
+                FetchLiveData('http://%s/RequestInstance?cr_access=%s' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address'], StateResponseContext), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
+                messages.info(self.request, 'CRAccessRequestChange')
+                #view_context['ResponseMessage'] = 'CRAccessRequestChange'
+                return view_context
+
+            elif self.ActionState == "LockState":
+                StateResponseContext = False if view_context['LockState'] == 'Locked' else True
+                FetchLiveData('http://%s/RequestInstance?lock_state=%s' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address'], StateResponseContext), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
+                view_context['ResponseMessage'] = 'LockStateRequestChange'
+                return view_context
+
+            elif self.ActionState == "ElectricState":
+                StateResponseContext = False if view_context['ElectricityState'] == 'On' else True
+                FetchLiveData('http://%s/RequestInstance?electric_state=%s' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address'], StateResponseContext), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
+                view_context['ResponseMessage'] = 'ElectricStateRequestChange'
+                return view_context
+
+            elif self.ActionState == "DevRestart":
+                FetchLiveData('http://%s/RequestInstance?dev_rstrt=initiate' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address']), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
+                view_context['ResponseMessage'] = 'DevRestartRequestChange'
+                return view_context
+
+            elif self.ActionState == "RoomAutomation":
+                FetchLiveData('http://%s/RequestInstance?cr_automate' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address']), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
+                view_context['ResponseMessage'] = 'RoomAutomationRequestChange'
+                return view_context
+
+        else:
+            return view_context # ! Return the Context to be rendered later on.
+
+    def get_queryset(self):
+        return CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID'])
 
     def handle_no_permission(self):
         self.raise_exception = self.request.user.is_authenticated
