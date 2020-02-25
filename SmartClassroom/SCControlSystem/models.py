@@ -47,6 +47,7 @@ class UserDataCredentials(AbstractUser):
     user_role = models.CharField(max_length=27, null=False, blank=False, choices=RoleDeclaredTypes, default=RoleDeclaredTypes[0], help_text="Roles Defined that gives users multiple actions to do. Pick one with RISK.")
     dept_residence = models.ForeignKey(ProgramBranch, to_field="ProgramBranch_Code", verbose_name='Staff Department Residence', help_text='Please refer the program code form where this staff resides.', null=True, blank=True, on_delete=models.CASCADE)
     avatar = models.ImageField(null=True, blank=True, upload_to=user_avatar_path)
+    fp_id = models.PositiveIntegerField(null=True, blank=True, unique=True, verbose_name='User Fingerprint ID', help_text='A Unique User FingerPrint. Required for All Classroom that has User Detection. Keep in mind that, with this ID, it must be registered to all Fingerprints in which the user goes into!!!')
 
     def __str__(self):
         return '%s | %s %s %s | %s' % (self.username, self.first_name, self.middle_name, self.last_name, self.dept_residence)
@@ -191,7 +192,7 @@ class CourseSchedule(models.Model):
 
     #CourseSchedule_Unique_ID = models.UUIDField(max_length=32, default=uuid4, editable=False, primary_key=False, help_text="A Unique Identifier for the course schedules.")
     CourseSchedule_CourseReference = models.ForeignKey(Course, verbose_name='Course Reference', help_text='Refers to a candidated subject from which allocates the time.', to_field="Course_Code", null=False, blank=False, on_delete=models.CASCADE)
-    CourseSchedule_Instructor = models.ForeignKey(UserDataCredentials, verbose_name='Course Instructor', help_text='Refers to an instructor who teach the following course.', to_field="unique_id", null=False, blank=False, on_delete=models.CASCADE, limit_choices_to={'user_role': 'Professor'})
+    CourseSchedule_Instructor = models.ForeignKey(UserDataCredentials, verbose_name='Course Instructor', help_text='Refers to an instructor who teach the following course.', to_field="unique_id", null=False, blank=False, on_delete=models.CASCADE)
     CourseSchedule_Room = models.ForeignKey(Classroom, verbose_name='Course Classroom Assignment', help_text='Refers to a classroom that is currently in vacant in which the session takes place.', null=False, blank=False, to_field="Classroom_CompleteString", related_name="ClassRoomMainReference", on_delete=models.CASCADE)
     CourseSchedule_Section = models.ForeignKey(SectionGroup, verbose_name='Section Course Assignment', help_text='Refers to a section who partakes to this course.', null=True, blank=True, to_field="Section_CompleteStringGroup", on_delete=models.CASCADE)
     CourseSchedule_Session_Start = models.TimeField(verbose_name='Course Session Start Time', help_text='Refers to a time start session point.', null=False, blank=False)

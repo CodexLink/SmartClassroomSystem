@@ -78,14 +78,14 @@ class UserClassAttributes(UserAdmin):
         List_Filter is a feature exclusive based on referenced field. In short, you can filter on **that** field.
         Search_Fields is a set of fields candidated to be searched / indexed when user is looking something by typing in the search bar.
     """
-    list_display = ('username', 'first_name', 'middle_name', 'last_name', 'dept_residence', 'user_role', 'is_active' ,'is_staff', 'is_superuser', 'date_joined')
-    list_filter = ('first_name', 'middle_name', 'last_name', 'user_role', 'dept_residence', 'is_active' ,'is_staff', 'is_superuser', 'date_joined',)
-    search_fields = ('first_name', 'middle_name', 'last_name', 'user_role', 'dept_residence', 'is_active' ,'is_staff', 'is_superuser', 'date_joined',)
+    list_display = ('username', 'first_name', 'middle_name', 'last_name', 'dept_residence', 'user_role', 'is_active' ,'is_staff', 'is_superuser', 'date_joined', 'fp_id')
+    list_filter = ('first_name', 'middle_name', 'last_name', 'user_role', 'dept_residence', 'is_active' ,'is_staff', 'is_superuser', 'date_joined', 'fp_id')
+    search_fields = ('first_name', 'middle_name', 'last_name', 'user_role', 'dept_residence', 'is_active' ,'is_staff', 'is_superuser', 'date_joined', 'fp_id')
 
     # ! Fieldsets is a container that contains fields that can be displayed / read / modified. This fields are available when looking at them by CHANGING.
     fieldsets =  (
         ('User Credentials', {
-            'fields': ('username', 'password', 'user_role', 'dept_residence'),
+            'fields': ('username', 'password', 'user_role', 'dept_residence', 'fp_primary', 'fp_secondary', 'fp_tertiary'),
             }
         ),
         ('User Information', {
