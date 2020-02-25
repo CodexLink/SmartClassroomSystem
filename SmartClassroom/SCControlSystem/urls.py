@@ -33,7 +33,7 @@ urlpatterns = [
         path('control/roomAutomate/', SelectableClassroomView.as_view(ActionState='RoomAutomation'), name='classroom_take_action_automate'),
         ])),
 
-    path('classroom/<uuid:classUniqueID>/schedule/', ScheduleListView.as_view(), name='schedule_exclusive_view'), # ! For teachers only.
+    path('classroom/schedule/', ScheduleListView.as_view(), name='schedule_exclusive_view'), # ! For teachers only.
     # ! Admin Only URLs
     path('classroom/', ClassroomView.as_view(), name='classroom_user_view'),
     path('override/', admin.site.urls),
