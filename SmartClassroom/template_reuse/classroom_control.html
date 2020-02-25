@@ -1,4 +1,5 @@
 <div class="container content-offset">
+
     <div class="card-columns class-control-column">
             {% for ClassroomAttr in object_list %}
             {% if forloop.first %}
@@ -13,6 +14,89 @@
                     </div>
                 </div>
             </div>
+            {% for message in messages %}
+            {% if message.message == 'DeviceRequestSuccess' %}
+            <div class="col mb-auto">
+                <div class="card bg-success">
+                    <div class="card-body">
+                        <h2 class="card-title text-white-primary">Device is Online</h2>
+                        <h3 class="card-subtitle text-white-secondary">You can access the controls for now.</h3>
+                        <p class="card-text text-white-primary">Remember! Your action will always be recorded no matter what your role is. If you made a mistake, administrators will know.</p>
+                    </div>
+                </div>
+            </div>
+            {% elif message.message == 'DeviceRequestFailed' %}
+            <div class="col mb-auto">
+                <div class="card bg-danger">
+                    <div class="card-body">
+                        <h2 class="card-title text-white-primary">Device is Not Online or Connection Timed-Out!</h2>
+                        <h3 class="card-subtitle text-white-secondary">Control Access is not Available.</h3>
+                        <p class="card-text text-white-primary">Please check the device! The device might be put into a down state or the device just rebooted, please wait if that is the case.</p>
+                    </div>
+                </div>
+            </div>
+            {% elif message.message == 'CRAccessRequestChange' %}
+            <div class="col mb-auto">
+                <div class="card bg-warning">
+                    <div class="card-body">
+                        <h2 class="card-title text-white-primary">Classroom Access Request Granted!</h2>
+                        <h3 class="card-subtitle text-white-secondary">Staff can now acces this classroom.</h3>
+                        <p class="card-text text-white-primary">All staff were not able to access this classroom. Only if their schedule is assigned to it in which that schedule does in scope of the current time today.</p>
+                    </div>
+                </div>
+            </div>
+            {% elif message.message == 'LockStateRequestChange' %}
+            <div class="col mb-auto">
+                <div class="card bg-danger">
+                    <div class="card-body">
+                        <h2 class="card-title text-white-primary">Device is Not Online or Connection Timed-Out!</h2>
+                        <h3 class="card-subtitle text-white-secondary">Control Access is not Available.</h3>
+                        <p class="card-text text-white-primary">Please check the device! It may be set as unknown or the device just rebooted, please wait if that is the case.</p>
+                    </div>
+                </div>
+            </div>
+            {% elif message.message == 'ElectricStateRequestChange' %}
+            <div class="col mb-auto">
+                <div class="card bg-danger">
+                    <div class="card-body">
+                        <h2 class="card-title text-white-primary">Device is Not Online or Connection Timed-Out!</h2>
+                        <h3 class="card-subtitle text-white-secondary">Control Access is not Available.</h3>
+                        <p class="card-text text-white-primary">Please check the device! It may be set as unknown or the device just rebooted, please wait if that is the case.</p>
+                    </div>
+                </div>
+            </div>
+            {% elif message.message == 'DevRestartRequestChange' %}
+            <div class="col mb-auto">
+                <div class="card bg-danger">
+                    <div class="card-body">
+                        <h2 class="card-title text-white-primary">Device is Not Online or Connection Timed-Out!</h2>
+                        <h3 class="card-subtitle text-white-secondary">Control Access is not Available.</h3>
+                        <p class="card-text text-white-primary">Please check the device! It may be set as unknown or the device just rebooted, please wait if that is the case.</p>
+                    </div>
+                </div>
+            </div>
+            {% elif message.message == 'RoomAutomationRequestChange' %}
+            <div class="col mb-auto">
+                <div class="card bg-danger">
+                    <div class="card-body">
+                        <h2 class="card-title text-white-primary">Device is Not Online or Connection Timed-Out!</h2>
+                        <h3 class="card-subtitle text-white-secondary">Control Access is not Available.</h3>
+                        <p class="card-text text-white-primary">Please check the device! It may be set as unknown or the device just rebooted, please wait if that is the case.</p>
+                    </div>
+                </div>
+            </div>
+            {% elif message.message == 'InvalidCommand' %}
+            <div class="col mb-auto">
+                <div class="card bg-danger">
+                    <div class="card-body">
+                        <h2 class="card-title text-white-primary">Device is Not Online or Connection Timed-Out!</h2>
+                        <h3 class="card-subtitle text-white-secondary">Control Access is not Available.</h3>
+                        <p class="card-text text-white-primary">Please check the device! It may be set as unknown or the device just rebooted, please wait if that is the case.</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
             <div class="col mb-auto">
                 <div class="card">
                     <div class="card-header border-0">
@@ -21,13 +105,14 @@
                     </div>
                     <!-- Insert some extra buttons for admin -->
                     <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Temperature Celcius<span class="badge badge-primary badge-pill bg-{{ ClassroomAttr.CourseSchedule_Room.Classroom_State }}">{{ TempOutput }}°C</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Humidity Percentage<span class="badge badge-primary badge-pill bg-danger">{{ HumidOutput }}%</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Temperature Celcius<span class="badge badge-primary badge-pill bg-alert">{{ TempOutput }}°C</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Humidity Percentage<span class="badge badge-primary badge-pill bg-success">{{ HumidOutput }}%</span></a>
                         <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Calculated Heat Index<span class="badge badge-primary badge-pill bg-danger">{{ HeatInxOutput }}°C</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Recent Motion Detection<span class="badge badge-primary badge-pill bg-danger">{{ PIRTTOutput }} second/s since {{ refresh_recent_time }}.</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Recent Motion Detection<span class="badge badge-primary badge-pill bg-warning">{{ PIRTTOutput }} second/s since {{ refresh_recent_time }}.</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Authentication State<span class="badge badge-primary badge-pill bg-info">Currently Authenticated with ID: 1</span></a>
                     </div>
                     <div class="card-actions border-top d-flex justify-content-between align-items-center">
-                        <span class="text-muted">Updated as of {{ refresh_recent_time }}.</span>
+                        <span class="text-muted">Updated as of {{ refresh_recent_time }}. (The time you refereshed this page)</span>
                     </div>
                 </div>
             </div>
@@ -35,17 +120,17 @@
                 <div class="card">
                     <div class="card-header border-0">
                         <h2 class="card-title">Classroom Device Options</h2>
-                        <h3 class="card-subtitle text-black-secondary">{% if user_class == "ITSO Supervisor" %}You're not allowed to touch these controls! Contact your administrator!{% else %}{% if ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' %}For each actions that you commit, will be recorded by the system!{% elif ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Offline'%}The device is not turned on! Please check!{% else %}The device associated with the classroom is not set up! Please check it!{% endif %}{% endif %}</h3>
+                        <h3 class="card-subtitle text-black-secondary">{% if user_class == "ITSO Supervisor" %}You're not allowed to touch these controls! Contact your administrator!{% else %}For each actions that you commit, will be recorded by the system!{% endif %}</h3>
                     </div>
                     <!-- Insert some extra buttons for admin -->
                     <div class="card-body list-group border-0" id="list-tab" role="tablist">
                         {% if user_class == "ITSO Administrator" or user_class == "Project Owner" or user_class == "Project Administrator" %}
-                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' %}disabled{% endif %}" id="list-home-list" href="{% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}#{% else %}{% url 'classroom_take_action_lock_state' classUniqueID=Class_UID_Literal %}{% endif %}" role="tab" aria-controls="home">Toggle Classroom Access<span class="badge badge-primary badge-pill bg-{{ ClassroomAttr.CourseSchedule_Room.Classroom_AccessState|lower }}">{{ ClassAccessState }}</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center {% if user_class == 'ITSO Supervisor' or ResponseMessage == 'DeviceRequestFailed' %}disabled{% endif %}" href="{% if ResponseMessage == 'DeviceRequestFailed' or user_class == 'ITSO Supervisor' %}#{% else %}{% url 'classroom_take_action_cr_access' classUniqueID=Class_UID_Literal %}{% endif %}" role="tab" aria-controls="home">Toggle Classroom Access<span class="badge badge-primary badge-pill bg-{% if ResponseMessage == 'DeviceRequestFailed' %}dark{% else %}info{% endif %}">{% if ResponseMessage != 'DeviceRequestFailed' %}{{ ClassAccessState }}{% else %}Unknown{% endif %}</span></a>
                         {% endif %}
-                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}disabled{% endif %}"  data-toggle="list" href="{% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}#{% else %}{% url 'classroom_take_action_lock_state' classUniqueID=Class_UID_Literal %}{% endif %}" role="tab" aria-controls="home">Toggle Lock<span class="badge badge-primary badge-pill bg-{{ ClassroomAttr.CourseSchedule_Room.Classroom_State }}">{{ LockState }}</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}disabled{% endif %}"  data-toggle="list" href="{% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}#{% else %}{% url 'classroom_take_action_device_reset' classUniqueID=Class_UID_Literal %}{% endif %}" role="tab" aria-controls="profile">Toggle Electricity<span class="badge badge-primary badge-pill bg-danger">{{ ElectricityState }}</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}disabled{% endif %}"  data-toggle="list" href="{% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}#{% else %}{% url 'classroom_take_action_electric_state' classUniqueID=Class_UID_Literal %}{% endif %}" role="tab" aria-controls="profile">Restart Device<span class="badge badge-primary badge-pill bg-{{ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status }}">{{ DeviceState }}</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center {% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}disabled{% endif %}"  data-toggle="list" href="{% if not ClassroomAttr.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' or user_class == 'ITSO Supervisor' %}#{% else %}{% url 'classroom_take_action_cr_access' classUniqueID=Class_UID_Literal %}{% endif %}" role="tab" aria-controls="profile">Room Automate<span class="badge badge-primary badge-pill bg-danger">{{ AutomateState }}</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center {% if user_class == 'ITSO Supervisor' or ResponseMessage == 'DeviceRequestFailed' %}disabled{% endif %}" href="{% if user_class == 'ITSO Supervisor' or ResponseMessage == 'DeviceRequestFailed' %}#{% else %}{% url 'classroom_take_action_lock_state' classUniqueID=Class_UID_Literal %}{% endif %}" role="tab" aria-controls="home">Toggle Lock<span class="badge badge-primary badge-pill bg-{% if ResponseMessage == 'DeviceRequestFailed' %}dark{% else %}{{ LockState|lower }}{% endif %}">{% if ResponseMessage != 'DeviceRequestFailed' %}{{ LockState }}{% else %}Unknown{% endif %}</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center {% if user_class == 'ITSO Supervisor' or ResponseMessage == 'DeviceRequestFailed' %}disabled{% endif %}" href="{% if user_class == 'ITSO Supervisor' or ResponseMessage == 'DeviceRequestFailed' %}#{% else %}{% url 'classroom_take_action_electric_state' classUniqueID=Class_UID_Literal %}{% endif %}" role="tab" aria-controls="profile">Toggle Electricity<span class="badge badge-primary badge-pill bg-{% if ResponseMessage == 'DeviceRequestFailed' %}dark{% else %}danger{% endif %}">{% if ResponseMessage != 'DeviceRequestFailed' %}{{ ElectricityState }}{% else %}Unknown{% endif %}</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center {% if user_class == 'ITSO Supervisor' or ResponseMessage == 'DeviceRequestFailed' %}disabled{% endif %}" href="{% if user_class == 'ITSO Supervisor' or ResponseMessage == 'DeviceRequestFailed' %}#{% else %}{% url 'classroom_take_action_device_reset' classUniqueID=Class_UID_Literal %}{% endif %}" role="tab" aria-controls="profile">Restart Device<span class="badge badge-primary badge-pill bg-{% if ResponseMessage == 'DeviceRequestFailed' %}dark{% else %}warning{% endif %}">{% if ResponseMessage != 'DeviceRequestFailed' %}{{ DeviceState }}{% else %}Unknown{% endif %}</span></a>
+                        <a class="list-group-item d-flex justify-content-between align-items-center {% if user_class == 'ITSO Supervisor' or ResponseMessage == 'DeviceRequestFailed' %}disabled{% endif %}" href="{% if user_class == 'ITSO Supervisor' or ResponseMessage == 'DeviceRequestFailed' %}#{% else %}{% url 'classroom_take_action_automate' classUniqueID=Class_UID_Literal %}{% endif %}" role="tab" aria-controls="profile">Room Automate<span class="badge badge-primary badge-pill bg-{% if ResponseMessage == 'DeviceRequestFailed' %}dark{% else %}danger{% endif %}">{% if ResponseMessage != 'DeviceRequestFailed' %}{{ AutomateState }}{% else %}Unknown{% endif %}</span></a>
                     </div>
                 </div>
             </div>
