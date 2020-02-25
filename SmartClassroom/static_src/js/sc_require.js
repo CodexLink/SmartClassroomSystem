@@ -178,3 +178,13 @@ $('.auth-clear-entry').click(function (e)
 {
     $('.form-control').val('');
 });
+
+// ! HTML Device Command Bypass Back to Root classroom/<uuid:classUniqueID>/control
+$(document).ready(function (event) {
+    // ! Add More, Especially In Thank You Page Or On Anything else.
+    if (window.location.pathname.split('/')[1] == "classroom" && window.location.pathname.split('/')[3] == "control" && window.location.pathname.split('/')[4])
+    {
+        window.history.replaceState(null, document.title, "/" + window.location.pathname.split('/')[1] + "/" + window.location.pathname.split('/')[2] + "/" + window.location.pathname.split('/')[3] + "/");
+        window.location.reload();
+    }
+})
