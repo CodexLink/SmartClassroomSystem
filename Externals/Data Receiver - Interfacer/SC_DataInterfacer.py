@@ -24,7 +24,7 @@ from SCMySQLDB import MySQLEssentialHelper as SCMySQL
 class SC_IoTDriver(SCMySQL):
     # On Starting Point we have to supply the given arguments to __init__() function.
     # ! Because we have to initialize the class from the object itself.
-    def __init__(self, COMPort=None, BaudRate=None, TimeoutCheck=3, **NodeCandidates):
+    def __init__(self, COMPort=None, BaudRate=None, TimeoutCheck=5, **NodeCandidates):
         super().__init__(ServerHost='localhost', UCredential='root', PCredential=None, DB_Target='sc_db') # ! We have to initialize superclass 'MySQLEssentialHelper' to gather functions from 'that' class.
 
         self.TimeoutDevCheck = TimeoutCheck
@@ -47,8 +47,8 @@ class SC_IoTDriver(SCMySQL):
         for DevNumber, (DevName, DevIP) in enumerate(NodeDevCandidates.items()):
             try:
                 print('Device #%s | %s — %s | Connection Checking... |  '% (DevNumber + 1, DevName, DevIP,), end='')
-                DevResp = DataGETReq('http://%s/RequestData' % (DevIP,), timeout=self.TimeoutDevCheck)
-
+                UUID_Dev = self.MySQL_ExecuteState("SELECT Device_Unique_ID from dev_decl WHERE Device_Name='%s'" % (DevName))
+                DevResp = DataGETReq('http://%s/RequestData' % (DevIP,), timeout=self.TimeoutDevCheck, auth=(DevName, UUID_Dev['Device_Unique_ID']))
                 if DevResp.ok:
                     print('Response Success.')
                     passCount += 1
@@ -56,12 +56,12 @@ class SC_IoTDriver(SCMySQL):
                     print('Response Failed / No Content.')
                     errCount += 1
 
-            except ConnectionError:
+            except (ConnectionError, TypeError):
                 print('Response Failed.')
                 errCount += 1
                 pass
 
-        print('Device Checking Finished... (Success: %s, Failed: %s)' % (passCount, errCount))
+        print('\nDevice Checking Finished... (Success: %s, Failed: %s)\n' % (passCount, errCount))
 
         if passCount and errCount:
             print("There's are some devices that didn't passed from the connection test. Are you sure you want to continue?")
@@ -70,27 +70,29 @@ class SC_IoTDriver(SCMySQL):
             return True if userAcc in ('Y', 'y') else False
 
         elif not passCount and errCount:
-            print("All devices were not able to pass from the connection test. Please check their corresponding IP Addresses!")
+            print("All devices were not able to pass from the connection test. Please check the device candidate information!")
             Terminate()
 
     # ! Step 2 | Connect To Them Individual and Check For Datas
     def getNewData(self, **IndivDevice):
         for DevName, DevIP in IndivDevice.items():
             try:
-                print('Current Device Query | %s — %s'% (DevName, DevIP,))
-                DevResp = DataGETReq('http://%s/RequestData' % (DevIP,), timeout=self.TimeoutDevCheck)
+                print('\nJob | Device Currently on Process Query is %s — %s'% (DevName, DevIP,))
+                UUID_Dev = self.MySQL_ExecuteState("SELECT Device_Unique_ID from dev_decl WHERE Device_Name='%s'" % (DevName))
+                DevResp = DataGETReq('http://%s/RequestData' % (DevIP,), timeout=self.TimeoutDevCheck, auth=(DevName, UUID_Dev['Device_Unique_ID']))
 
                 if DevResp.ok:
-                    print('Response Success | %s — %s\n'% (DevName, DevIP,))
+                    print('Response Result for %s — %s was Successful on Request...\n'% (DevName, DevIP,))
                     self.processURL(DevName, DevIP, DevResp.content)
 
-            except ConnectionError:
-                print('Response Failed | %s — %s, Skipped...'% (DevName, DevIP,))
+            except (ConnectionError, TypeError):
+                print('Response Result for %s — %s was Failed on Request, Skipping It!'% (DevName, DevIP,))
         return
 
     # ! Processes URL given by the NodeMCU into a dictionary for further processing.
     """
         The URL context should have the following:
+
             - Classroom Assignment
             - Temperature Output
             - Humidity Output
@@ -100,23 +102,35 @@ class SC_IoTDriver(SCMySQL):
                 - Actual State (Authorized, Unauthorized)
             - Lock States
                 - Recently Opened / Closed
-        Therefore,
-        {'cr_assigned': '', 'temp_optpt': '', 'humid_optpt': '', 'authentication': {'recent_detection' : '', 'state' : ''}, 'door_lock': ''}
+        Therefore, the output will be...
+        {
+            'DATA_HEADER': {'CR_IDNTY': 'DEV_CR_ASSIGNED', 'CR_UID': 'DEV_UID'},
+            'DATA_SENS': {'CR_TEMP': 'DHT22_Temp', 'CR_HUMD': 'DHT22_Humid', 'CR_HTINX': '', ''PIR_MOTION':
+                {'PIR_OTPT': 'PIR_Bool', 'PIR_OTPT_TIME_TRIGGER': 'PIR_MILLIS_TRIGGER'}
+            },
+            'DATA_AUTH': {'AUTH_ID':'-1', 'AUTH_STATE': 'AUTH_FGPRT_STATE'},
+            'DATA_STATE': {
+                'DOOR_STATE': 'AUTH_CR_DOOR', 'ACCESS_STATE': 'AUTH_CR_ACCESS', 'ELECTRIC_STATE': 'NON_AUTH_ELECTRIC_STATE'
+            },
+        }
+
     """
     def processURL(self, DevTarget_Name, DevTarget_IP, urlStr):
-        print("%s | %s | Processing Context from URL Response." % (DevTarget_Name, DevTarget_IP,))
+        print("Processing Context from URL Response for %s | %s..." % (DevTarget_Name, DevTarget_IP,))
         convIoTData = json.loads(urlStr.decode('utf-8').replace("'", "\""))
+        print("Context Was Sterelized for %s | %s..." % (DevTarget_Name, DevTarget_IP,))
         return self.interpretData(DevTarget_Name, DevTarget_IP, **convIoTData)
 
-    # ! Interpret Data from the URL by reading them as a dictionary.
+    # ! Interpret Data from the URL by reading them as a dictionary and Take Action about it.
     def interpretData(self, DevInterpret_Name, DevInterpret_IP, **URLSterlData):
-        print('%s | %s | Interpreting Context.' % (DevInterpret_Name, DevInterpret_IP))
-        return print(URLSterlData)
+        print('Interpreting Given Context for %s | %s...' % (DevInterpret_Name, DevInterpret_IP))
+        print("DATA_HEADER => ROOM: %s | UID: %s" % (URLSterlData['DATA_HEADER']['CR_IDNTY'], URLSterlData['DATA_HEADER']['CR_UID']))
+        print("DATA_SENS => TEMP: %s | HUMD: %s | HTINDEX: %s" % (URLSterlData['DATA_SENS']['CR_TEMP'], URLSterlData['DATA_SENS']['CR_HUMD'], URLSterlData['DATA_SENS']['CR_HTINX']))
+        print("DATA_SENS => PIR_MOTION => OUTPUT: %s | TIME_TRIGGER: %s" % (URLSterlData['DATA_SENS']['PIR_MOTION']['PIR_OTPT'], URLSterlData['DATA_SENS']['PIR_MOTION']['PIR_OTPT_TIME_TRIGGER']))
+        print("DATA_AUTH => AUTH_ID:    %s | AUTH_STATE: %s" % (URLSterlData['DATA_AUTH']['AUTH_ID'], URLSterlData['DATA_AUTH']['AUTH_STATE']))
+        print("DATA_STATE => DOOR_STATE: %s | ACCESS_STATE: %s | ELECTRIC_STATE: %s" % (URLSterlData['DATA_STATE']['DOOR_STATE'], URLSterlData['DATA_STATE']['ACCESS_STATE'], URLSterlData['DATA_STATE']['ELECTRIC_STATE']))
 
-    # ! We take action and do something about the data. It can be, Data Change, State Change, Logging such as [Sensor Data, UUID Data, and Status for Entries and Etc.],
-    def takeAction(self, ActionType=None):
-        pass
-
+        return
 
 if __name__ == '__main__':
     CommandLine('CLS', shell=True)
