@@ -85,7 +85,7 @@ class UserClassAttributes(UserAdmin):
     # ! Fieldsets is a container that contains fields that can be displayed / read / modified. This fields are available when looking at them by CHANGING.
     fieldsets =  (
         ('User Credentials', {
-            'fields': ('username', 'password', 'user_role', 'dept_residence', 'fp_primary', 'fp_secondary', 'fp_tertiary'),
+            'fields': ('username', 'password', 'user_role', 'dept_residence', 'fp_id'),
             }
         ),
         ('User Information', {
