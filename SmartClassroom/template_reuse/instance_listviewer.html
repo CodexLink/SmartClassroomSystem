@@ -39,14 +39,14 @@
     </div>
     {% elif current_view == "ScheduleListView" %}
     <div class="schedule-item col mb-auto">
-        <div class="card bg-info">
+        <div class="card bg-warning">
             <div class="card-header border-0 text-white-primary">
-                <h1 class="card-title">Hey! Your Schedules are seperated accordingly!</h1>
+                <h1 class="card-title">Hey! Your Schedules are diplayed! But sorted accordingly by time, not by days!</h1>
             </div>
             <div class="card-body text-white">
                 <p>We displayed your schedules by disabling and enabling them based from your schedule day scope. We
                     have to make things clear that you cannot modify or forcefully enable some
-                    rooms that is out of scope based from your schedule. But you can still have information about it.
+                    rooms that is out of scope based from your schedule. But you can still have information on the outside.
                 </p>
             </div>
         </div>
@@ -55,8 +55,8 @@
     <div class="seperate-section">
         <div class="form-group">
             <div class="floating-label textfield-box">
-                <label for="FilterSearchBox">Filter Search by Card Name</label>
-                <input class="form-control" id="FilterSearchBox" placeholder="Search Data..." type="text">
+                <label for="FilterSearchBox">Exact Filter Search by Card Primary Name</label>
+                <input class="form-control filter-card-elements" id="FilterSearchBox" placeholder="Search Data Exactly by Card Name..." type="text">
             </div>
         </div>
 
@@ -73,6 +73,10 @@
             <li class="nav-item">
                 <a aria-selected="false" class="nav-link" data-toggle="tab" data-filter=".sys-locked"
                     href="javascript:void(0)" role="tab">Locked</a>
+            </li>
+            <li class="nav-item">
+                <a aria-selected="false" class="nav-link" data-toggle="tab" data-filter=".sys-offline"
+                    href="javascript:void(0)" role="tab">Offline</a>
             </li>
             {% elif current_view == "StaffActionsListView" %}
             <li class="nav-item">
@@ -108,19 +112,18 @@
 
     <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 schedule-grid">
         {% for Classroom in object_list %}
-        <div class="schedule-item col mb-auto sys-{{ Classroom.Classroom_State|lower }}">
+        <div class="schedule-item col mb-auto sys-{% if Classroom.Classroom_Dev.Device_Status == 'Online' %}{{ Classroom.Classroom_State|lower }}{% else %}offline{% endif %}">
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title">{{ Classroom.Classroom_Name }}</h2>
                     <h3 class="card-subtitle text-black-secondary">Room {{ Classroom.Classroom_CompleteString }} </h3>
                     <span class="card-text text-black-secondary">This classroom is currently associated with the device
-                        '{{ Classroom.Classroom_Dev }}' that is currently in {{ Classroom.Classroom_Dev.Device_Status }}
-                        State.</span>
+                        '{{ Classroom.Classroom_Dev }}'.</span>
                 </div>
                 <div class="card-actions d-flex justify-content-between align-items-center">
                     <a class="card-link"
                         href="{% url 'classroom_info_view' classUniqueID=Classroom.Classroom_Unique_ID %}">Actions</a>
-                    <span class="badge badge-primary badge-pill bg-{{ Classroom.Classroom_State|lower }}">{{ Classroom.Classroom_Dev.Device_Status }} and {{ Classroom.Classroom_State }}</span>
+                    <span class="badge badge-primary badge-pill bg-{% if Classroom.Classroom_Dev.Device_Status == 'Online' %}{{ Classroom.Classroom_State|lower }}{% else %}offline{% endif %}">{% if Classroom.Classroom_Dev.Device_Status == 'Online' %} Currently {{ Classroom.Classroom_State }}{% else %}{{ Classroom.Classroom_Dev.Device_Status }}{% endif %}</span>
                 </div>
             </div>
         </div>
@@ -131,9 +134,7 @@
             <div class="log-item col mb-auto {{ ClassroomActionLog.ActionLevel|lower }}-log">
                 <div class="card">
                     <div class="card-body">
-                        <h2 class="card-title">
-                            {{ ClassroomActionLog.Course_Reference.CourseSchedule_CourseReference.Course_Code }} |
-                            {{ ClassroomActionLog.Course_Reference.CourseSchedule_CourseReference.Course_Name }}</h2>
+                        <h2 class="card-title">{{ ClassroomActionLog.Course_Reference.CourseSchedule_CourseReference.Course_Code }} | {{ ClassroomActionLog.Course_Reference.CourseSchedule_CourseReference.Course_Name }}</h2>
                         <h3 class="card-subtitle text-black-secondary">
                             {{ ClassroomActionLog.Course_Reference.CourseSchedule_Room.Classroom_CompleteString }} |
                             {{ ClassroomActionLog.Course_Reference.CourseSchedule_Section.Section_CompleteStringGroup }}
@@ -171,10 +172,9 @@
                                 {{ ScheduleCandidates.CourseSchedule_Section.Section_CompleteStringGroup }}</li>
                         </div>
                         <div class="card-actions d-flex justify-content-between align-items-center">
-                            <a class="card-link {% if ScheduleCandidates.CourseSchedule_Room.Classroom_State == 'Locked' %}disabled{% endif %}"
-                                href="{% if ScheduleCandidates.CourseSchedule_Room.Classroom_State == 'Locked' %}#{% else %}{% url 'classroom_info_view' classUniqueID=ScheduleCandidates.CourseSchedule_Room.Classroom_Unique_ID %}{% endif %}">Actions</a>
-                            <span
-                                class="badge badge-primary badge-pill bg-{{ ScheduleCandidates.CourseSchedule_Room.Classroom_State|lower }}">{{ ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status }} and {{ ScheduleCandidates.CourseSchedule_Room.Classroom_State }}</span>
+                            <a class="card-link {% if ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status != 'Online' or ScheduleCandidates.CourseSchedule_Lecture_Day != schedule_weekday_name %}disabled{% endif %}"
+                                href="{% if ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status != 'Online' %}#{% else %}{% url 'classroom_info_view' classUniqueID=ScheduleCandidates.CourseSchedule_Room.Classroom_Unique_ID %}{% endif %}">Actions</a>
+                            <span class="badge badge-primary badge-pill bg-{% if ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' %}{{ ScheduleCandidates.CourseSchedule_Room.Classroom_State|lower }}{% else %}offline{% endif %}">{% if ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' %} Currently {{ ScheduleCandidates.CourseSchedule_Room.Classroom_State }}{% else %}{{ ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status }}{% endif %}</span>
                         </div>
                     </div>
                 </div>
