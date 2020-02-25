@@ -86,7 +86,6 @@ $('.tab-card-filter').on('click', 'li a', function () {
     var filterValue = $(this).attr('data-filter');
     var sortValue = $(this).attr('data-sort-by');
     $('.schedule-grid').isotope({ filter: filterValue });
-    $('.schedule-grid').isotope({ sortBy: sortValue });
 });
 
 // ! Isotope Filtering System for Logs Level
@@ -95,8 +94,25 @@ $('.tab-card-filter').on('click', 'li a', function () {
     $('.log-grid').isotope({ filter: filterValue });
 });
 
-$(document).ready(function (e)
-{
+// ! Isotope Filtering System for Type Queries
+$('.filter-card-elements').on('input', function () {
+    var filterValue = $(this).val();
+    $('.log-grid, .schedule-grid').isotope({
+        filter: function () {
+            var titleSearch = $(this).find('.card-title').text();
+            if (!filterValue.length)
+            {
+                return true;
+            }
+            else
+            {
+                return (filterValue.toUpperCase() === titleSearch.toUpperCase()) ? true : false;
+            }
+        }
+    });
+});
+
+$(document).ready(function (e) {
     $('.schedule-grid').isotope({ sortBy: 'timestart' });
 });
 
@@ -174,16 +190,14 @@ if (document.querySelector('.local_time_display') !== null) {
 }
 
 // ! Clear Auth Credential Fields
-$('.auth-clear-entry').click(function (e)
-{
+$('.auth-clear-entry').click(function (e) {
     $('.form-control').val('');
 });
 
 // ! HTML Device Command Bypass Back to Root classroom/<uuid:classUniqueID>/control
 $(document).ready(function (event) {
     // ! Add More, Especially In Thank You Page Or On Anything else.
-    if (window.location.pathname.split('/')[1] == "classroom" && window.location.pathname.split('/')[3] == "control" && window.location.pathname.split('/')[4])
-    {
+    if (window.location.pathname.split('/')[1] == "classroom" && window.location.pathname.split('/')[3] == "control" && window.location.pathname.split('/')[4]) {
         window.history.replaceState(null, document.title, "/" + window.location.pathname.split('/')[1] + "/" + window.location.pathname.split('/')[2] + "/" + window.location.pathname.split('/')[3] + "/");
         window.location.reload();
     }
