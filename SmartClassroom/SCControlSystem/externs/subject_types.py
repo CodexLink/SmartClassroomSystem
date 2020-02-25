@@ -44,7 +44,7 @@ SemClassification = (
 SessionDaysClassification = (
     ('Monday', 'Monday'),
     ('Tuesday', 'Tuesday'),
-    ('Wednesdy', 'Wednesday'),
+    ('Wednesday', 'Wednesday'),
     ('Thursday', 'Thursday'),
     ('Friday', 'Friday'),
     ('Saturday', 'Saturday'),
