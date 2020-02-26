@@ -64,21 +64,6 @@ class DeviceInfo(models.Model):
 
     def __str__(self):
         return '%s | %s' % (self.Device_Name, self.Device_IP_Address)
-
-class SensOutput(models.Model):
-    class Meta:
-        verbose_name = "Classroom Device Sensor Output"
-        db_table = "dev_sens_output"
-
-    Sens_Name = models.CharField(max_length=100, null=False, blank=False, verbose_name='Sensors Name', help_text='Please indicate. We need to know what kind of sensors is it gonna be to communicate with the app.', validators=[MinLengthValidator(5), MaxLengthValidator(100)])
-    Sens_Ref = models.ForeignKey(DeviceInfo, to_field='Device_Unique_ID', verbose_name='Sensors Unique Reference', help_text='Indication of where the data comes from.', null=False, blank=False, on_delete=models.CASCADE)
-    Sens_Type = models.CharField(max_length=29, null=False, blank=False, verbose_name='Sensors Type', help_text='The type of the sensors. This needs to be indicated to properly identify what kind of output it returns.', validators=[MinLengthValidator(13), MaxLengthValidator(15)], default=DevDeclarationTypes[0], choices=DevDeclarationTypes)
-    Sens_Output = models.CharField(max_length=255, verbose_name='Sensors Referred Output', help_text='The output of the sensors can be a string, integer, float, or boolean.', null=False, blank=False)
-    Sens_Date_Committed = models.DateTimeField(verbose_name='Sensors Date Committed', help_text='The date and time from where the the output of the sensors is committed. ', null=False, blank=False, auto_now_add=True)
-
-    def __str__(self):
-        return '%s | %s | %s — %s' % (self.Sens_Name, self.Sens_Ref, self.Sens_Type, self.Sens_Output)
-
 '''
 # ! Integrity Information for Classroom Model
 Classroom has set Classroom_CompleteString as the primary key. No other such as unique at this point.
