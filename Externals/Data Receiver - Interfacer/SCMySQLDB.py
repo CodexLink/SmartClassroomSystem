@@ -23,12 +23,15 @@ class MySQLEssentialHelper(object):
             Terminate()  # ! Terminate the program, when we're unable to connect to the database.
 
     # ! Execute Statement Given with the IoT Data Attached to it.
-    def MySQL_ExecuteState(self, ExecuteStatement):
+    def MySQL_ExecuteState(self, ExecuteStatement, FetchType=None):
         try:
             cursorSet = self.MySQLDataWire.cursor()
             cursorSet.execute(ExecuteStatement)
 
-            return cursorSet.fetchone()
+            if FetchType == "FetchOne":
+                return cursorSet.fetchone()
+            elif FetchType == "FetchAll":
+                return cursorSet.fetchall()
 
         except MySQLConnector.MySQLError as ExecErrMsg:
             print('Execution State Error | Please check your MySQL statements. | Detailed Info |> %s' % ExecErrMsg)

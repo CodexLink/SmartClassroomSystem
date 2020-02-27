@@ -15,8 +15,7 @@ from sys import exit as Terminate
 from time import sleep as delay
 
 from requests import get as DataGETReq
-from requests.exceptions import ConnectionError
-from SC_NodeCandidates import NodeDevCandidates  # NodeMCU Candidates
+from requests.exceptions import RequestException
 from SCMySQLDB import MySQLEssentialHelper as SCMySQL
 
 
@@ -24,31 +23,31 @@ from SCMySQLDB import MySQLEssentialHelper as SCMySQL
 class SC_IoTDriver(SCMySQL):
     # On Starting Point we have to supply the given arguments to __init__() function.
     # ! Because we have to initialize the class from the object itself.
-    def __init__(self, COMPort=None, BaudRate=None, TimeoutCheck=5, **NodeCandidates):
+    def __init__(self, COMPort=None, BaudRate=None, TimeoutCheck=5):
         super().__init__(ServerHost='localhost', UCredential='root', PCredential=None, DB_Target='sc_db') # ! We have to initialize superclass 'MySQLEssentialHelper' to gather functions from 'that' class.
 
         self.TimeoutDevCheck = TimeoutCheck
         return
 
     # ! First Step | Initialization | We check a list of NodeMCUs to be scanned.
-    def checkNodeConn(self, **NodeDict):
+    def checkNodeConn(self):
         # ! Add Indicators. User actions will be dependent upon this.
         errCount = 0
         passCount = 0
+        devList = self.MySQL_ExecuteState("SELECT Device_Name, Device_IP_Address, Device_Unique_ID from dev_decl WHERE  Device_Status='Online'", "FetchAll")
 
         print("Device List | Checking...")
-        if not len(NodeDict):
-            print('Count Result | There are no NodeMCU declared from the container! Please check them and correct them if possible!!!')
+        if not len(devList):
+            print('Count Result | There are no NodeMCUs declared from the container! Please check them and correct them if possible!!!')
             Terminate()
         else:
-            print("Count Result | The dictionary contains %s Devices to be scanned...\n" % (len(NodeDict)))
+            print("Count Result | The dictionary contains %s devices to be scanned...\n" % (len(devList)))
 
     # * IF a device is not included to the list but WAS included to the DJango Database then we set their states as Unknown.
-        for DevNumber, (DevName, DevIP) in enumerate(NodeDevCandidates.items()):
+        for listCandidates in devList:
             try:
-                print('Device #%s | %s — %s | Connection Checking... |  '% (DevNumber + 1, DevName, DevIP,), end='')
-                UUID_Dev = self.MySQL_ExecuteState("SELECT Device_Unique_ID from dev_decl WHERE Device_Name='%s'" % (DevName))
-                DevResp = DataGETReq('http://%s/RequestData' % (DevIP,), timeout=self.TimeoutDevCheck, auth=(DevName, UUID_Dev['Device_Unique_ID']))
+                print('Device %s — %s | Checking... |  ' % (listCandidates['Device_Name'], listCandidates['Device_IP_Address']), end='')
+                DevResp = DataGETReq('http://%s/RequestData' % (listCandidates['Device_IP_Address'],), timeout=self.TimeoutDevCheck, auth=(listCandidates['Device_Name'], listCandidates['Device_Unique_ID'].replace("-", "")))
                 if DevResp.ok:
                     print('Response Success.')
                     passCount += 1
@@ -56,7 +55,7 @@ class SC_IoTDriver(SCMySQL):
                     print('Response Failed / No Content.')
                     errCount += 1
 
-            except (ConnectionError, TypeError):
+            except RequestException:
                 print('Response Failed.')
                 errCount += 1
                 pass
@@ -74,19 +73,19 @@ class SC_IoTDriver(SCMySQL):
             Terminate()
 
     # ! Step 2 | Connect To Them Individual and Check For Datas
-    def getNewData(self, **IndivDevice):
-        for DevName, DevIP in IndivDevice.items():
+    def getNewData(self):
+        devMetaData = self.MySQL_ExecuteState("SELECT Device_Name, Device_IP_Address, Device_Unique_ID from dev_decl WHERE  Device_Status='Online'", "FetchAll")
+        for listCandidates in devMetaData:
             try:
-                print('\nJob | Device Currently on Process Query is %s — %s'% (DevName, DevIP,))
-                UUID_Dev = self.MySQL_ExecuteState("SELECT Device_Unique_ID from dev_decl WHERE Device_Name='%s'" % (DevName))
-                DevResp = DataGETReq('http://%s/RequestData' % (DevIP,), timeout=self.TimeoutDevCheck, auth=(DevName, UUID_Dev['Device_Unique_ID']))
+                print('\nJob | Device Currently on Process Query is %s — %s'% (listCandidates['Device_Name'], listCandidates['Device_IP_Address'],))
+                DevResp = DataGETReq('http://%s/RequestData' % (listCandidates['Device_IP_Address'],), timeout=self.TimeoutDevCheck, auth=(listCandidates['Device_Name'], listCandidates['Device_Unique_ID'].replace("-", "")))
 
                 if DevResp.ok:
-                    print('Response Result for %s — %s was Successful on Request...\n'% (DevName, DevIP,))
-                    self.processURL(DevName, DevIP, DevResp.content)
+                    print('Response Result for %s — %s was Successful on Request...\n'% (listCandidates['Device_Name'], listCandidates['Device_IP_Address'],))
+                    self.processURL(listCandidates['Device_Name'], listCandidates['Device_IP_Address'], DevResp.content)
 
-            except (ConnectionError, TypeError):
-                print('Response Result for %s — %s was Failed on Request, Skipping It!'% (DevName, DevIP,))
+            except RequestException:
+                print('Response Result for %s — %s was Failed on Request, Skipping It!'% (listCandidates['Device_Name'], listCandidates['Device_IP_Address'],))
         return
 
     # ! Processes URL given by the NodeMCU into a dictionary for further processing.
@@ -105,8 +104,9 @@ class SC_IoTDriver(SCMySQL):
         Therefore, the output will be...
         {
             'DATA_HEADER': {'CR_IDNTY': 'DEV_CR_ASSIGNED', 'CR_UID': 'DEV_UID'},
-            'DATA_SENS': {'CR_TEMP': 'DHT22_Temp', 'CR_HUMD': 'DHT22_Humid', 'CR_HTINX': '', ''PIR_MOTION':
-                {'PIR_OTPT': 'PIR_Bool', 'PIR_OTPT_TIME_TRIGGER': 'PIR_MILLIS_TRIGGER'}
+            'DATA_SENS': {'CR_TEMP': 'DHT22_Temp', 'CR_HUMD': 'DHT22_Humid', 'CR_HTINX': '',
+            'PIR_MOTION':
+                {'PIR_MOTION': 'PIR_Bool', 'PIR_OTPT_TIME_TRIGGER': 'PIR_MILLIS_TRIGGER'}
             },
             'DATA_AUTH': {'AUTH_ID':'-1', 'AUTH_STATE': 'AUTH_FGPRT_STATE'},
             'DATA_STATE': {
@@ -126,7 +126,7 @@ class SC_IoTDriver(SCMySQL):
         print('Interpreting Given Context for %s | %s...' % (DevInterpret_Name, DevInterpret_IP))
         print("DATA_HEADER => ROOM: %s | UID: %s" % (URLSterlData['DATA_HEADER']['CR_IDNTY'], URLSterlData['DATA_HEADER']['CR_UID']))
         print("DATA_SENS => TEMP: %s | HUMD: %s | HTINDEX: %s" % (URLSterlData['DATA_SENS']['CR_TEMP'], URLSterlData['DATA_SENS']['CR_HUMD'], URLSterlData['DATA_SENS']['CR_HTINX']))
-        print("DATA_SENS => PIR_MOTION => OUTPUT: %s | TIME_TRIGGER: %s" % (URLSterlData['DATA_SENS']['PIR_MOTION']['PIR_OTPT'], URLSterlData['DATA_SENS']['PIR_MOTION']['PIR_OTPT_TIME_TRIGGER']))
+        print("DATA_SENS => PIR_MOTION => OUTPUT: %s | TIME_TRIGGER: %s" % (URLSterlData['DATA_SENS']['PIR_MOTION']['PIR_OPTPT'], URLSterlData['DATA_SENS']['PIR_MOTION']['PIR_OTPT_TIME_TRIGGER']))
         print("DATA_AUTH => AUTH_ID:    %s | AUTH_STATE: %s" % (URLSterlData['DATA_AUTH']['AUTH_ID'], URLSterlData['DATA_AUTH']['AUTH_STATE']))
         print("DATA_STATE => DOOR_STATE: %s | ACCESS_STATE: %s | ELECTRIC_STATE: %s" % (URLSterlData['DATA_STATE']['DOOR_STATE'], URLSterlData['DATA_STATE']['ACCESS_STATE'], URLSterlData['DATA_STATE']['ELECTRIC_STATE']))
 
@@ -141,12 +141,12 @@ if __name__ == '__main__':
     # * We initialize this class with parameters. You can provide your own container by declaring at this scope.
     # ! Means you can change NodeDevCandidate Declaration Here.
     # * This is a reason why it was declared in the first place. Not directly.
-    SessionInstance = SC_IoTDriver(**NodeDevCandidates)
+    SessionInstance = SC_IoTDriver()
 
-    if SessionInstance.checkNodeConn(**NodeDevCandidates): # Test All Connections To The IoT Devices.
+    if SessionInstance.checkNodeConn(): # Test All Connections To The IoT Devices.
         try:
             while 1:
-                SessionInstance.getNewData(**NodeDevCandidates)
+                SessionInstance.getNewData()
                 print('Device Query | Done. Waiting for 2 Minutes Before Re-Querying...\n')
                 delay(2 * 60) # ! 2 Minutes
         except:
