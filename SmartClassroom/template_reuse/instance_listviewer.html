@@ -127,6 +127,21 @@
                 </div>
             </div>
         </div>
+        {% empty %}
+        <div class="schedule-item col mb-auto sys-offline">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">No Classrooms Declared!</h2>
+                    <h3 class="card-subtitle text-black-secondary">Room Non-Existent</h3>
+                    <span class="card-text text-black-secondary">The system must been reset to a factory settings. Start by setting them up at Control Override!</span>
+                </div>
+                <div class="card-actions d-flex justify-content-between align-items-center">
+                    <a class="card-link disabled"
+                        href="javascript:void(0)">Actions</a>
+                    <span class="badge badge-primary badge-pill bg-offline">Currently Unknown</span>
+                </div>
+            </div>
+        </div>
         {% endfor %}
         {% elif current_view == "StaffActionsListView" %}
         <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 log-grid">
@@ -137,16 +152,32 @@
                         <h2 class="card-title">{{ ClassroomActionLog.Course_Reference.CourseSchedule_CourseReference.Course_Code }} | {{ ClassroomActionLog.Course_Reference.CourseSchedule_CourseReference.Course_Name }}</h2>
                         <h3 class="card-subtitle text-black-secondary">
                             {{ ClassroomActionLog.Course_Reference.CourseSchedule_Room.Classroom_CompleteString }} |
-                            {{ ClassroomActionLog.Course_Reference.CourseSchedule_Section.Section_CompleteStringGroup }}
+                            {% if ClassroomActionLog.Course_Reference.CourseSchedule_Section.Section_CompleteStringGroup %}{{ ClassroomActionLog.Course_Reference.CourseSchedule_Section.Section_CompleteStringGroup }}{% else %}Unknown{% endif %}
                             | {{ ClassroomActionLog.Course_Reference.CourseSchedule_Session_Start }} —
                             {{ ClassroomActionLog.Course_Reference.CourseSchedule_Session_End }} |
                             {{ ClassroomActionLog.Course_Reference.CourseSchedule_Lecture_Day }}</h3>
-                        <span class="card-text text-black-primary">{{ ClassroomActionLog.UserActionTaken }} {% if not user_class == "Professor" %}| Action Associated to {{ ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.first_name }} {{ ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.middle_name|default_if_none:"" }} {{ ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.last_name }}{% endif %}</span>
+                        <span class="card-text text-black-primary">{{ ClassroomActionLog.UserActionTaken }} | Action was Associated to {% if user_class == "Professor" %}{{ ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.first_name }} {{ ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.middle_name|default_if_none:"" }} {{ ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.last_name }}{% else %}an Administrator / Staff.{% endif %}</span>
                     </div>
                     <div class="card-actions d-flex justify-content-between align-items-center">
                         <span
                             class="badge badge-primary badge-pill bg-{{ ClassroomActionLog.ActionLevel|lower }}">{{ ClassroomActionLog.ActionLevel }}</span>
                         <span class="text-muted">Happened at {{ ClassroomActionLog.TimeRecorded }}</span>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="log-item col mb-auto {{ ClassroomActionLog.ActionLevel|lower }}-log">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">You have no recent logs!</h2>
+                        <h3 class="card-subtitle text-black-secondary">
+                            Unknown Room | Unknown Section | N/A — N/A | N/A Day</h3>
+                        <span class="card-text text-black-primary">You must be a new professor! Start filling up your logs by trying to lock your current scheduled room! | Action was Associated to Nobody.</span>
+                    </div>
+                    <div class="card-actions d-flex justify-content-between align-items-center">
+                        <span
+                            class="badge badge-primary badge-pill bg-offline">Unidentified Level</span>
+                        <span class="text-muted">Happened at Non-Existent Time</span>
                     </div>
                 </div>
             </div>
@@ -164,8 +195,7 @@
                                 {{ ScheduleCandidates.CourseSchedule_Session_End }} |
                                 {{ ScheduleCandidates.CourseSchedule_Lecture_Day }}</h3>
 
-                            <li class="card-texttext-black-secondary">Lecture Type:
-                                {{ ScheduleCandidates.CourseSchedule_Room.Course_Type }}</li>
+                            <li class="card-texttext-black-secondary">Lecture Type: {{ ScheduleCandidates.CourseSchedule_CourseReference.Course_Type }}</li>
                             <li class="card-texttext-black-secondary">Room:
                                 {{ ScheduleCandidates.CourseSchedule_Room.Classroom_CompleteString }}</li>
                             <li class="card-texttext-black-secondary">Section:
@@ -175,6 +205,25 @@
                             <a class="card-link {% if ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status != 'Online' or ScheduleCandidates.CourseSchedule_Lecture_Day != schedule_weekday_name %}disabled{% endif %}"
                                 href="{% if ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status != 'Online' %}#{% else %}{% url 'classroom_info_view' classUniqueID=ScheduleCandidates.CourseSchedule_Room.Classroom_Unique_ID %}{% endif %}">Actions</a>
                             <span class="badge badge-primary badge-pill bg-{% if ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' %}{{ ScheduleCandidates.CourseSchedule_Room.Classroom_State|lower }}{% else %}offline{% endif %}">{% if ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Online' %} Currently {{ ScheduleCandidates.CourseSchedule_Room.Classroom_State }}{% else %}{{ ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status }}{% endif %}</span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="schedule-item col mb-auto room-not-allowed">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="card-title">UNKN | No Course Meta Data</h2>
+                            <h3 class="card-subtitle text-black-secondary">From
+                                N/A —
+                                N/A |
+                                Unknown Day</h3>
+
+                            <li class="card-texttext-black-secondary">You have no schedule!? This might be a problem. Please contact the administrator regarding this issue!!!</li>
+                        </div>
+                        <div class="card-actions d-flex justify-content-between align-items-center">
+                            <a class="card-link disabled"
+                                href="javascript:void(0)">Actions</a>
+                            <span class="badge badge-primary badge-pill bg-offline">Currently Unknown</span>
                         </div>
                     </div>
                 </div>
