@@ -175,15 +175,13 @@ class CourseSchedule(models.Model):
             ("course_schedule_viewable", "Can view the course schedule window. Used for PermissionRequiredMixin."),
         ]
 
-    #CourseSchedule_Unique_ID = models.UUIDField(max_length=32, default=uuid4, editable=False, primary_key=False, help_text="A Unique Identifier for the course schedules.")
     CourseSchedule_CourseReference = models.ForeignKey(Course, verbose_name='Course Reference', help_text='Refers to a candidated subject from which allocates the time.', to_field="Course_Code", null=False, blank=False, on_delete=models.CASCADE)
-    CourseSchedule_Instructor = models.ForeignKey(UserDataCredentials, verbose_name='Course Instructor', help_text='Refers to an instructor who teach the following course.', to_field="unique_id", null=False, blank=False, on_delete=models.CASCADE)
-    CourseSchedule_Room = models.ForeignKey(Classroom, verbose_name='Course Classroom Assignment', help_text='Refers to a classroom that is currently in vacant in which the session takes place.', null=False, blank=False, to_field="Classroom_CompleteString", related_name="ClassRoomMainReference", on_delete=models.CASCADE)
+    CourseSchedule_Instructor = models.ForeignKey(UserDataCredentials, verbose_name='Course Instructor', help_text='Refers to an instructor who teach the following course.', to_field="unique_id", null=True, blank=True, on_delete=models.CASCADE)
+    CourseSchedule_Room = models.ForeignKey(Classroom, verbose_name='Course Classroom Assignment', help_text='Refers to a classroom that is currently in vacant in which the session takes place.', null=True, blank=True, to_field="Classroom_CompleteString", related_name="ClassRoomMainReference", on_delete=models.CASCADE)
     CourseSchedule_Section = models.ForeignKey(SectionGroup, verbose_name='Section Course Assignment', help_text='Refers to a section who partakes to this course.', null=True, blank=True, to_field="Section_CompleteStringGroup", on_delete=models.CASCADE)
-    CourseSchedule_Session_Start = models.TimeField(verbose_name='Course Session Start Time', help_text='Refers to a time start session point.', null=False, blank=False)
-    CourseSchedule_Session_End = models.TimeField(verbose_name='Course Session End Time', help_text='Refers to a time end session point.', null=False, blank=False)
-    CourseSchedule_Lecture_Day = models.CharField(max_length=9, verbose_name='Course Lecture Day', help_text='Refers to a day in which the course session takes place.', null=False, blank=False, default=SessionDaysClassification[0], choices=SessionDaysClassification, validators=[MinLengthValidator(6), MaxLengthValidator(9)])
-    #CourseSchedule_Unique_ID = models.OneToOneField(Classroom, max_length=32, null=True, blank=True, unique=True, to_field='Classroom_Unique_ID', verbose_name='Course Schedule Unique ID', help_text="A Unique Identifier for the course schedule. Required for the unique identity which will be referenced later.", on_delete=models.CASCADE)
+    CourseSchedule_Session_Start = models.TimeField(verbose_name='Course Session Start Time', help_text='Refers to a time start session point.', null=True, blank=True)
+    CourseSchedule_Session_End = models.TimeField(verbose_name='Course Session End Time', help_text='Refers to a time end session point.', null=True, blank=True)
+    CourseSchedule_Lecture_Day = models.CharField(max_length=9, verbose_name='Course Lecture Day', help_text='Refers to a day in which the course session takes place.', null=True, blank=True, default=SessionDaysClassification[0], choices=SessionDaysClassification, validators=[MinLengthValidator(6), MaxLengthValidator(9)])
 
     def __str__(self):
         return 'Schedule of %s | Handled by %s | Every %s | Time: %s-%s' % (self.CourseSchedule_CourseReference, self.CourseSchedule_Instructor, self.CourseSchedule_Lecture_Day, self.CourseSchedule_Session_Start, self.CourseSchedule_Session_End)
