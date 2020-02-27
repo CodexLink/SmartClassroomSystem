@@ -4,7 +4,8 @@
 
 #include "SmartClassroom.h"
 
-SC_MCU_DRVR SC(9600, "HW_EcLi284255H_Cdx", "@Li2019_b015@");
+//SC_MCU_DRVR SC(9600, "HW_EcLi284255H_Cdx", "@Li2019_b015@");
+SC_MCU_DRVR SC(9600, "CodexLink", "01010101");
 ESP8266WebServer NodeServer(80); // ! Make this public. Cause a lot of CONFLICTS.
 
 // Unreferenced / Unclassed functions
@@ -38,12 +39,10 @@ void HandleGET_Sens()
         return NodeServer.requestAuthentication();
     }
     digitalWrite(SC.RESTATED_DEV_PINS::ESP_LED, LOW);
-    NodeServer.send(200, "text/plain", String("{'DATA_HEADER': {'CR_IDNTY': '") + SC.DEV_INST_CREDENTIALS.DEV_CR_ASSIGNED + String("', 'CR_UID': '") + SC.DEV_INST_CREDENTIALS.DEV_UID + String("'}, 'DATA_SENS': {'CR_TEMP': '") + SC.ENV_INST_CONT.DHT11_TEMP + String("', 'CR_HUMD': '") + SC.ENV_INST_CONT.DHT11_HUMID + String("', 'CR_HTINX': '") + SC.ENV_INST_CONT.DHT11_HT_INDX + String("', 'PIR_MOTION': {'PIR_OTPT':'") + SC.ENV_INST_CONT.PIR_OPTPT + String("', 'PIR_OTPT_TIME_TRIGGER': '") + SC.ENV_INST_CONT.PIR_MILLIS_TRIGGER + String("'}}, 'DATA_AUTH': {'AUTH_ID':'") + SC.AUTH_INST_CONT.AUTH_USER_ID_FNGRPRNT + String("', 'AUTH_STATE': '") + SC.AUTH_INST_CONT.AUTH_FGPRT_STATE + String("'}, 'DATA_STATE': {'DOOR_STATE': '") + SC.AUTH_INST_CONT.AUTH_CR_DOOR + String("', 'ACCESS_STATE': '") + SC.AUTH_INST_CONT.AUTH_CR_ACCESS + String("', 'ELECTRIC_STATE': '") + SC.AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE + String("'}}"));
+    NodeServer.send(200, "text/plain", String("{'DATA_HEADER': {'CR_IDNTY': '") + SC.DEV_INST_CREDENTIALS.DEV_CR_ASSIGNED + String("', 'CR_UID': '") + SC.DEV_INST_CREDENTIALS.DEV_UID + String("'}, 'DATA_SENS': {'CR_TEMP': '") + SC.ENV_INST_CONT.DHT11_TEMP + String("', 'CR_HUMD': '") + SC.ENV_INST_CONT.DHT11_HUMID + String("', 'CR_HTINX': '") + SC.ENV_INST_CONT.DHT11_HT_INDX + String("', 'PIR_MOTION': {'PIR_OPTPT':'") + SC.ENV_INST_CONT.PIR_OPTPT + String("', 'PIR_OTPT_TIME_TRIGGER': '") + SC.ENV_INST_CONT.PIR_MILLIS_TRIGGER + String("'}}, 'DATA_AUTH': {'AUTH_ID':'") + SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT + String("', 'AUTH_STATE': '") + SC.AUTH_INST_CONT.AUTH_FGPRT_STATE + String("'}, 'DATA_STATE': {'DOOR_STATE': '") + SC.AUTH_INST_CONT.AUTH_CR_DOOR + String("', 'ACCESS_STATE': '") + SC.AUTH_INST_CONT.AUTH_CR_ACCESS + String("', 'ELECTRIC_STATE': '") + SC.AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE + String("'}}"));
     digitalWrite(SC.RESTATED_DEV_PINS::ESP_LED, HIGH);
 }
 
-// Put some Argument Checking Here. But first finalized the request input and outputs.
-// https://robotzero.one/sending-data-esp8266-to-esp8266/
 void HandleGET_SetInstance()
 {
     if (!NodeServer.authenticate(SC.DEV_INST_CREDENTIALS.AUTH_DEV_USN, SC.DEV_INST_CREDENTIALS.AUTH_DEV_PWD))
