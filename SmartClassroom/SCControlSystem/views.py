@@ -12,7 +12,7 @@ from django.views.generic import DetailView, FormView, ListView, RedirectView
 from django.views.generic.base import TemplateView
 from requests import get as FetchLiveData
 from django.http import HttpResponseRedirect
-from requests.exceptions import ConnectionError, ConnectTimeout
+from requests.exceptions import RequestException
 
 from .forms import UserAuthForm
 from .models import *
@@ -156,7 +156,7 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                 #view_context['AuthCRState'] = 'On' if int(finalMetaData['DATA_STATE']['ELECTRIC_STATE']) else 'Off'
                 view_context['DeviceState'] = "Online"
 
-        except (ConnectTimeout, ConnectionError, TypeError, IndexError):
+        except RequestException:
             messages.info(self.request, 'DeviceRequestFailed')
             pass
 
