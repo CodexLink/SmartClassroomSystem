@@ -10,6 +10,7 @@
 #include <SoftwareSerial.h>
 #include "LiquidCrystal_I2C.h"
 #include "GT5X.h"
+#include <EEPROM.h>
 
 #define TX_OVERRIDE 3
 #define SSD3 10
@@ -27,6 +28,32 @@ class SC_MCU_DRVR
         MAX_STR_CR = 20,
         MAX_STR_UUID = 40,
         MAX_FNGRPRNT_STORABLE = 3000,
+        EEPROM_MAX_BYTE = 512,
+        EEPROM_CR_ASSIGNED_CHAR_LEN = 6,
+        EEPROM_CR_ROOM_CHAR_LEN = 11,
+        EEPROM_DEV_USN_CHAR_LEN = 16,
+        EEPROM_DEV_UID_CHAR_LEN = 32,
+        SCAN_PROC_REQUIRED = 600000,
+        // It is always good to skip one byte before getting another data.
+        // ! How does this work?
+        /*
+            For each data, we have to make at least one space for formality or indication of data is not joined, it is different.
+            Usually we start at Address 0 or 0x00. Which is starting point of us, currently assigned in EEPROM_CR_ASSIGNED_CHAR_START_ADDR.
+            Now we knew that CR_ASSIGNED consumes 6 bytes. IF that is the case then,
+            The next usable data is by computation of Current Address + Consumed Address + 1
+            Therefore, 0 + 6 + 1 = 0x07
+
+            Now let 0x07 as CR_ROOM_CHAR starting address.
+            Since CR_ROOM_CHAR consumes 11 Characters then we do, 0x07 + 11 + 1.
+            Then we get an output of 0x12 because 0x07 + 11 is 18. Since After 0x0F is 15, we do + 3.
+            Which then goes from 0x10, 0x11 and lastly, 0x12.
+
+            Then continued.
+        */
+        EEPROM_CR_ASSIGNED_CHAR_START_ADDR = 0x00,
+        EEPROM_CR_ROOM_CHAR_START_ADDR = 0x07, // Usually 0x06 + 1 For Skipping
+        EEPROM_DEV_USN_CHAR_START_ADDR = 0x12, // Usually 0x0F is 15. Then + 3, therefore, 0x12 is 18
+        EEPROM_DEV_UID_CHAR_START_ADDR = 0x23, // ...
     };
 
     enum CONST_DEV_PARAM
@@ -40,9 +67,7 @@ class SC_MCU_DRVR
     enum SENS_DAT_PINS
     {
         TEMP_HUD_DAT_PIN = D0,
-        PIR_DAT_PIN = D1,
-        DEMUX_LTCH_PIN = 0,
-        DEMUX_CLK_PIN = 0,
+        PIR_DAT_PIN = D3,
     };
 
     struct WIFI_CRENDENTIALS
@@ -99,30 +124,30 @@ public:
         float DHT11_TEMP;
         float DHT11_HUMID;
         float DHT11_HT_INDX;
-        uint8_t PIR_OPTPT;
+        bool PIR_OPTPT;
         uint32_t PIR_MILLIS_TRIGGER;
     } ENV_INST_CONT;
 
     struct AUTH_STATE
     {
-        uint8_t AUTH_FGPRT_STATE; // 1 Passed, 0 Not Passed
-
         bool AUTH_CR_DOOR = 1;        // 1 Locked, 0 Unlocked
         bool AUTH_CR_ACCESS = 1;      // 1 Enabled, 0 Disabled
         bool NON_AUTH_ELECTRIC_STATE = 0;      // 1 Enabled, 0 Disabled
-        bool AUTH_FP_LED_STATE; // LED ON, LED OFF
-        uint16_t AUTH_USER_ID_FNGRPRNT = 1; // Must be set by user.
-        //int16_t AUTH_USER_ID_FNGRPRNTS[10] = -1;
+        bool AUTH_FGPRT_STATE = 0; // 1 For Currently Authenticated, Else Not Authenticated
+        uint16_t AUTH_USER_ID_FNGRPRNT = 0; // Must be set by user.
     } AUTH_INST_CONT;
 
-    const struct DEV_CREDENTIALS
+
+    struct DEV_CREDENTIALS
     {
-        char *DEV_CR_ASSIGNED;
-        char * DEV_CR_ROOM;
-        char *DEV_UID;
-        char *AUTH_DEV_USN;
-        char *AUTH_DEV_PWD;
-    } DEV_INST_CREDENTIALS
+        char DEV_CR_ASSIGNED[CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_LEN + 1];
+        char DEV_CR_ROOM[CONST_VAL::EEPROM_CR_ROOM_CHAR_LEN + 1];
+        char DEV_UID[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1];
+        char AUTH_DEV_USN[CONST_VAL::EEPROM_DEV_USN_CHAR_LEN + 1];
+        char AUTH_DEV_PWD[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1];
+        uint16_t AUTH_USER_ID_FNGRPRNT = 0; // Must be set by user.
+    } DEV_INST_CREDENTIALS;
+    /*
     {
 
         .DEV_CR_ASSIGNED = "Q-5424",
@@ -130,7 +155,14 @@ public:
         .DEV_UID = "df826e0334b84f2689e64f2c6b24a6ab",
         .AUTH_DEV_USN = "NodeMCU | Q-5424",
         .AUTH_DEV_PWD = "df826e0334b84f2689e64f2c6b24a6ab",
-    };
+    };*/
+
+    // ! Referrable to saveMetaData and retrieveMetaData
+
+    // ! The code below is a uin8_t (unsigned char pointer variable) that stores the address of the struct DEV_CREDENTIALS.
+    // * They're converted to uint8_t or typecasted to uint8_t to be iterrable as object.
+    uint8_t *structStorage = (uint8_t *)&DEV_INST_CREDENTIALS;
+    bool sketchForceStop;
 
     // General Function To Be Used.
     SC_MCU_DRVR(uint16_t BAUD_RATE, const char *SSID, const char *PW);
@@ -139,11 +171,14 @@ public:
     void displayLCDScreen(DataDisplayTypes Screens);
     void authCheck_Fngrprnt();
     //void
+    bool SketchTimeCheck(uint32_t TimeIntervalToMeet);
 
 private:
+    inline void retrieveMetaData();
+    inline void saveMetaData();
+
+    bool checkPresence();
     bool checkWiFiConnection();
-    inline bool FNGRPRNT_isLEDState(bool whatState, bool changeOnFalse);
-    inline void FNGRPRNT_InverseLEDState();
     //void InterpretData(DataInterpretTypes DataType);
 };
 

@@ -19,6 +19,10 @@ void SC_MCU_DRVR::begin()
     FP_WIRE.begin(__BAUD_RATE);
     FPController.begin(&FP_DEV_INFO);
     FPController.set_led(false);
+    EEPROM.begin(CONST_VAL::EEPROM_MAX_BYTE);
+
+    //! saveMetaData(); We can execute this function only if we did some factory shit.
+    retrieveMetaData();
 
     pinMode(RESTATED_DEV_PINS::ESP_LED, OUTPUT);
     pinMode(RESTATED_DEV_PINS::MCU_LED, OUTPUT);
@@ -34,12 +38,110 @@ void SC_MCU_DRVR::begin()
 
     pinMode(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, OUTPUT);
     digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, HIGH);
+
     LCD_DRVR.noBacklight();
     LCD_DRVR.clear();
     delay(500);
     LCD_DRVR.backlight();
     FPController.set_led(true);
     return;
+}
+
+// ! A Function to Retrieve EEPROM MetaData
+
+// * Usually at this point, we have two variables to fill with.
+// ! Contains 14 Bit Address | Device AUTH Name
+// ! Contains 32 Bit Address | Device AUTH PWD
+
+// ! We have to make sure that this function DOES only retrieve some functions and then off we go.
+inline void SC_MCU_DRVR::retrieveMetaData()
+{
+    // Get DEV_CR_ASSIGNED
+    for (size_t structBytes = CONST_VAL::NULL_CONTENT; structBytes < sizeof(DEV_CREDENTIALS); structBytes++)
+    {
+        structStorage[structBytes] = EEPROM.read(CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_START_ADDR + structBytes);
+    }
+    Serial.print("Retrieved Meta Data:");
+    Serial.print(" CR_ROOM |> ");
+    Serial.println(DEV_INST_CREDENTIALS.DEV_CR_ROOM);
+    Serial.print("AUTH_DEV_USN |> ");
+    Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_USN);
+    Serial.print("DEV_UID |> ");
+    Serial.println(DEV_INST_CREDENTIALS.DEV_UID);
+    Serial.print("AUTH_DEV_PWD |> ");
+    Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_PWD);
+    EEPROM.end();
+    return;
+}
+
+// ! A Function to Save MetaData to EEPROM
+// * Requires Everytime we do REQUEST.
+inline void SC_MCU_DRVR::saveMetaData()
+{
+    for (size_t structBytes = CONST_VAL::NULL_CONTENT; structBytes < sizeof(DEV_CREDENTIALS); structBytes++)
+    {
+        EEPROM.write(CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_START_ADDR + structBytes, structStorage[structBytes]);
+    }
+    EEPROM.commit();
+    EEPROM.end();
+    return;
+}
+
+bool SC_MCU_DRVR::checkPresence()
+{
+    if (SketchTimeCheck(CONST_VAL::SCAN_PROC_REQUIRED) && !ENV_INST_CONT.PIR_OPTPT)
+    {
+        AUTH_INST_CONT.AUTH_CR_DOOR = !AUTH_INST_CONT.AUTH_CR_DOOR;
+        digitalWrite(RELAY_FRST_PIN, HIGH);
+        digitalWrite(RELAY_SCND_PIN, HIGH);
+        digitalWrite(RELAY_THRD_PIN, HIGH);
+        AUTH_INST_CONT.AUTH_CR_DOOR = true;
+        AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
+        LCD_DRVR.setCursor(0, 3);
+        LCD_DRVR.print("> No Presence...    ");
+        delay(1000);
+        return false;
+    }
+    return true;
+}
+
+bool SC_MCU_DRVR::SketchTimeCheck(uint32_t TimeIntervalToMeet)
+{
+    uint_fast32_t sketchBaseTime = millis();
+    static bool sketchRelease = true;
+    static uint_fast32_t sketchPreviousHit;
+
+    if (sketchForceStop)
+    {
+        Serial.println("Sketch Time Process Stopper Initialized.");
+        sketchForceStop = false;
+        sketchRelease = true;
+        return true;
+    }
+
+    if (sketchRelease)
+    {
+        sketchRelease = false;
+        sketchPreviousHit = sketchBaseTime;
+    }
+
+    Serial.print("Sketch Time: ");
+    Serial.print(sketchBaseTime);
+    Serial.print(" - ");
+    Serial.print(sketchPreviousHit);
+    Serial.print(" > ");
+    Serial.print(" = ");
+    Serial.println(sketchBaseTime - sketchPreviousHit);
+
+    if (!sketchRelease && (uint_fast32_t)(sketchBaseTime - sketchPreviousHit) >= TimeIntervalToMeet)
+    {
+        sketchRelease = true;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 bool SC_MCU_DRVR::checkWiFiConnection()
@@ -93,7 +195,7 @@ void SC_MCU_DRVR::displayLCDScreen(DataDisplayTypes Screens)
         LCD_DRVR.setCursor(0, 2);
         LCD_DRVR.print(" Interactless Mgmt.");
         LCD_DRVR.setCursor(0, 3);
-        LCD_DRVR.print(" Connecting to SSID");
+        LCD_DRVR.print("   Connecting ...   ");
         break;
 
     case DataDisplayTypes::WAIT_CLEAR:
@@ -117,6 +219,7 @@ void SC_MCU_DRVR::displayLCDScreen(DataDisplayTypes Screens)
         ENV_INST_CONT.DHT11_TEMP = TempSens.getTemperature();
         ENV_INST_CONT.DHT11_HUMID = TempSens.getHumidity();
         ENV_INST_CONT.DHT11_HT_INDX = TempSens.computeHeatIndex(ENV_INST_CONT.DHT11_TEMP, ENV_INST_CONT.DHT11_HUMID, false);
+        ENV_INST_CONT.PIR_OPTPT = digitalRead(SENS_DAT_PINS::PIR_DAT_PIN);
         LCD_DRVR.setCursor(0, 0);
         LCD_DRVR.print(DEV_INST_CREDENTIALS.DEV_CR_ASSIGNED);
         LCD_DRVR.print(F(" | "));
@@ -134,13 +237,15 @@ void SC_MCU_DRVR::displayLCDScreen(DataDisplayTypes Screens)
         LCD_DRVR.print(ENV_INST_CONT.DHT11_HT_INDX, 1);
         LCD_DRVR.print(F("C"));
 
-        Serial.print("DEV REPORT | T, P: ");
-        Serial.print(ENV_INST_CONT.DHT11_TEMP);
-        Serial.print("C | HTI: ");
-        Serial.print(ENV_INST_CONT.DHT11_HT_INDX);
-        Serial.print("C | HUD: ");
-        Serial.print(ENV_INST_CONT.DHT11_HUMID);
-        Serial.println("%");
+        //Serial.print("MODULE REPORTS | T: ");
+        //Serial.print(ENV_INST_CONT.DHT11_TEMP);
+        //Serial.print("C | HTI: ");
+        //Serial.print(ENV_INST_CONT.DHT11_HT_INDX);
+        //Serial.print("C | HUD: ");
+        //Serial.print(ENV_INST_CONT.DHT11_HUMID);
+        //Serial.print("%");
+        //Serial.print(" | MOTION SENS: ");
+        //Serial.println(ENV_INST_CONT.PIR_OPTPT);
         digitalWrite(RESTATED_DEV_PINS::MCU_LED, HIGH);
         break;
 
@@ -219,8 +324,8 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
             digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, HIGH);
             digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, HIGH);
             LCD_DRVR.setCursor(0, 3);
-            AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = false;
             AUTH_INST_CONT.AUTH_CR_DOOR = true;
+            AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
             LCD_DRVR.print(F("> Invalid UID!"));
             return;
         }
@@ -231,9 +336,24 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
             digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
             AUTH_INST_CONT.AUTH_CR_DOOR = false;
             AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = true;
+
             LCD_DRVR.setCursor(0, 3);
-            LCD_DRVR.print(F("> Verified UID: "));
-            LCD_DRVR.print(AUTH_INST_CONT.AUTH_USER_ID_FNGRPRNT);
+            if (!AUTH_INST_CONT.AUTH_FGPRT_STATE)
+            {
+                AUTH_INST_CONT.AUTH_FGPRT_STATE = true;
+                LCD_DRVR.print(F("> Access Authorized!"));
+                delay(1000);
+            }
+            else
+            {
+                AUTH_INST_CONT.AUTH_CR_DOOR = true;
+                AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = false;
+                AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
+                AUTH_INST_CONT.AUTH_FGPRT_STATE = true;
+                sketchForceStop = true;
+                LCD_DRVR.print(F("> Locking Verified! "));
+                delay(1000);
+            }
             return;
             // Add Relay ON State.
         }
@@ -247,44 +367,37 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
         }
         else
         {
-            LCD_DRVR.print(F("> Ready.            "));
+            if (AUTH_INST_CONT.AUTH_FGPRT_STATE)
+            {
+                if (checkPresence() && FPController.is_pressed() && AUTH_INST_CONT.AUTH_CR_ACCESS)
+                {
+                    uint16_t rc = FPController.capture_finger();
+                    if (rc != GT5X_OK)
+                    {
+                        return;
+                    }
+                    rc = FPController.verify_finger_with_template(AUTH_INST_CONT.AUTH_USER_ID_FNGRPRNT);
+                    if (rc != GT5X_OK)
+                    {
+                        LCD_DRVR.print(F("> Invalid UID!"));
+                    }
+                    else
+                    {
+                        AUTH_INST_CONT.AUTH_FGPRT_STATE = true;
+                        sketchForceStop = true;
+                        LCD_DRVR.print(F("> Locking Verified! "));
+                    }
+                }
+                else
+                {
+                    LCD_DRVR.print(F("> InUse. Lock Ready."));
+                }
+            }
+            else
+            {
+                LCD_DRVR.print(F("> Ready.            "));
+            }
         }
         return;
     }
-}
-
-inline bool SC_MCU_DRVR::FNGRPRNT_isLEDState(bool whatState, bool changeOnFalse)
-{
-    bool retState = (whatState == AUTH_INST_CONT.AUTH_FP_LED_STATE) ? true : false;
-    Serial.print(F("FNGRPRNT_isLEDState | "));
-    Serial.print(F("Given State |> "));
-    Serial.print(whatState);
-    Serial.print(F(" | changedOnFalse |> "));
-    Serial.print(changeOnFalse);
-    Serial.print(F(" | funcReturn |> "));
-    Serial.println(retState);
-
-    // If we dont need to change anything and we just want the state then just return bool.
-    if (!changeOnFalse)
-    {
-        return retState;
-    }
-    else // We return the same thing from above except we do some extra steps.
-    {
-        if (!retState)
-            FNGRPRNT_InverseLEDState();
-    }
-}
-
-inline void SC_MCU_DRVR::FNGRPRNT_InverseLEDState()
-{
-    Serial.print(F("FNGRPRNT_InverseLEDState | "));
-    Serial.print(F("Before |> "));
-    Serial.print(AUTH_INST_CONT.AUTH_FP_LED_STATE);
-    Serial.print(F(" | After |> "));
-    Serial.println(!AUTH_INST_CONT.AUTH_FP_LED_STATE);
-    // Inverse the output whenever this function was executed.
-    AUTH_INST_CONT.AUTH_FP_LED_STATE = !AUTH_INST_CONT.AUTH_FP_LED_STATE;
-    FPController.set_led(AUTH_INST_CONT.AUTH_FP_LED_STATE);
-    return;
 }
