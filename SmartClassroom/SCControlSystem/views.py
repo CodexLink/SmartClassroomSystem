@@ -140,9 +140,11 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
             Device_MetaData_Name = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).values('CourseSchedule_Room__Classroom_Dev__Device_Name')[0]
             Device_MetaData_IP = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).values('CourseSchedule_Room__Classroom_Dev__Device_IP_Address')[0]
 
-            passUniqueID = str(self.kwargs['classUniqueID']).replace('-', '')
+            Device_MetaData_UUID = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).values('CourseSchedule_Room__Classroom_Dev__Device_Unique_ID')[0]
+            passUniqueID = str(Device_MetaData_UUID['CourseSchedule_Room__Classroom_Dev__Device_Unique_ID']).replace('-', '')
 
             dev_metadata = FetchLiveData('http://%s/RequestData' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address']), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
+
             if dev_metadata.ok:
                 finalMetaData = DictSerialize((dev_metadata.content).decode('utf-8').replace("'", "\""))
                 view_context['TempOutput'] = finalMetaData['DATA_SENS']['CR_TEMP']
@@ -153,7 +155,8 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                 view_context['ClassAccessState'] = 'Enabled' if int(finalMetaData['DATA_STATE']['ACCESS_STATE']) else 'Disabled'
                 view_context['LockState'] = 'Locked' if int(finalMetaData['DATA_STATE']['DOOR_STATE']) else 'Unlocked'
                 view_context['ElectricityState'] = 'On' if int(finalMetaData['DATA_STATE']['ELECTRIC_STATE']) else 'Off'
-                #view_context['AuthCRState'] = 'On' if int(finalMetaData['DATA_STATE']['ELECTRIC_STATE']) else 'Off'
+                view_context['AuthCRState'] = 'Authenticated' if int(finalMetaData['DATA_AUTH']['AUTH_STATE']) else 'Not Authenticated'
+                view_context['UserScheduledID'] = finalMetaData['DATA_AUTH']['AUTH_ID']
                 view_context['DeviceState'] = "Online"
 
         except RequestException:
@@ -176,6 +179,8 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                     FetchLiveData('http://%s/RequestInstance?cr_access=%s' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address'], StateResponseContext), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
                     view_context['ResponseMessage'] = 'RequestChangeSet'
                     messages.info(self.request, 'CRAccessRequestChange')
+
+
                     return view_context
 
                 else:
