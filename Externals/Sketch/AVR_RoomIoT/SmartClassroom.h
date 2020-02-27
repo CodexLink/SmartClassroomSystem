@@ -140,22 +140,15 @@ public:
 
     struct DEV_CREDENTIALS
     {
-        char DEV_CR_ASSIGNED[CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_LEN + 1];
-        char DEV_CR_ROOM[CONST_VAL::EEPROM_CR_ROOM_CHAR_LEN + 1];
-        char DEV_UID[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1];
-        char AUTH_DEV_USN[CONST_VAL::EEPROM_DEV_USN_CHAR_LEN + 1];
-        char AUTH_DEV_PWD[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1];
+        char DEV_CR_ASSIGNMENT[CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_LEN + 1] = "Q-5424"/**/;
+        char DEV_CR_SHORT_NAME[CONST_VAL::EEPROM_CR_ROOM_CHAR_LEN + 1] = "CompEng Lab"/**/;
+        char DEV_CR_UUID[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1] = "df826e0334b84f2689e64f2c6b24a6ab"/**/;
+        char DEV_UUID[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1] = "e776ffc28b524d318624bc39d7efea0e"/**/;
+
+        char AUTH_DEV_USN[CONST_VAL::EEPROM_DEV_USN_CHAR_LEN + 1] = "NodeMCU | Q-5424"/**/;
+        char AUTH_DEV_PWD[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1] = "e776ffc28b524d318624bc39d7efea0e"/**/;
         uint16_t AUTH_USER_ID_FNGRPRNT = 0; // Must be set by user.
     } DEV_INST_CREDENTIALS;
-    /*
-    {
-
-        .DEV_CR_ASSIGNED = "Q-5424",
-        .DEV_CR_ROOM = "CompEng Lab", // Lckd, Used
-        .DEV_UID = "df826e0334b84f2689e64f2c6b24a6ab",
-        .AUTH_DEV_USN = "NodeMCU | Q-5424",
-        .AUTH_DEV_PWD = "df826e0334b84f2689e64f2c6b24a6ab",
-    };*/
 
     // ! Referrable to saveMetaData and retrieveMetaData
 
