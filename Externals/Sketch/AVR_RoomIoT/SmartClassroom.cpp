@@ -21,8 +21,15 @@ void SC_MCU_DRVR::begin()
     FPController.set_led(false);
     EEPROM.begin(CONST_VAL::EEPROM_MAX_BYTE);
 
-    //! saveMetaData(); We can execute this function only if we did some factory shit.
-    retrieveMetaData();
+    // ! We can execute this function only if we did some factory configuration.
+    if (DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT == NULL || DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME == NULL || DEV_INST_CREDENTIALS.DEV_CR_UUID == NULL || DEV_INST_CREDENTIALS.DEV_UUID == NULL || DEV_INST_CREDENTIALS.AUTH_DEV_USN == NULL || DEV_INST_CREDENTIALS.AUTH_DEV_PWD == NULL || DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT == -1)
+    {
+        retrieveMetaData();
+    }
+    else
+    {
+        saveMetaData();
+    }
 
     pinMode(RESTATED_DEV_PINS::ESP_LED, OUTPUT);
     pinMode(RESTATED_DEV_PINS::MCU_LED, OUTPUT);
@@ -56,21 +63,44 @@ void SC_MCU_DRVR::begin()
 // ! We have to make sure that this function DOES only retrieve some functions and then off we go.
 inline void SC_MCU_DRVR::retrieveMetaData()
 {
-    // Get DEV_CR_ASSIGNED
-    for (size_t structBytes = CONST_VAL::NULL_CONTENT; structBytes < sizeof(DEV_CREDENTIALS); structBytes++)
+    Serial.println();
+    Serial.println(F("Structure Data has No Default Content. Retrieving Values..."));
+    if (EEPROM.read(CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_START_ADDR) != NULL)
     {
-        structStorage[structBytes] = EEPROM.read(CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_START_ADDR + structBytes);
+
+        Serial.println(F("EEPROM Stored Data Byte Detected!"));
+        for (size_t structBytes = CONST_VAL::NULL_CONTENT; structBytes < sizeof(DEV_CREDENTIALS); structBytes++)
+        {
+            structStorage[structBytes] = EEPROM.read(CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_START_ADDR + structBytes);
+        }
+        Serial.println(F("Retrieved Meta Data: "));
+        Serial.print(F("DEV_CR_ASSIGNMENT |> "));
+        Serial.println(DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT);
+        Serial.print(F("DEV_CR_SHORT_NAME |> "));
+        Serial.println(DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME);
+        Serial.print(F("DEV_CR_UUID |> "));
+        Serial.println(DEV_INST_CREDENTIALS.DEV_CR_UUID);
+        Serial.print(F("DEV_UUID |> "));
+        Serial.println(DEV_INST_CREDENTIALS.DEV_UUID);
+        Serial.print(F("AUTH_DEV_USN |> "));
+        Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_USN);
+        Serial.print(F("AUTH_DEV_PWD |> "));
+        Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_PWD);
+        Serial.print(F("AUTH_USER_ID_FNGRPRNT |> "));
+        Serial.println(DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
+        EEPROM.end();
+        Serial.println(F("EEPROM Data Retrival to Structured Data Done."));
+        Serial.println();
     }
-    Serial.print("Retrieved Meta Data:");
-    Serial.print(" CR_ROOM |> ");
-    Serial.println(DEV_INST_CREDENTIALS.DEV_CR_ROOM);
-    Serial.print("AUTH_DEV_USN |> ");
-    Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_USN);
-    Serial.print("DEV_UID |> ");
-    Serial.println(DEV_INST_CREDENTIALS.DEV_UID);
-    Serial.print("AUTH_DEV_PWD |> ");
-    Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_PWD);
-    EEPROM.end();
+    else
+    {
+        Serial.println(F("EEPROM Stored Data is NULL. Please reupload the sketch with structured data to get started!"));
+        do
+        {
+            yield();
+            delay(10000);
+        } while (1);
+    }
     return;
 }
 
@@ -78,12 +108,45 @@ inline void SC_MCU_DRVR::retrieveMetaData()
 // * Requires Everytime we do REQUEST.
 inline void SC_MCU_DRVR::saveMetaData()
 {
+    Serial.println();
+    Serial.println(F("Structured Data with Content Detected. Saving Those Values..."));
+    Serial.println();
+    Serial.println(F("Meta Data From Structured Data: "));
+    Serial.print(F("DEV_CR_ASSIGNMENT |> "));
+    Serial.println(DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT);
+    Serial.print(F("DEV_CR_SHORT_NAME |> "));
+    Serial.println(DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME);
+    Serial.print(F("DEV_CR_UUID |> "));
+    Serial.println(DEV_INST_CREDENTIALS.DEV_CR_UUID);
+    Serial.print(F("DEV_UUID |> "));
+    Serial.println(DEV_INST_CREDENTIALS.DEV_UUID);
+    Serial.print(F("AUTH_DEV_USN |> "));
+    Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_USN);
+    Serial.print(F("AUTH_DEV_PWD |> "));
+    Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_PWD);
+    Serial.print(F("AUTH_USER_ID_FNGRPRNT |> "));
+    Serial.println(DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
+    Serial.println();
+    Serial.println(F("Saving Those Values..."));
+    if (EEPROM.read(CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_START_ADDR) != NULL)
+    {
+        Serial.println(F("EEPROM Data is not NULL. Deleting them..."));
+        for (int storageBytes = 0; storageBytes < CONST_VAL::EEPROM_MAX_BYTE; storageBytes++)
+        {
+            EEPROM.write(storageBytes, 0);
+        }
+        Serial.println(F("EEPROM Data Deleted."));
+    }
+
+    Serial.println(F("Saving Structured Data to EEPROM."));
     for (size_t structBytes = CONST_VAL::NULL_CONTENT; structBytes < sizeof(DEV_CREDENTIALS); structBytes++)
     {
         EEPROM.write(CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_START_ADDR + structBytes, structStorage[structBytes]);
     }
     EEPROM.commit();
     EEPROM.end();
+    Serial.println(F("EEPROM Data Save Done."));
+    Serial.println();
     return;
 }
 
@@ -98,7 +161,7 @@ bool SC_MCU_DRVR::checkPresence()
         AUTH_INST_CONT.AUTH_CR_DOOR = true;
         AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
         LCD_DRVR.setCursor(0, 3);
-        LCD_DRVR.print("> No Presence...    ");
+        LCD_DRVR.print(F("> No Presence...    "));
         delay(1000);
         return false;
     }
@@ -113,7 +176,7 @@ bool SC_MCU_DRVR::SketchTimeCheck(uint32_t TimeIntervalToMeet)
 
     if (sketchForceStop)
     {
-        Serial.println("Sketch Time Process Stopper Initialized.");
+        Serial.println(F("Sketch Time Process Stopper Initialized."));
         sketchForceStop = false;
         sketchRelease = true;
         return true;
@@ -125,12 +188,12 @@ bool SC_MCU_DRVR::SketchTimeCheck(uint32_t TimeIntervalToMeet)
         sketchPreviousHit = sketchBaseTime;
     }
 
-    Serial.print("Sketch Time: ");
+    Serial.print(F("Sketch Time: "));
     Serial.print(sketchBaseTime);
-    Serial.print(" - ");
+    Serial.print(F(" - "));
     Serial.print(sketchPreviousHit);
-    Serial.print(" > ");
-    Serial.print(" = ");
+    Serial.print(F(" > "));
+    Serial.print(F(" = "));
     Serial.println(sketchBaseTime - sketchPreviousHit);
 
     if (!sketchRelease && (uint_fast32_t)(sketchBaseTime - sketchPreviousHit) >= TimeIntervalToMeet)
@@ -148,7 +211,7 @@ bool SC_MCU_DRVR::checkWiFiConnection()
 {
     displayLCDScreen(DataDisplayTypes::CLEAR);
     displayLCDScreen(DataDisplayTypes::WAITPOINT);
-    Serial.print("Connection to WiFi is not established. Waiting.");
+    Serial.print(F("Connection to WiFi is not established. Waiting."));
     digitalWrite(RESTATED_DEV_PINS::MCU_LED, HIGH);
     while (WiFi.status() != WL_CONNECTED)
     {
@@ -160,9 +223,9 @@ bool SC_MCU_DRVR::checkWiFiConnection()
     }
     digitalWrite(RESTATED_DEV_PINS::ESP_LED, HIGH);
     Serial.println();
-    Serial.print("Connected to ");
+    Serial.print(F("Connected to "));
     Serial.print(WIFI_INST_STRUCT.WIFI_SSID);
-    Serial.print("!!! | IP Address |> ");
+    Serial.print(F("!!! | IP Address |> "));
     Serial.println(WiFi.localIP());
     displayLCDScreen(DataDisplayTypes::WAIT_CLEAR);
     delay(1000);
@@ -178,7 +241,7 @@ bool SC_MCU_DRVR::mntndWiFiConnection()
     }
     else
     {
-        Serial.println("Connection to WiFi was lost. Attempting ReConnection...");
+        Serial.println(F("Connection to WiFi was lost. Attempting ReConnection..."));
         return (checkWiFiConnection() ? true : false);
     }
 }
@@ -189,18 +252,18 @@ void SC_MCU_DRVR::displayLCDScreen(DataDisplayTypes Screens)
     {
     case DataDisplayTypes::WAITPOINT:
         LCD_DRVR.setCursor(0, 0);
-        LCD_DRVR.print("Smart Classroom Sys.");
+        LCD_DRVR.print(F("Smart Classroom Sys."));
         LCD_DRVR.setCursor(0, 1);
-        LCD_DRVR.print(" Ver. 02222020-2327");
+        LCD_DRVR.print(F(" Ver. 02222020-2327"));
         LCD_DRVR.setCursor(0, 2);
-        LCD_DRVR.print(" Interactless Mgmt.");
+        LCD_DRVR.print(F(" Interactless Mgmt."));
         LCD_DRVR.setCursor(0, 3);
-        LCD_DRVR.print("   Connecting ...   ");
+        LCD_DRVR.print(F("   Connecting ...   "));
         break;
 
     case DataDisplayTypes::WAIT_CLEAR:
         LCD_DRVR.setCursor(0, 3);
-        LCD_DRVR.print("     Connected!     ");
+        LCD_DRVR.print(F("     Connected!     "));
         break;
 
     case DataDisplayTypes::CLEAR:
@@ -221,9 +284,9 @@ void SC_MCU_DRVR::displayLCDScreen(DataDisplayTypes Screens)
         ENV_INST_CONT.DHT11_HT_INDX = TempSens.computeHeatIndex(ENV_INST_CONT.DHT11_TEMP, ENV_INST_CONT.DHT11_HUMID, false);
         ENV_INST_CONT.PIR_OPTPT = digitalRead(SENS_DAT_PINS::PIR_DAT_PIN);
         LCD_DRVR.setCursor(0, 0);
-        LCD_DRVR.print(DEV_INST_CREDENTIALS.DEV_CR_ASSIGNED);
+        LCD_DRVR.print(DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT);
         LCD_DRVR.print(F(" | "));
-        LCD_DRVR.print(DEV_INST_CREDENTIALS.DEV_CR_ROOM);
+        LCD_DRVR.print(DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME);
         LCD_DRVR.setCursor(0, 1);
         LCD_DRVR.print(F("S:"));
         LCD_DRVR.print((AUTH_INST_CONT.AUTH_CR_DOOR) ? "Lockd" : "UnLkd");
