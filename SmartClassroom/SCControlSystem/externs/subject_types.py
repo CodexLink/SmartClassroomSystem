@@ -77,6 +77,12 @@ BuildingFloors = (
 ClassroomActionTypes = (
     ('Classroom was Opened by Toggle Lock.', 'Classroom was Opened by Toggle Lock.'),
     ('Classroom was Closed by Toggle Lock.', 'Classroom was Closed by Toggle Lock.'),
+    ('Classroom was Opened by Fingerprint.', 'Classroom was Opened by Fingerprint.'),
+    ('Classroom Electricity was Turned On.', 'Classroom Electricity was Turned On.'),
+    ('Classroom Electricity was Turned Off.', 'Classroom Electricity was Turned Off.'),
+    ('Classroom was Closed by Fingerprint.', 'Classroom was Closed by Fingerprint.'),
+    ('Classroom was Closed by Fingerprint.', 'Classroom was Closed by Fingerprint.'),
+    ('Device was reset by a Staff.', 'Device was reset by a Staff.'),
     ('Action: Set Room Automate to ON.', 'Action: Set Room Automate to ON.'),
     ('Action: Set Room Automate to OFF.', 'Action: Set Room Automate to OFF.'),
     ('Unauthorized Access Detected.', 'Unauthorized Access Detected.'),
