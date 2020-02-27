@@ -1,204 +1,297 @@
 <div class="container content-offset">
     <div class="card-columns class-control-column">
-            {% for ClassroomAttr in object_list %}
-            {% if forloop.first %}
-            <div class="col mb-auto">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">{{ ClassroomAttr.CourseSchedule_Room.Classroom_Name }}</h2>
-                        <h3 class="card-subtitle text-black-secondary">Some small information that you must need to know.</h3>
-                        <p class="card-text text-black-primary">{% if user_class != "Professor" %} This classroom is currently associated with the device
-                            '{{ ClassroomAttr.CourseSchedule_Room.Classroom_Dev }}'. It's current state will depend if your request is successful. It should always be online.{% else %}This classroom is being monitored based from your actions and from other professors as well.{% endif %}</p>
-                    </div>
+        {% for ClassroomAttr in object_list %}
+        {% if forloop.first %}
+        <div class="col mb-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{{ ClassroomAttr.CourseSchedule_Room.Classroom_Name }}</h2>
+                    <h3 class="card-subtitle text-black-secondary">Some small information that you must need to know.
+                    </h3>
+                    <p class="card-text text-black-primary">{% if user_class != "Professor" %} This classroom is
+                        currently associated with the device
+                        '{{ ClassroomAttr.CourseSchedule_Room.Classroom_Dev }}'. It's current state will depend if your
+                        request is successful. It should always be online.{% else %}This classroom is being monitored
+                        based from your actions and from other professors as well.{% endif %}</p>
                 </div>
             </div>
-            {% if DeviceState == 'Online' %}
-            <div class="col mb-auto">
-                <div class="card bg-success">
-                    <div class="card-body">
-                        <h2 class="card-title text-white-primary">Device is Online</h2>
-                        <h3 class="card-subtitle text-white-secondary">You can access the controls for now.</h3>
-                        <p class="card-text text-white-primary">Remember! Your action will always be recorded no matter what your role is. If you made a mistake, administrators will know.</p>
-                    </div>
-                </div>
-            </div>
-            {% else %}
-            <div class="col mb-auto">
-                <div class="card bg-danger">
-                    <div class="card-body">
-                        <h2 class="card-title text-white-primary">Device is Not Online or Connection Timed-Out!</h2>
-                        <h3 class="card-subtitle text-white-secondary">Control Access is Not Available at this point.</h3>
-                        <p class="card-text text-white-primary">Please check the device! The device might be put into a down state or the device just rebooted, please wait if that is the case. Or else, contact the administrator!</p>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-            {% if ResponseMessage != 'RequestChangeSet' %}
-            {% for message in messages %}
-            {% if message.message == 'CRAccessRequestChange' %}
-            <div class="col mb-auto">
-                <div class="card bg-warning">
-                    <div class="card-body">
-                        <h2 class="card-title text-white-primary">Classroom Access Alteration Request Accepted!</h2>
-                        <h3 class="card-subtitle text-white-secondary">The command has been processed succesfully.</h3>
-                        <p class="card-text text-white-primary">The result of the process is usually updated. If you have got an unexpected result, try again! If it persists, check your connection or contact your administrator.</p>
-                    </div>
-                </div>
-            </div>
-            {% elif message.message == 'LockStateRequestChange' %}
-            <div class="col mb-auto">
-                <div class="card bg-disabled">
-                    <div class="card-body">
-                        <h2 class="card-title text-white-primary">Lock State Alteration Request Accepted!</h2>
-                        <h3 class="card-subtitle text-white-secondary">The command has been processed succesfully.</h3>
-                        <p class="card-text text-white-primary">The result of the process is usually updated. If you have gotten an unexpected result such as indication of unlocked door when the systems locked, please refresh the page or try it again. If things goes wrong, check your connection and try again or contact your administrator.</p>
-                    </div>
-                </div>
-            </div>
-            {% elif message.message == 'ElectricStateRequestChange' %}
-            <div class="col mb-auto">
-                <div class="card bg-online">
-                    <div class="card-body">
-                        <h2 class="card-title text-white-primary">Electricity Alteration Accepted!</h2>
-                        <h3 class="card-subtitle text-white-secondary">The command has been processed succesfully.</h3>
-                        <p class="card-text text-white-primary">The result of the process is usually updated. If the result is quite not expected, such as electricity is indicated as opened while it is locked in reality. Please refresh the page. If things goes wrong, check your connection and try again or contact your administrator.</p>
-                    </div>
-                </div>
-            </div>
-            {% elif message.message == 'DevRestartRequestChange' %}
-            <div class="col mb-auto">
-                <div class="card bg-warning">
-                    <div class="card-body">
-                        <h2 class="card-title text-white-primary">Device Restart Accepted!</h2>
-                        <h3 class="card-subtitle text-white-secondary">Control Access will NOT be Available at the moment.</h3>
-                        <p class="card-text text-white-primary">This message shows an indication that you just succesfully able to restart the device. Please wait for about 20 seconds approximate and refresh the page to see if things goes back to normal.</p>
-                    </div>
-                </div>
-            </div>
-            {% elif message.message == 'RoomAutomationRequestChange' %}
-            <div class="col mb-auto">
-                <div class="card bg-dark">
-                    <div class="card-body">
-                        <h2 class="card-title text-white-primary">Command Not Available.</h2>
-                        <h3 class="card-subtitle text-white-secondary">Nothing will happen at the moment.</h3>
-                        <p class="card-text text-white-primary">We haven't implement this one due to complexity.</p>
-                    </div>
-                </div>
-            </div>
-            {% elif message.message == 'InvalidCommand' %}
-                <div class="col mb-auto">
-                    <div class="card bg-dark">
-                        <div class="card-body">
-                            <h2 class="card-title text-white-primary">Stop Right There!</h2>
-                            <h3 class="card-subtitle text-white-secondary">Hold up! We knew that this might happen already!</h3>
-                            <p class="card-text text-white-primary">You're not allowed to that! This issue is recorded! If you have typed something accidentally then, we might pass your actions.</p>
-                        </div>
-                    </div>
-                </div>
-            {% elif message.message == 'InvalidAccess' %}
-                <div class="col mb-auto">
-                    <div class="card bg-dark">
-                        <div class="card-body">
-                            <h2 class="card-title text-white-primary">Hold On, You Cannot Do This!</h2>
-                            <h3 class="card-subtitle text-white-secondary">We suspected that you're trying to access this room illegally or explicitly!</h3>
-                            <p class="card-text text-white-primary">You're not allowed to that! This issue is recorded! If you have typed something accidentally then, we might pass your actions.</p>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-            {% endfor %}
-            {% endif %}
-            <div class="col mb-auto">
-                <div class="card">
-                    <div class="card-header border-0">
-                        <h2 class="card-title">Scanner Device Outputs</h2>
-                        <h3 class="card-subtitle text-black-secondary">Sensors available in the device. Last readings were saved and in the database.</h3>
-                    </div>
-                    <!-- Insert some extra buttons for admin -->
-                    <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Temperature Celcius<span class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}alert{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}{{ TempOutput }}{% else %}—{% endif %}°C</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Humidity Percentage<span class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}success{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}{{ HumidOutput }}{% else %}—{% endif %}%</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Calculated Heat Index<span class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}danger{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}{{ HeatInxOutput }}{% else %}—{% endif %}°C</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Recent Motion Detection<span class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}warning{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}{{ PIRTTOutput }}{% else %}{% endif %} second/s since {% if DeviceState == 'Online' %}{{ refresh_recent_time }}{% else %}—{% endif %}.</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list" href="javascript:void(0)" role="tab">Authentication State<span class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}info{% else %}offline{% endif %}">Currently {{ AuthCRState }} with ID {{ UserScheduledID }}</span></a>
-                    </div>
-                    <div class="card-actions border-top d-flex justify-content-between align-items-center">
-                        <span class="text-muted">Updated as of {{ refresh_recent_time }}. (The time you refereshed this page)</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col mb-auto">
-                <div class="card">
-                    <div class="card-header border-0">
-                        <h2 class="card-title">Classroom Device Options</h2>
-                        <h3 class="card-subtitle text-black-secondary">{% if user_class == "ITSO Supervisor" %}If you're looking forward to restart the classroom device or change classroom access, you need an administrator to do that!{% else %}For each actions that you commit, will be recorded by the system!{% endif %}</h3>
-                    </div>
-                    <!-- Insert some extra buttons for admin -->
-                    <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                        <a class="list-group-item d-flex justify-content-between align-items-center {% if user_class == 'ITSO Supervisor' or DeviceState != 'Online' %}disabled{% endif %}" href="{% if message.message == 'DeviceRequestFailed' or user_class == 'ITSO Supervisor' %}#{% else %}{% url 'classroom_take_action_cr_access' classUniqueID=Class_UID_Literal %}{% endif %}" role="tab" aria-controls="home">Toggle Classroom Access<span class="badge badge-primary badge-pill bg-{% if DeviceState != 'Online' %}dark{% else %}info{% endif %}">{% if DeviceState == 'Online' %}{{ ClassAccessState }}{% else %}Unknown{% endif %}</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center {% if DeviceState != 'Online' %}disabled{% endif %}" href="{% if DeviceState != 'Online' %}#{% else %}{% url 'classroom_take_action_lock_state' classUniqueID=Class_UID_Literal %}{% endif %}" role="tab" aria-controls="home">Toggle Lock<span class="badge badge-primary badge-pill bg-{% if DeviceState != 'Online' %}dark{% else %}{{ LockState|lower }}{% endif %}">{% if DeviceState == 'Online' %}{{ LockState }}{% else %}Unknown{% endif %}</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center {% if DeviceState != 'Online' %}disabled{% endif %}" href="{% if DeviceState != 'Online' %}#{% else %}{% url 'classroom_take_action_electric_state' classUniqueID=Class_UID_Literal %}{% endif %}" role="tab" aria-controls="profile">Toggle Electricity<span class="badge badge-primary badge-pill bg-{% if DeviceState != 'Online' %}dark{% else %}danger{% endif %}">{% if DeviceState == 'Online' %}{{ ElectricityState }}{% else %}Unknown{% endif %}</span></a>
-                        <a class="list-group-item d-flex justify-content-between align-items-center {% if user_class == 'ITSO Supervisor' or DeviceState != 'Online' %}disabled{% endif %}" href="{% if user_class == 'ITSO Supervisor' or DeviceState != 'Online' %}#{% else %}{% url 'classroom_take_action_device_reset' classUniqueID=Class_UID_Literal %}{% endif %}" role="tab" aria-controls="profile">Restart Device<span class="badge badge-primary badge-pill bg-{% if DeviceState != 'Online' %}dark{% else %}warning{% endif %}">{% if DeviceState == 'Online' %}{{ DeviceState }}{% else %}Unknown{% endif %}</span></a>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-            {% empty %}
-            <div class="col mb-auto">
-                <div class="card bg-danger">
-                    <div class="card-body">
-                        <h2 class="card-title text-white-primary">Classroom Controls Are Not Viable</h2>
-                        <h3 class="card-subtitle text-white-secondary">TL;DR: No candidate courses are subjected to this room to control.</h3>
-                        <p class="card-text text-white-primary">There might be some records that can be displayed. But if there are no course assigned to this room, then we cannot provide you some controls and sensor readings. What's the point though!?</p>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-            <div class="col mb-auto">
-                <div class="card">
-                    <div class="card-header border-0">
-                        <h2 class="card-title">Classroom Action Records</h2>
-                        <h3 class="card-subtitle text-black-secondary">A set of actions made by {% if not user_class == "Professor" %}people{% else %}you{% endif %}, recently recorded by the system.
-                        </h3>
-                    </div>
-                    <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                        {% if ClassLogs %}
-                        {% for ActionCandidates in ClassLogs %}
-                        <a href="#" class="list-group-item list-group-item-action {% if forloop.first %} active {% endif %}">
-                            <div class="d-flex w-100">
-                                <h6 class="mb-1 text-dark-primary">{{ ActionCandidates.UserActionTaken }}</h6>
-                            </div>
-                            <p class="mb-1 d-flex justify-content-between align-items-center">By {{ ActionCandidates.Course_Reference.CourseSchedule_Instructor.first_name }} {{ ActionCandidates.CourseSchedule_Instructor.middle_name|default_if_none:"" }} {{ ActionCandidates.Course_Reference.CourseSchedule_Instructor.last_name }} along with {{ ActionCandidates.Course_Reference.CourseSchedule_Section }}<span
-                                    class="badge badge-primary badge-pill bg-{{ ActionCandidates.ActionLevel | lower }}">{{ ActionCandidates.ActionLevel }}</span></p>
-                            <p class="mb-1 d-flex justify-content-between align-items-center"><small class="text-black-primary"> {{ ActionCandidates.TimeRecorded }}</small></p>
-                        </a>
-                        {% endfor %}
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            {% if not user_class == "Professor" %}
-            <div class="col mb-auto">
-                <div class="card">
-                    <div class="card-header border-0">
-                        <h2 class="card-title">Subjects Involved From This Room</h2>
-                        <h3 class="card-subtitle text-black-secondary">A list of subjects along with instructors who are uses this room.
-                        </h3>
-                    </div>
-                    <div class="card-body list-group border-0" id="list-tab" role="tablist">
-                        {% for SubjectCandidates in SubjectsInvolved %}
-                        <a href="#" class="list-group-item list-group-item-action {% if forloop.first %} active {% endif %}">
-                            <div class="d-flex w-100">
-                                <h6 class="mb-1 text-dark-primary ">{{ SubjectCandidates.CourseSchedule_CourseReference__Course_Code }} | {{ SubjectCandidates.CourseSchedule_CourseReference__Course_Name }}</h6>
-                            </div>
-                            <p class="mb-1 d-flex justify-content-between align-items-center">{{ SubjectCandidates.CourseSchedule_Section__Section_CompleteStringGroup }} handled by {{ SubjectCandidates.CourseSchedule_Instructor__first_name }} {{ SubjectCandidates.CourseSchedule_Instructor__middle_name|default_if_none:"" }} {{ SubjectCandidates.CourseSchedule_Instructor__last_name }} <span></span></p>
-                        </a>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-            {% endif %}
         </div>
+        {% if DeviceState == 'Online' %}
+        <div class="col mb-auto">
+            <div class="card bg-success">
+                <div class="card-body">
+                    <h2 class="card-title text-white-primary">Device is Online</h2>
+                    <h3 class="card-subtitle text-white-secondary">You can access the controls for now.</h3>
+                    <p class="card-text text-white-primary">Remember! Your action will always be recorded no matter what
+                        your role is. If you made a mistake, administrators will know.</p>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col mb-auto">
+            <div class="card bg-danger">
+                <div class="card-body">
+                    <h2 class="card-title text-white-primary">Device is Not Online or Connection Timed-Out!</h2>
+                    <h3 class="card-subtitle text-white-secondary">Control Access is Not Available at this point.</h3>
+                    <p class="card-text text-white-primary">Please check the device! The device might be put into a down
+                        state or the device just rebooted, please wait if that is the case. Or else, contact the
+                        administrator!</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if ResponseMessage != 'RequestChangeSet' %}
+        {% for message in messages %}
+        {% if message.message == 'CRAccessRequestChange' %}
+        <div class="col mb-auto">
+            <div class="card bg-warning">
+                <div class="card-body">
+                    <h2 class="card-title text-white-primary">Classroom Access Alteration Request Accepted!</h2>
+                    <h3 class="card-subtitle text-white-secondary">The command has been processed succesfully.</h3>
+                    <p class="card-text text-white-primary">The result of the process is usually updated. If you have
+                        got an unexpected result, try again! If it persists, check your connection or contact your
+                        administrator.</p>
+                </div>
+            </div>
+        </div>
+        {% elif message.message == 'LockStateRequestChange' %}
+        <div class="col mb-auto">
+            <div class="card bg-disabled">
+                <div class="card-body">
+                    <h2 class="card-title text-white-primary">Lock State Alteration Request Accepted!</h2>
+                    <h3 class="card-subtitle text-white-secondary">The command has been processed succesfully.</h3>
+                    <p class="card-text text-white-primary">The result of the process is usually updated. If you have
+                        gotten an unexpected result such as indication of unlocked door when the systems locked, please
+                        refresh the page or try it again. If things goes wrong, check your connection and try again or
+                        contact your administrator.</p>
+                </div>
+            </div>
+        </div>
+        {% elif message.message == 'ElectricStateRequestChange' %}
+        <div class="col mb-auto">
+            <div class="card bg-online">
+                <div class="card-body">
+                    <h2 class="card-title text-white-primary">Electricity Alteration Accepted!</h2>
+                    <h3 class="card-subtitle text-white-secondary">The command has been processed succesfully.</h3>
+                    <p class="card-text text-white-primary">The result of the process is usually updated. If the result
+                        is quite not expected, such as electricity is indicated as opened while it is locked in reality.
+                        Please refresh the page. If things goes wrong, check your connection and try again or contact
+                        your administrator.</p>
+                </div>
+            </div>
+        </div>
+        {% elif message.message == 'DevRestartRequestChange' %}
+        <div class="col mb-auto">
+            <div class="card bg-warning">
+                <div class="card-body">
+                    <h2 class="card-title text-white-primary">Device Restart Accepted!</h2>
+                    <h3 class="card-subtitle text-white-secondary">Control Access will NOT be Available at the moment.
+                    </h3>
+                    <p class="card-text text-white-primary">This message shows an indication that you just succesfully
+                        able to restart the device. Please wait for about 20 seconds approximate and refresh the page to
+                        see if things goes back to normal.</p>
+                </div>
+            </div>
+        </div>
+        {% elif message.message == 'RoomAutomationRequestChange' %}
+        <div class="col mb-auto">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <h2 class="card-title text-white-primary">Command Not Available.</h2>
+                    <h3 class="card-subtitle text-white-secondary">Nothing will happen at the moment.</h3>
+                    <p class="card-text text-white-primary">We haven't implement this one due to complexity.</p>
+                </div>
+            </div>
+        </div>
+        {% elif message.message == 'InvalidCommand' %}
+        <div class="col mb-auto">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <h2 class="card-title text-white-primary">Stop Right There!</h2>
+                    <h3 class="card-subtitle text-white-secondary">Hold up! We knew that this might happen already!</h3>
+                    <p class="card-text text-white-primary">You're not allowed to that! This issue is recorded! If you
+                        have typed something accidentally then, we might pass your actions.</p>
+                </div>
+            </div>
+        </div>
+        {% elif message.message == 'InvalidAccess' %}
+        <div class="col mb-auto">
+            <div class="card bg-dark">
+                <div class="card-body">
+                    <h2 class="card-title text-white-primary">Hold On, You Cannot Do This!</h2>
+                    <h3 class="card-subtitle text-white-secondary">We suspected that you're trying to access this room
+                        illegally or explicitly!</h3>
+                    <p class="card-text text-white-primary">You're not allowed to that! This issue is recorded! If you
+                        have typed something accidentally then, we might pass your actions.</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        <div class="col mb-auto">
+            <div class="card">
+                <div class="card-header border-0">
+                    <h2 class="card-title">Scanner Device Outputs</h2>
+                    <h3 class="card-subtitle text-black-secondary">Sensors available in the device. Last readings were
+                        saved and in the database.</h3>
+                </div>
+                <!-- Insert some extra buttons for admin -->
+                <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                    <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list"
+                        href="javascript:void(0)" role="tab">Temperature Celcius<span
+                            class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}alert{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}{{ TempOutput }}{% else %}—{% endif %}°C</span></a>
+                    <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list"
+                        href="javascript:void(0)" role="tab">Humidity Percentage<span
+                            class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}success{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}{{ HumidOutput }}{% else %}—{% endif %}%</span></a>
+                    <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list"
+                        href="javascript:void(0)" role="tab">Calculated Heat Index<span
+                            class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}danger{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}{{ HeatInxOutput }}{% else %}—{% endif %}°C</span></a>
+                    <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list"
+                        href="javascript:void(0)" role="tab">Recent Motion Detection<span
+                            class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}warning{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}{{ PIRTTOutput }}{% else %}{% endif %}
+                            second/s since
+                            {% if DeviceState == 'Online' %}{{ refresh_recent_time }}{% else %}—{% endif %}.</span></a>
+                    <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list"
+                        href="javascript:void(0)" role="tab">Authentication State<span
+                            class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}info{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}Currently
+                            {{ AuthCRState }} with ID {{ UserScheduledID }}{% else %}Unknown{% endif %}</span></a>
+                </div>
+                <div class="card-actions border-top d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Updated as of {{ refresh_recent_time }}. (The time you refereshed this
+                        page)</span>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-auto">
+            <div class="card">
+                <div class="card-header border-0">
+                    <h2 class="card-title">Classroom Device Options</h2>
+                    <h3 class="card-subtitle text-black-secondary">{% if user_class == "ITSO Supervisor" %}If you're
+                        looking forward to restart the classroom device or change classroom access, you need an
+                        administrator to do that!{% else %}For each actions that you commit, will be recorded by the
+                        system!{% endif %}</h3>
+                </div>
+                <!-- Insert some extra buttons for admin -->
+                <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                    <a class="list-group-item d-flex justify-content-between align-items-center {% if user_class == 'ITSO Supervisor' or user_class == 'Professor' or DeviceState != 'Online' %}disabled{% endif %}"
+                        href="{% if message.message == 'DeviceRequestFailed' or user_class == 'ITSO Supervisor' or user_class == 'Professor' %}#{% else %}{% url 'classroom_take_action_cr_access' classUniqueID=Class_UID_Literal %}{% endif %}"
+                        role="tab" aria-controls="home">Toggle Classroom Access<span
+                            class="badge badge-primary badge-pill bg-{% if DeviceState != 'Online' %}dark{% else %}info{% endif %}">{% if DeviceState == 'Online' %}{{ ClassAccessState }}{% else %}Unknown{% endif %}</span></a>
+                    <a class="list-group-item d-flex justify-content-between align-items-center {% if DeviceState != 'Online' %}disabled{% endif %}"
+                        href="{% if DeviceState != 'Online' %}#{% else %}{% url 'classroom_take_action_lock_state' classUniqueID=Class_UID_Literal %}{% endif %}"
+                        role="tab" aria-controls="home">Toggle Lock<span
+                            class="badge badge-primary badge-pill bg-{% if DeviceState != 'Online' %}dark{% else %}{{ LockState|lower }}{% endif %}">{% if DeviceState == 'Online' %}{{ LockState }}{% else %}Unknown{% endif %}</span></a>
+                    <a class="list-group-item d-flex justify-content-between align-items-center {% if DeviceState != 'Online' %}disabled{% endif %}"
+                        href="{% if DeviceState != 'Online' %}#{% else %}{% url 'classroom_take_action_electric_state' classUniqueID=Class_UID_Literal %}{% endif %}"
+                        role="tab" aria-controls="profile">Toggle Electricity<span
+                            class="badge badge-primary badge-pill bg-{% if DeviceState != 'Online' %}dark{% else %}danger{% endif %}">{% if DeviceState == 'Online' %}{{ ElectricityState }}{% else %}Unknown{% endif %}</span></a>
+                    <a class="list-group-item d-flex justify-content-between align-items-center {% if user_class == 'ITSO Supervisor' or user_class == 'Professor' or DeviceState != 'Online' %}disabled{% endif %}"
+                        href="{% if user_class == 'ITSO Supervisor' or user_class == 'Professor' or DeviceState != 'Online' %}#{% else %}{% url 'classroom_take_action_device_reset' classUniqueID=Class_UID_Literal %}{% endif %}"
+                        role="tab" aria-controls="profile">Restart Device<span
+                            class="badge badge-primary badge-pill bg-{% if DeviceState != 'Online' %}dark{% else %}warning{% endif %}">{% if DeviceState == 'Online' %}{{ DeviceState }}{% else %}Unknown{% endif %}</span></a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% empty %}
+        <div class="col mb-auto">
+            <div class="card bg-danger">
+                <div class="card-body">
+                    <h2 class="card-title text-white-primary">Classroom Controls Are Not Viable</h2>
+                    <h3 class="card-subtitle text-white-secondary">TL;DR: No candidate courses are subjected to this
+                        room to control.</h3>
+                    <p class="card-text text-white-primary">There might be some records that can be displayed. But if
+                        there are no course assigned to this room, then we cannot provide you some controls and sensor
+                        readings. What's the point though!?</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% if not user_class == "Professor" %}
+        <div class="col mb-auto">
+            <div class="card">
+                <div class="card-header border-0">
+                    <h2 class="card-title">Subjects Involved From This Room</h2>
+                    <h3 class="card-subtitle text-black-secondary">A list of subjects along with instructors who are
+                        uses this room.
+                    </h3>
+                </div>
+                <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                    {% for SubjectCandidates in SubjectsInvolved %}
+                    <a href="#" class="list-group-item list-group-item-action {% if forloop.first %} active {% endif %}">
+                        <div class="d-flex w-100">
+                            <h6 class="mb-1 text-dark-primary ">
+                                {{ SubjectCandidates.CourseSchedule_CourseReference__Course_Code }} |
+                                {{ SubjectCandidates.CourseSchedule_CourseReference__Course_Name }}</h6>
+                        </div>
+                        <p class="mb-1 d-flex justify-content-between align-items-center">
+                            {% if SubjectCandidates.CourseSchedule_Section__Section_CompleteStringGroup is None %}Handled
+                            by ITSO
+                            Staff.{% else %}{{ SubjectCandidates.CourseSchedule_Section__Section_CompleteStringGroup }}
+                            handled by {{ SubjectCandidates.CourseSchedule_Instructor__first_name }}
+                            {{ SubjectCandidates.CourseSchedule_Instructor__middle_name|default_if_none:"" }}
+                            {{ SubjectCandidates.CourseSchedule_Instructor__last_name }}{% endif %}
+                        </p>
+                    </a>
+                    {% empty %}
+                    <a href="#" class="list-group-item list-group-item-action {% if forloop.first %} active {% endif %} disabled">
+                        <div class="d-flex w-100">
+                            <h6 class="mb-1 text-dark-primary">
+                                NC | No Course Involved!
+                            </h6>
+                        </div>
+                        <p class="mb-1 d-flex justify-content-between align-items-center">
+                            Not a quite common issue. But each room should have at least one subject involved!
+                        </p>
+                    </a>
+
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="col mb-auto">
+            <div class="card">
+                <div class="card-header border-0">
+                    <h2 class="card-title">Classroom Action Records</h2>
+                    <h3 class="card-subtitle text-black-secondary">A set of actions made by
+                        {% if not user_class == "Professor" %}people{% else %}you{% endif %}, recently recorded by the
+                        system.
+                    </h3>
+                </div>
+                <div class="card-body list-group border-0" id="list-tab" role="tablist">
+                    {% for ActionCandidates in ClassLogs %}
+                    <a href="#" class="list-group-item list-group-item-action {% if forloop.first %} active {% endif %}">
+                        <div class="d-flex w-100">
+                            <h6 class="mb-1 text-dark-primary">{{ ActionCandidates.UserActionTaken }}</h6>
+                        </div>
+                        <p class="mb-1 d-flex justify-content-between align-items-center">
+                            {% if ActionCandidates.Course_Reference.CourseSchedule_Section is None %}Action was made by Administrator or Supervisor.{% else %}
+                            By {{ ActionCandidates.Course_Reference.CourseSchedule_Instructor.first_name }}
+                            {{ ActionCandidates.CourseSchedule_Instructor.middle_name|default_if_none:"" }}
+                            {{ ActionCandidates.Course_Reference.CourseSchedule_Instructor.last_name }} along with
+                            {{ ActionCandidates.Course_Reference.CourseSchedule_Section }}{% endif %}
+                            <span class="badge badge-primary badge-pill bg-{{ ActionCandidates.ActionLevel | lower }}">{{ ActionCandidates.ActionLevel }}</span>
+                        </p>
+                        <p class="mb-1 d-flex justify-content-between align-items-center"><small class="text-black-primary">{{ ActionCandidates.TimeRecorded }}</small></p>
+                    </a>
+                    {% empty %}
+                    <a href="#" class="list-group-item list-group-item-action active disabled">
+                        <div class="d-flex w-100">
+                            <h6 class="mb-1 text-dark-primary">No Currently Issued Record</h6>
+                        </div>
+                        <p class="mb-1 d-flex justify-content-between align-items-center">
+                            The room might be recently set-up. If still persist even at access, contact the project developers or administrators.
+                            <span class="badge badge-primary badge-pill bg-unknown">Unknown</span>
+                        </p>
+                        <p class="mb-1 d-flex justify-content-between align-items-center"><small class="text-black-primary">Non-Existent Date and Time</small></p>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {%if not isUserFullCtrl %}
 {% else %}
