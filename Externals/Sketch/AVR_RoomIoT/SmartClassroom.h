@@ -130,7 +130,7 @@ public:
 
     struct AUTH_STATE
     {
-        bool AUTH_CR_DOOR = 1;        // 1 Locked, 0 Unlocked
+        bool AUTH_CR_DOOR = 0;        // 1 Unlocked, 0 Locked
         bool AUTH_CR_ACCESS = 1;      // 1 Enabled, 0 Disabled
         bool NON_AUTH_ELECTRIC_STATE = 0;      // 1 Enabled, 0 Disabled
         bool AUTH_FGPRT_STATE = 0; // 1 For Currently Authenticated, Else Not Authenticated

@@ -154,11 +154,11 @@ bool SC_MCU_DRVR::checkPresence()
 {
     if (SketchTimeCheck(CONST_VAL::SCAN_PROC_REQUIRED) && !ENV_INST_CONT.PIR_OPTPT)
     {
-        AUTH_INST_CONT.AUTH_CR_DOOR = !AUTH_INST_CONT.AUTH_CR_DOOR;
+        //AUTH_INST_CONT.AUTH_CR_DOOR = !AUTH_INST_CONT.AUTH_CR_DOOR;
         digitalWrite(RELAY_FRST_PIN, HIGH);
         digitalWrite(RELAY_SCND_PIN, HIGH);
         digitalWrite(RELAY_THRD_PIN, HIGH);
-        AUTH_INST_CONT.AUTH_CR_DOOR = true;
+        AUTH_INST_CONT.AUTH_CR_DOOR = false;
         AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
         LCD_DRVR.setCursor(0, 3);
         LCD_DRVR.print(F("> No Presence...    "));
@@ -279,9 +279,9 @@ void SC_MCU_DRVR::displayLCDScreen(DataDisplayTypes Screens)
 
     case DataDisplayTypes::DISP_CR_INFO:
         digitalWrite(RESTATED_DEV_PINS::MCU_LED, LOW);
-        ENV_INST_CONT.DHT11_TEMP = TempSens.getTemperature();
-        ENV_INST_CONT.DHT11_HUMID = TempSens.getHumidity();
-        ENV_INST_CONT.DHT11_HT_INDX = TempSens.computeHeatIndex(ENV_INST_CONT.DHT11_TEMP, ENV_INST_CONT.DHT11_HUMID, false);
+        ENV_INST_CONT.DHT11_TEMP = (isnan(ENV_INST_CONT.DHT11_TEMP) == TempSens.getTemperature()) ? ENV_INST_CONT.DHT11_TEMP : TempSens.getTemperature();
+        ENV_INST_CONT.DHT11_HUMID = (isnan(ENV_INST_CONT.DHT11_HUMID) == TempSens.getHumidity()) ? ENV_INST_CONT.DHT11_HUMID : TempSens.getHumidity();
+        ENV_INST_CONT.DHT11_HT_INDX = (isnan(ENV_INST_CONT.DHT11_HT_INDX) == TempSens.computeHeatIndex(ENV_INST_CONT.DHT11_TEMP, ENV_INST_CONT.DHT11_HUMID, false)) ? ENV_INST_CONT.DHT11_HT_INDX : TempSens.computeHeatIndex(ENV_INST_CONT.DHT11_TEMP, ENV_INST_CONT.DHT11_HUMID, false);
         ENV_INST_CONT.PIR_OPTPT = digitalRead(SENS_DAT_PINS::PIR_DAT_PIN);
         LCD_DRVR.setCursor(0, 0);
         LCD_DRVR.print(DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT);
@@ -289,7 +289,7 @@ void SC_MCU_DRVR::displayLCDScreen(DataDisplayTypes Screens)
         LCD_DRVR.print(DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME);
         LCD_DRVR.setCursor(0, 1);
         LCD_DRVR.print(F("S:"));
-        LCD_DRVR.print((AUTH_INST_CONT.AUTH_CR_DOOR) ? "Lockd" : "UnLkd");
+        LCD_DRVR.print((AUTH_INST_CONT.AUTH_CR_DOOR) ? "UnLkd" : "Lockd");
         LCD_DRVR.print(F(" | T:"));
         LCD_DRVR.print(ENV_INST_CONT.DHT11_TEMP, 1);
         LCD_DRVR.print(F("C"));
@@ -387,7 +387,6 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
             digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, HIGH);
             digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, HIGH);
             LCD_DRVR.setCursor(0, 3);
-            AUTH_INST_CONT.AUTH_CR_DOOR = true;
             AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
             LCD_DRVR.print(F("> Invalid UID!"));
             return;
@@ -397,7 +396,7 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
             digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, LOW);
             digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, LOW);
             digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
-            AUTH_INST_CONT.AUTH_CR_DOOR = false;
+            AUTH_INST_CONT.AUTH_CR_DOOR = true;
             AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = true;
 
             LCD_DRVR.setCursor(0, 3);
@@ -409,10 +408,9 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
             }
             else
             {
-                AUTH_INST_CONT.AUTH_CR_DOOR = true;
+                AUTH_INST_CONT.AUTH_CR_DOOR = false;
                 AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = false;
                 AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
-                AUTH_INST_CONT.AUTH_FGPRT_STATE = true;
                 sketchForceStop = true;
                 LCD_DRVR.print(F("> Locking Verified! "));
                 delay(1000);
