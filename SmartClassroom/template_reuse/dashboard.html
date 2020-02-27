@@ -96,6 +96,18 @@
                             <span class="badge badge-primary badge-pill bg-{{ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status|lower}}">{{ ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status }} State</span>
                         </p>
                     </a>
+                    {% empty %}
+                        <a href="javascript:void(0)" class="list-group-item list-group-item-action active disabled">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1 text-dark-primary">No Schedule Meta Data</h6>
+                            </div>
+                            <p class="mb-1 d-flex justify-content-between align-items-center">You have no schedule for today!
+                                <span class="badge badge-primary badge-pill bg-offline">Unknown</span>
+                            </p>
+                            <p class="mb-1 d-flex justify-content-between align-items-center">— | — | — | N/A — N/A
+                                <span class="badge badge-primary badge-pill bg-offline">Unknown State</span>
+                            </p>
+                        </a>
                     {% endfor %}
                 </div>
                 <div class="card-actions border-top d-flex justify-content-between align-items-center">
@@ -147,7 +159,7 @@
                         <div class="d-flex w-100">
                             <h6 class="mb-1 text-dark-primary ">{{ AllActionLogs.Course_Reference.CourseSchedule_Room.Classroom_CompleteString }} | {{ AllActionLogs.Course_Reference.CourseSchedule_CourseReference.Course_Code }} | {{ AllActionLogs.Course_Reference.CourseSchedule_Room.Classroom_Name }}</h6>
                         </div>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllActionLogs.Course_Reference.CourseSchedule_Section }} was handled by {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.first_name }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.middle_name|default_if_none:"" }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.last_name }} <span
+                        <p class="mb-1 d-flex justify-content-between align-items-center">{% if AllActionLogs.Course_Reference.CourseSchedule_Section %} {{ AllActionLogs.Course_Reference.CourseSchedule_Section }} was handled by {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.first_name }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.middle_name|default_if_none:"" }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.last_name }}{% else %}Action was made by Administrator or Supervisor.{% endif %}<span
                                 class="badge badge-primary badge-pill bg-{{ AllActionLogs.ActionLevel | lower }}">{{ AllActionLogs.ActionLevel }}</span></p>
                         <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllActionLogs.UserActionTaken }}<small class="text-black-primary"> {{ AllActionLogs.TimeRecorded }}</small></p>
                     </a>
