@@ -6,7 +6,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h2 class="card-title">{{ ClassroomAttr.CourseSchedule_Room.Classroom_Name }}</h2>
-                        <h3 class="card-subtitle text-black-secondary">Some general information that always need to know.</h3>
+                        <h3 class="card-subtitle text-black-secondary">Some small information that you must need to know.</h3>
                         <p class="card-text text-black-primary">{% if user_class != "Professor" %} This classroom is currently associated with the device
                             '{{ ClassroomAttr.CourseSchedule_Room.Classroom_Dev }}'. It's current state will depend if your request is successful. It should always be online.{% else %}This classroom is being monitored based from your actions and from other professors as well.{% endif %}</p>
                     </div>
