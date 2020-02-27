@@ -53,15 +53,15 @@ void HandleGET_SetInstance()
     digitalWrite(SC.RESTATED_DEV_PINS::ESP_LED, LOW);
     if (NodeServer.arg("lock_state") == "True")
     {
-        digitalWrite(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
-        SC.AUTH_INST_CONT.AUTH_CR_DOOR = !SC.AUTH_INST_CONT.AUTH_CR_DOOR;
-        NodeServer.send(200, "text/plain", "LOCK_STATE |> CHANGE TO ENABLED |> OK");
+        digitalWrite(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, HIGH);
+        SC.AUTH_INST_CONT.AUTH_CR_DOOR = false;
+        NodeServer.send(200, "text/plain", "LOCK_STATE |> CHANGE TO LOCK |> OK");
     }
     else if (NodeServer.arg("lock_state") == "False")
     {
-        digitalWrite(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, HIGH);
-        SC.AUTH_INST_CONT.AUTH_CR_DOOR = !SC.AUTH_INST_CONT.AUTH_CR_DOOR;
-        NodeServer.send(200, "text/plain", "LOCK_STATE |> CHANGE TO DISABLED |> OK");
+        digitalWrite(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
+        SC.AUTH_INST_CONT.AUTH_CR_DOOR = true;
+        NodeServer.send(200, "text/plain", "LOCK_STATE |> CHANGE TO UNLOCK |> OK");
     }
 
     if (NodeServer.arg("dev_rstrt") == "initiate")
