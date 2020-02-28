@@ -136,7 +136,6 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
         view_context['refresh_recent_time'] = datetime.datetime.now().time().strftime('%I:%M%p')
         view_context['Class_UID_Literal'] = self.kwargs['classUniqueID']
 
-
         # We wanna set the status of the device with its live sensor literally.
         try:
             Device_MetaData_Name = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).values('CourseSchedule_Room__Classroom_Dev__Device_Name')[0]
@@ -174,7 +173,6 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
 
         if self.ActionState:
             messages.info(self.request, 'DeviceRequestSuccess')
-
             classroomPointer = Classroom.objects.filter(Classroom_Unique_ID=self.kwargs['classUniqueID']).values('Classroom_CompleteString').distinct()
 
             if self.ActionState == "CRAccess":
