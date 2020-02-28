@@ -64,6 +64,8 @@ db.sqlite3-journal
 media/
 /app_static_src/
 /SmartClassroom/usersrc/
+# Ignore Migrations, let rebuild by itself.
+/SmartClassroom/SCControlSystem/migrations/
 .vscode/
 
 # Flask stuff:
