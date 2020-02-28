@@ -126,6 +126,16 @@
                 </div>
             </div>
         </div>
+        {% elif message.message == 'ScheduleNotOnScope' %}
+        <div class="col mb-auto">
+            <div class="card bg-danger">
+                <div class="card-body">
+                    <h2 class="card-title text-white-primary">Your Schedule Is Out Of Scope</h2>
+                    <h3 class="card-subtitle text-white-secondary">The schedule that you currently have is not available for this room!</h3>
+                    <p class="card-text text-white-primary">We thought you have accidentally pressed backward page and refreshed it. We are afraid to say that your session is already ended for this classroom.</p>
+                </div>
+            </div>
+        </div>
         {% endif %}
         {% endfor %}
         {% endif %}
