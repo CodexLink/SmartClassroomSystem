@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'SCControlSystem.apps.SmartClassroomConfig',
+    'NodeHandler.apps.NodehandlerConfig',
     'django_extensions',
 ]
 
