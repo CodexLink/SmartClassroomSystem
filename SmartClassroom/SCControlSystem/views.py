@@ -147,22 +147,25 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
             dev_metadata = FetchLiveData('http://%s/RequestData' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address']), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
 
             if dev_metadata.ok:
-                finalMetaData = DictSerialize((dev_metadata.content).decode('utf-8').replace("'", "\""))
-                view_context['TempOutput'] = finalMetaData['DATA_SENS']['CR_TEMP']
-                view_context['HumidOutput'] = finalMetaData['DATA_SENS']['CR_HUMD']
-                view_context['HeatInxOutput'] = finalMetaData['DATA_SENS']['CR_HTINX']
-                view_context['PIRTTOutput'] = finalMetaData['DATA_SENS']['PIR_MOTION']['PIR_OTPT_TIME_TRIGGER'] # Time Trigger Output
+                finalMetaData = DictSerialize((dev_metadata.content).decode('utf-8').replace("'", "\"")) if dev_metadata.ok else None
+                view_context['TempOutput'] = finalMetaData['DATA_SENS']['CR_TEMP'] if dev_metadata.ok else None
+                view_context['HumidOutput'] = finalMetaData['DATA_SENS']['CR_HUMD'] if dev_metadata.ok else None
+                view_context['HeatInxOutput'] = finalMetaData['DATA_SENS']['CR_HTINX'] if dev_metadata.ok else None
+                view_context['PIRTTOutput'] = finalMetaData['DATA_SENS']['PIR_MOTION']['PIR_OTPT_TIME_TRIGGER'] if dev_metadata.ok else None# Time Trigger Output
 
-                view_context['ClassAccessState'] = 'Enabled' if int(finalMetaData['DATA_STATE']['ACCESS_STATE']) else 'Disabled'
-                view_context['LockState'] = 'Unlocked' if int(finalMetaData['DATA_STATE']['DOOR_STATE']) else 'Locked'
-                view_context['ElectricityState'] = 'On' if int(finalMetaData['DATA_STATE']['ELECTRIC_STATE']) else 'Off'
-                view_context['AuthCRState'] = 'Authenticated' if int(finalMetaData['DATA_AUTH']['AUTH_STATE']) else 'Not Authenticated'
-                view_context['UserScheduledID'] = finalMetaData['DATA_AUTH']['AUTH_ID']
+                view_context['ClassAccessState'] = 'Enabled' if int(finalMetaData['DATA_STATE']['ACCESS_STATE']) else 'Disabled' if dev_metadata.ok else None
+                view_context['LockState'] = 'Unlocked' if int(finalMetaData['DATA_STATE']['DOOR_STATE']) else 'Locked' if dev_metadata.ok else None
+                view_context['ElectricityState'] = 'On' if int(finalMetaData['DATA_STATE']['ELECTRIC_STATE']) else 'Off' if dev_metadata.ok else None
+                view_context['AuthCRState'] = 'Authenticated' if int(finalMetaData['DATA_AUTH']['AUTH_STATE']) else 'Not Authenticated' if dev_metadata.ok else None
+                view_context['UserScheduledID'] = finalMetaData['DATA_AUTH']['AUTH_ID'] if dev_metadata.ok else None
                 view_context['DeviceState'] = "Online"
+            else:
+                messages.error(self.request, 'DeviceRequestFailed')
+                return view_context
 
         except RequestException:
-            messages.info(self.request, 'DeviceRequestFailed')
-            pass
+            messages.error(self.request, 'DeviceRequestFailed')
+            return view_context
 
         if not current_user.user_role == "Professor":
             view_context['ClassLogs'] = ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-TimeRecorded')
@@ -175,99 +178,118 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
             messages.info(self.request, 'DeviceRequestSuccess')
             classroomPointer = Classroom.objects.filter(Classroom_Unique_ID=self.kwargs['classUniqueID']).values('Classroom_CompleteString').distinct()
 
-            if self.ActionState == "CRAccess":
+            if self.ActionState == "ClassroomAccess":
+                StateResponseContext = False if view_context['ClassAccessState'] == 'Enabled' else True
                 dataFetchState = FetchLiveData('http://%s/RequestInstance?cr_access=%s' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address'], StateResponseContext), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
-                
-                if not current_user.user_role in ("Professor", "ITSO Supervisor"):
-                    StateResponseContext = False if view_context['ClassAccessState'] == 'Enabled' else True
-                    if dataFetchState.status_code.ok:
-                        adminReference = CourseSchedule.objects.get(CourseSchedule_CourseReference__Course_Name="Admin Control Management", CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
-                        objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[13][0] if StateResponseContext else ClassroomActionTypes[12][0], ActionLevel=LevelAlert[2][0], Course_Reference=adminReference)
+
+                try:
+                    if not current_user.user_role in ("Professor", "ITSO Supervisor"):
+                        if dataFetchState.ok:
+                            adminReference = CourseSchedule.objects.get(CourseSchedule_CourseReference__Course_Name="Admin Control Management", CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
+                            objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[13][0] if StateResponseContext else ClassroomActionTypes[12][0], ActionLevel=LevelAlert[2][0], Course_Reference=adminReference)
+                            objectInstance.save()
+
+                            view_context['ResponseMessage'] = 'RequestChangeSet'
+                            messages.info(self.request, 'CRAccessRequestChange')
+                            return view_context
+                        else:
+                            messages.info(self.request, 'InvalidCommand')
+                            return view_context
+
+                    else:
+                        if dataFetchState.ok:
+                            view_context['ResponseMessage'] = 'RequestChangeSet'
+                            messages.info(self.request, 'InvalidCommand')
+                            return view_context
+                        else:
+                            view_context['ResponseMessage'] = None
+                            messages.info(self.request, 'InvalidCommand')
+                            return view_context
+
+                except (BaseException, RequestException):
+                    messages.error(self.request, 'DeviceRequestFailed')
+                    return view_context
+
+            elif self.ActionState == "LockDoorAccess":
+                print(view_context['LockState'])
+                StateResponseContext = False if view_context['LockState'] == 'Locked' else True
+                dataFetchState = FetchLiveData('http://%s/RequestInstance?lock_state=%s' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address'], StateResponseContext), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
+
+                try:
+                    if dataFetchState.ok:
+                        if not current_user.user_role in ("Professor", "ITSO Supervisor"):
+                            adminReference = CourseSchedule.objects.get(CourseSchedule_CourseReference__Course_Name="Admin Control Management", CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
+
+                        else:
+                            adminReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
+
+                        objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[1][0] if StateResponseContext else ClassroomActionTypes[0][0], ActionLevel=LevelAlert[0][0], Course_Reference=adminReference)
+                        objectInstance.save()
+                        view_context['ResponseMessage'] = 'RequestChangeSet'
+                        messages.info(self.request, 'LockStateRequestChange')
+                        return view_context
+
+                    else:
+                        view_context['ResponseMessage'] = None
+                        return view_context
+
+                except (BaseException, RequestException):
+                    messages.error(self.request, 'DeviceRequestFailed')
+                    return view_context
+
+            elif self.ActionState == "ElectricityAccess":
+                StateResponseContext = False if view_context['ElectricityState'] == 'On' else True
+                dataFetchState = FetchLiveData('http://%s/RequestInstance?electric_state=%s' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address'], StateResponseContext), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
+
+                try:
+                    if dataFetchState.ok:
+                        if not current_user.user_role in ("Professor", "ITSO Supervisor"):
+                            adminReference = CourseSchedule.objects.get(CourseSchedule_CourseReference__Course_Name="Admin Control Management", CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
+
+                        else:
+                            adminReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
+
+                        objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[3][0] if StateResponseContext else ClassroomActionTypes[4][0], ActionLevel=LevelAlert[1][0], Course_Reference=adminReference)
                         objectInstance.save()
 
                         view_context['ResponseMessage'] = 'RequestChangeSet'
-                        messages.info(self.request, 'CRAccessRequestChange')
-                        return view_context
-                    else:
-                        messages.info(self.request, 'InvalidCommand')
+                        messages.info(self.request, 'ElectricStateRequestChange')
                         return view_context
 
-                else:
-                    if dataFetchState.status_code.ok:
-                        view_context['ResponseMessage'] = 'RequestChangeSet'
-                        messages.info(self.request, 'InvalidCommand')
+                    else:
+                        view_context['ResponseMessage'] = None
                         return view_context
+
+                except (BaseException, RequestException):
+                    messages.error(self.request, 'DeviceRequestFailed')
+                    return view_context
+
+            elif self.ActionState == "DevRestart":
+                dataFetchState = FetchLiveData('http://%s/RequestInstance?dev_rstrt=initiate' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address']), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
+
+                try:
+                    if dataFetchState.ok:
+                        if not current_user.user_role in ("Professor", "ITSO Supervisor"):
+
+                            adminReference = CourseSchedule.objects.get(CourseSchedule_CourseReference__Course_Name="Admin Control Management", CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
+                            objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[7][0], ActionLevel=LevelAlert[2][0], Course_Reference=adminReference)
+                            objectInstance.save()
+
+                            messages.info(self.request, 'DevRestartRequestChange')
+                            view_context['ResponseMessage'] = 'RequestChangeSet'
+                            return view_context
+
+                        else:
+                            view_context['ResponseMessage'] = 'RequestChangeSet'
+                            messages.info(self.request, 'InvalidCommand')
+                            return view_context
                     else:
                         view_context['ResponseMessage'] = None
                         messages.info(self.request, 'InvalidCommand')
                         return view_context
 
-
-
-            elif self.ActionState == "LockState":
-                StateResponseContext = False if view_context['LockState'] == 'Locked' else True
-                dataFetchState = FetchLiveData('http://%s/RequestInstance?lock_state=%s' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address'], StateResponseContext), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
-
-                if dataFetchState.status_code.ok:
-                    if not current_user.user_role in ("Professor", "ITSO Supervisor"):
-                        adminReference = CourseSchedule.objects.get(CourseSchedule_CourseReference__Course_Name="Admin Control Management", CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
-
-                    else:
-                        adminReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
-
-                    objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[1][0] if StateResponseContext else ClassroomActionTypes[0][0], ActionLevel=LevelAlert[0][0], Course_Reference=adminReference)
-                    objectInstance.save()
-                    view_context['ResponseMessage'] = 'RequestChangeSet'
-                    messages.info(self.request, 'LockStateRequestChange')
-                    return view_context
-
-                else:
-                    view_context['ResponseMessage'] = None
-                    return view_context
-
-            elif self.ActionState == "ElectricState":
-                StateResponseContext = False if view_context['ElectricityState'] == 'On' else True
-                dataFetchState = FetchLiveData('http://%s/RequestInstance?electric_state=%s' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address'], StateResponseContext), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
-
-                if dataFetchState.status_code.ok:
-                    if not current_user.user_role in ("Professor", "ITSO Supervisor"):
-                        adminReference = CourseSchedule.objects.get(CourseSchedule_CourseReference__Course_Name="Admin Control Management", CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
-
-                    else:
-                        adminReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
-
-                    objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[3][0] if StateResponseContext else ClassroomActionTypes[4][0], ActionLevel=LevelAlert[1][0], Course_Reference=adminReference)
-                    objectInstance.save()
-
-                    view_context['ResponseMessage'] = 'RequestChangeSet'
-                    messages.info(self.request, 'ElectricStateRequestChange')
-                    return view_context
-
-                else:
-                    view_context['ResponseMessage'] = None
-                    return view_context
-
-            elif self.ActionState == "DevRestart":
-                dataFetchState = FetchLiveData('http://%s/RequestInstance?dev_rstrt=initiate' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address']), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
-                
-                if dataFetchState.status_code.ok:
-                    if not current_user.user_role in ("Professor", "ITSO Supervisor"):
-
-                        adminReference = CourseSchedule.objects.get(CourseSchedule_CourseReference__Course_Name="Admin Control Management", CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
-                        objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[7][0], ActionLevel=LevelAlert[2][0], Course_Reference=adminReference)
-                        objectInstance.save()
-
-                        messages.info(self.request, 'DevRestartRequestChange')
-                        view_context['ResponseMessage'] = 'RequestChangeSet'
-                        return view_context
-
-                    else:
-                        view_context['ResponseMessage'] = 'RequestChangeSet'
-                        messages.info(self.request, 'InvalidCommand')
-                        return view_context
-                else:
-                    view_context['ResponseMessage'] = None
-                    messages.info(self.request, 'InvalidCommand')
+                except (BaseException, RequestException):
+                    messages.error(self.request, 'DeviceRequestFailed')
                     return view_context
 
         else:
