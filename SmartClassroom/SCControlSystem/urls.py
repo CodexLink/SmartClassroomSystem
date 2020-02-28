@@ -26,11 +26,10 @@ urlpatterns = [
     # ! Staff Only Accesible URLs
     path('classroom/<uuid:classUniqueID>/', include([
         path('control/', SelectableClassroomView.as_view(), name='classroom_info_view'),
-        path('control/crUpdate/', SelectableClassroomView.as_view(ActionState='CRAccess'), name='classroom_take_action_cr_access'),
-        path('control/lockInitiate/', SelectableClassroomView.as_view(ActionState='LockState'), name='classroom_take_action_lock_state'),
-        path('control/electricStateUpdate/', SelectableClassroomView.as_view(ActionState='ElectricState'), name='classroom_take_action_electric_state'),
+        path('control/crUpdate/', SelectableClassroomView.as_view(ActionState='ClassroomAccess'), name='classroom_take_action_cr_access'),
+        path('control/lockInitiate/', SelectableClassroomView.as_view(ActionState='LockDoorAccess'), name='classroom_take_action_lock_state'),
+        path('control/electricStateUpdate/', SelectableClassroomView.as_view(ActionState='ElectricityAccess'), name='classroom_take_action_electric_state'),
         path('control/devReset/', SelectableClassroomView.as_view(ActionState='DevRestart'), name='classroom_take_action_device_reset'),
-        path('control/roomAutomate/', SelectableClassroomView.as_view(ActionState='RoomAutomation'), name='classroom_take_action_automate'),
         ])),
 
     path('classroom/schedule/', ScheduleListView.as_view(), name='schedule_exclusive_view'), # ! For teachers only.
