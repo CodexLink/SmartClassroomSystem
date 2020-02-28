@@ -1,17 +1,36 @@
 from django.shortcuts import render
 from request import get as FetchData
+from requests.exceptions import RequestException
 from SCControlSystem.models import *
+from django.views.generic import DetailView
 
 
-class AuthenticateNode():
-    template_name = None 
-class MigrationScheduler():
-    template_name = None 
+class AuthenticateNode(DetailView):
+    template_name = None
+
+    def get_queryset(self):
+        return
+
+class MigrationScheduler(DetailView):
+    template_name = None
+    
+    def get_queryset(self):
+        return
 """
-class ():
-    template_name = None 
-class ():
-    template_name = None 
-class ():
-    template_name = None 
+class (DetailView):
+    template_name = None
+
+    def get_queryset(self):
+        return
+
+class (DetailView):
+    template_name = None
+
+    def get_queryset(self):
+        return
+
+class (DetailView):
+    template_name = None
+    def get_queryset(self):
+        return
 """
