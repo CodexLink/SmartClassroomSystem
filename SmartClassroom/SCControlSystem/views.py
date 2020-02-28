@@ -189,7 +189,7 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                         messages.info(self.request, 'CRAccessRequestChange')
                         return view_context
                     else:
-                        view_context['DeviceState'] = None
+                        messages.info(self.request, 'InvalidCommand')
                         return view_context
 
                 else:
@@ -198,7 +198,7 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                         messages.info(self.request, 'InvalidCommand')
                         return view_context
                     else:
-                        view_context['DeviceState'] = None
+                        view_context['ResponseMessage'] = None
                         messages.info(self.request, 'InvalidCommand')
                         return view_context
 
@@ -269,7 +269,7 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                     view_context['ResponseMessage'] = None
                     messages.info(self.request, 'InvalidCommand')
                     return view_context
-                    
+
         else:
             if self.sendOnce != True:
                 messages.info(self.request, 'DeviceRequestSuccess')
@@ -311,6 +311,7 @@ class ScheduleListView(PermissionRequiredMixin, ListView):
         view_context['user_class'] = current_user.user_role
         view_context['ClassInstance'] = self.more_context['ClassInstance']
         view_context['schedule_weekday_name'] = datetime.datetime.today().strftime('%A')
+        view_context['current_session_time'] = datetime.datetime.now().time().strftime('%I:%M%p')
         return view_context # ! Return the Context to be rendered later on.
 
     def handle_no_permission(self):
@@ -320,8 +321,8 @@ class ScheduleListView(PermissionRequiredMixin, ListView):
         else:
             messages.error(self.request, "PermissionAccessDenied")
         return super(ScheduleListView, self).handle_no_permission()
-# ! Authentication Classes
 
+# ! Authentication Classes
 # ! AuthUserView Requires LoginView To Provide Minimal Configuration
 class AuthUserView(LoginView):
     template_name = template_view # * Use Global Variable Later
