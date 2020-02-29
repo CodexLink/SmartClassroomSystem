@@ -392,31 +392,61 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
             return;
         }
         else
-        {
-            digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, LOW);
-            digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, LOW);
-            digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
-            AUTH_INST_CONT.AUTH_CR_DOOR = true;
-            AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = true;
+        { // Initialize Client for Sending POST Data
+            HTTPClient UpdatePOSTData;
 
-            LCD_DRVR.setCursor(0, 3);
-            if (!AUTH_INST_CONT.AUTH_FGPRT_STATE)
+            String DevUUID_Req = DEV_INST_CREDENTIALS.DEV_UUID;
+            String CrUUID_Req = DEV_INST_CREDENTIALS.DEV_CR_UUID;
+            String POSTArgs = DevUUID_Req + "/" + CrUUID_Req + "/" + AUTH_INST_CONT.AUTH_USER_ID_FNGRPRNT + "/LockState=" + AUTH_INST_CONT.AUTH_USER_ID_FNGRPRNT;
+            String RequestDest = "http://" + SERVER_IP_ADDRESS + ":" + SERVER_PORT + "/lockRemoteCall/" + POSTArgs;
+
+            UpdatePOSTData.begin(RequestDest);
+            UpdatePOSTData.addHeader("Content-Type", "text/plain");
+            uint8_t ReponseRequest = UpdatePOSTData.POST("NODEMCU POST REQ |> LOCK AUTHENTICATION");
+            String ResponseMsg = UpdatePOSTData.getString();
+            if (ReponseRequest == HTTP_CODE_OK)
             {
-                AUTH_INST_CONT.AUTH_FGPRT_STATE = true;
-                LCD_DRVR.print(F("> Access Authorized!"));
-                delay(1000);
+                Serial.print(F("HTTP Response |> "));
+                Serial.println(ReponseRequest);
+                Serial.print(F("HTTP Message |> "));
+                Serial.println(ResponseMsg);
+
+                digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, LOW);
+                digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, LOW);
+                digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
+                AUTH_INST_CONT.AUTH_CR_DOOR = true;
+                AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = true;
+
+                LCD_DRVR.setCursor(0, 3);
+                if (!AUTH_INST_CONT.AUTH_FGPRT_STATE)
+                {
+                    AUTH_INST_CONT.AUTH_FGPRT_STATE = true;
+                    LCD_DRVR.print(F("> Access Authorized!"));
+                    delay(1000);
+                }
+                else
+                {
+                    AUTH_INST_CONT.AUTH_CR_DOOR = false;
+                    AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = false;
+                    AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
+                    sketchForceStop = true;
+                    LCD_DRVR.print(F("> Locking Verified! "));
+                    delay(1000);
+                }
+                return;
+                // Add Relay ON State.
             }
             else
             {
-                AUTH_INST_CONT.AUTH_CR_DOOR = false;
-                AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = false;
-                AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
-                sketchForceStop = true;
-                LCD_DRVR.print(F("> Locking Verified! "));
-                delay(1000);
+                Serial.print(F("Query | IP Target |> "));
+                Serial.println(RequestDest);
+                Serial.print(F("HTTP Response |> "));
+                Serial.println(ReponseRequest);
+                Serial.print(F("HTTP Message |> "));
+                Serial.println(F("< Failed > | No Response."));
+                LCD_DRVR.print(F("> No Conn. To Srvr! "));
             }
-            return;
-            // Add Relay ON State.
+            UpdatePOSTData.end();
         }
     }
     else

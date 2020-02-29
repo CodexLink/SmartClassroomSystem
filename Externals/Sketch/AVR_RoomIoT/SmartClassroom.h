@@ -79,7 +79,6 @@ class SC_MCU_DRVR
     // ! Variables
     uint16_t __BAUD_RATE = CONST_VAL::NULL_CONTENT;
     uint8_t RELAY_TRIGGER[CONST_VAL::MAX_REL_CHANNEL] = {CONST_VAL::NULL_CONTENT}; // ! We'll be using 4-channel relay module
-
     // ! Object (Class) Instance
     LiquidCrystal_I2C LCD_DRVR{CONST_DEV_PARAM::LCD_ADDR, CONST_DEV_PARAM::LCD_W, CONST_DEV_PARAM::LCD_H};
     DHTesp TempSens;
@@ -130,23 +129,22 @@ public:
 
     struct AUTH_STATE
     {
-        bool AUTH_CR_DOOR = 0;        // 1 Unlocked, 0 Locked
-        bool AUTH_CR_ACCESS = 1;      // 1 Enabled, 0 Disabled
-        bool NON_AUTH_ELECTRIC_STATE = 0;      // 1 Enabled, 0 Disabled
-        bool AUTH_FGPRT_STATE = 0; // 1 For Currently Authenticated, Else Not Authenticated
+        bool AUTH_CR_DOOR = 0;              // 1 Unlocked, 0 Locked
+        bool AUTH_CR_ACCESS = 1;            // 1 Enabled, 0 Disabled
+        bool NON_AUTH_ELECTRIC_STATE = 0;   // 1 Enabled, 0 Disabled
+        bool AUTH_FGPRT_STATE = 0;          // 1 For Currently Authenticated, Else Not Authenticated
         uint16_t AUTH_USER_ID_FNGRPRNT = 0; // Must be set by user.
     } AUTH_INST_CONT;
 
-
     struct DEV_CREDENTIALS
     {
-        char DEV_CR_ASSIGNMENT[CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_LEN + 1] = "Q-5424"/**/;
-        char DEV_CR_SHORT_NAME[CONST_VAL::EEPROM_CR_ROOM_CHAR_LEN + 1] = "CompEng Lab"/**/;
-        char DEV_CR_UUID[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1] = "df826e0334b84f2689e64f2c6b24a6ab"/**/;
-        char DEV_UUID[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1] = "e776ffc28b524d318624bc39d7efea0e"/**/;
+        char DEV_CR_ASSIGNMENT[CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_LEN + 1] = "Q-5424" /**/;
+        char DEV_CR_SHORT_NAME[CONST_VAL::EEPROM_CR_ROOM_CHAR_LEN + 1] = "CompEng Lab" /**/;
+        char DEV_CR_UUID[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1] = "df826e0334b84f2689e64f2c6b24a6ab" /**/;
+        char DEV_UUID[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1] = "e776ffc28b524d318624bc39d7efea0e" /**/;
 
-        char AUTH_DEV_USN[CONST_VAL::EEPROM_DEV_USN_CHAR_LEN + 1] = "NodeMCU | Q-5424"/**/;
-        char AUTH_DEV_PWD[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1] = "e776ffc28b524d318624bc39d7efea0e"/**/;
+        char AUTH_DEV_USN[CONST_VAL::EEPROM_DEV_USN_CHAR_LEN + 1] = "NodeMCU | Q-5424" /**/;
+        char AUTH_DEV_PWD[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1] = "e776ffc28b524d318624bc39d7efea0e" /**/;
         uint16_t AUTH_USER_ID_FNGRPRNT = 0; // Must be set by user.
     } DEV_INST_CREDENTIALS;
 
@@ -156,6 +154,8 @@ public:
     // * They're converted to uint8_t or typecasted to uint8_t to be iterrable as object.
     uint8_t *structStorage = (uint8_t *)&DEV_INST_CREDENTIALS;
     bool sketchForceStop;
+    const String SERVER_IP_ADDRESS = "192.168.100.5";
+    const uint16_t SERVER_PORT = 8000;
 
     // General Function To Be Used.
     SC_MCU_DRVR(uint16_t BAUD_RATE, const char *SSID, const char *PW);
