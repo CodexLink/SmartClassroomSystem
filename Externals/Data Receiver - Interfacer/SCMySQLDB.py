@@ -32,6 +32,8 @@ class MySQLEssentialHelper(object):
                 return cursorSet.fetchone()
             elif FetchType == "FetchAll":
                 return cursorSet.fetchall()
+            else:
+                return self.MySQLDataWire.commit()
 
         except MySQLConnector.MySQLError as ExecErrMsg:
             print('Execution State Error | Please check your MySQL statements. | Detailed Info |> %s' % ExecErrMsg)

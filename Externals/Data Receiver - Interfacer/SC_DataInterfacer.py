@@ -58,14 +58,14 @@ class SC_IoTDriver(SCMySQL):
                 DevResp = DataGETReq('http://%s/RequestData' % (listCandidates['Device_IP_Address'],), timeout=self.TimeoutDevCheck, auth=(listCandidates['Device_Name'], listCandidates['Device_Unique_ID'].replace("-", "")))
                 if DevResp.ok:
                     print('Response Success.')
-                    self.MySQL_ExecuteState("UPDATE dev_decl SET Device_Status='Online' WHERE Device_Name='%s' AND Device_IP_Address='%s' AND Device_Unique_ID='%s'" % (listCandidates['Device_Name'], listCandidates['Device_IP_Address'], listCandidates['Device_Unique_ID']), "FetchFetchOne")
+                    self.MySQL_ExecuteState("UPDATE dev_decl SET Device_Status='Online' WHERE Device_Name='%s' AND Device_IP_Address='%s' AND Device_Unique_ID='%s'" % (listCandidates['Device_Name'], listCandidates['Device_IP_Address'], listCandidates['Device_Unique_ID']))
                     passCount += 1
                 else:
                     print('Response Failed / No Content.')
                     errCount += 1
 
             except RequestException:
-                self.MySQL_ExecuteState("UPDATE dev_decl SET Device_Status='Offline' WHERE Device_Name='%s' AND Device_IP_Address='%s' AND Device_Unique_ID='%s'" % (listCandidates['Device_Name'], listCandidates['Device_IP_Address'], listCandidates['Device_Unique_ID']), "FetchFetchOne")
+                self.MySQL_ExecuteState("UPDATE dev_decl SET Device_Status='Offline' WHERE Device_Name='%s' AND Device_IP_Address='%s' AND Device_Unique_ID='%s'" % (listCandidates['Device_Name'], listCandidates['Device_IP_Address'], listCandidates['Device_Unique_ID']))
                 print('Response Failed.')
                 errCount += 1
                 pass
