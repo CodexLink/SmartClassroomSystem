@@ -4,8 +4,9 @@
 
 #include "SmartClassroom.h"
 
-//SC_MCU_DRVR SC(9600, "HW_EcLi284255H_Cdx", "@Li2019_b015@");
-SC_MCU_DRVR SC(9600, "CodexLink", "01010101");
+SC_MCU_DRVR SC(9600, "HW_EcLi284255H_Cdx", "@Li2019_b015@");
+//SC_MCU_DRVR SC(9600, "CodexLink", "01010101");
+//SC_MCU_DRVR SC(9600, "SCMainServer", "TIP-QC-SC-NODE-PARENT");
 ESP8266WebServer NodeServer(80); // ! Make this public. Cause a lot of CONFLICTS.
 
 // Unreferenced / Unclassed functions
@@ -113,11 +114,6 @@ void HandleGET_SetInstance()
 
     // ! Two of these arguments has need to be supplied both before we can run the if statement scope under it.
     if (NodeServer.arg("dev_uid_replace") && NodeServer.arg("dev_name_replace"))
-    {
-    }
-
-    // This requires multiple logical function.
-    if (NodeServer.arg("cr_automate") == "")
     {
     }
 
