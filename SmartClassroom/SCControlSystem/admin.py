@@ -27,15 +27,15 @@ class ClassroomActionLogAttributes(admin.ModelAdmin):
 
 class ClassroomAttributes(admin.ModelAdmin):
     model = Classroom
-    list_display = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_AccessState', 'Classroom_Type', 'Classroom_Unique_ID')
+    list_display = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_AccessState', 'Classroom_Unique_ID')
     list_filter = ('Classroom_Name', 'Classroom_CompleteString', 'Classroom_Building', 'Classroom_Floor', 'Classroom_Number', 'Classroom_AccessState', 'Classroom_Type', 'Classroom_Unique_ID')
 
     readonly_fields = ('Classroom_CompleteString', 'Classroom_Unique_ID')
 
 class CourseScheduleAttributes(admin.ModelAdmin):
     model = CourseSchedule
-    list_display = ('CourseSchedule_CourseReference', 'CourseSchedule_Instructor', 'CourseSchedule_Room', 'CourseSchedule_Session_Start', 'CourseSchedule_Session_End', 'CourseSchedule_Lecture_Day')
-    list_filter = ('CourseSchedule_CourseReference', 'CourseSchedule_Instructor', 'CourseSchedule_Room', 'CourseSchedule_Session_Start', 'CourseSchedule_Session_End', 'CourseSchedule_Lecture_Day')
+    list_display = ('CourseSchedule_CourseReference', 'CourseSchedule_Instructor', 'CourseSchedule_Room', 'CourseSchedule_Session_Start', 'CourseSchedule_Session_End', 'CourseSchedule_Lecture_Day', 'CourseSchedule_Availability')
+    list_filter = ('CourseSchedule_CourseReference', 'CourseSchedule_Instructor', 'CourseSchedule_Room', 'CourseSchedule_Session_Start', 'CourseSchedule_Session_End', 'CourseSchedule_Lecture_Day', 'CourseSchedule_Availability')
 
     #readonly_fields = ('CourseSchedule_Unique_ID',)
 
