@@ -100,12 +100,10 @@ $('.filter-card-elements').on('input', function () {
     $('.log-grid, .schedule-grid').isotope({
         filter: function () {
             var titleSearch = $(this).find('.card-title').text();
-            if (!filterValue.length)
-            {
+            if (!filterValue.length) {
                 return true;
             }
-            else
-            {
+            else {
                 return (filterValue.toUpperCase() === titleSearch.toUpperCase()) ? true : false;
             }
         }
@@ -123,71 +121,78 @@ $('.close-sidebar').click(function (event) {
 
 // ! Live Dashboard Time with Progress Bar
 
+
+// ! Based from https://stackoverflow.com/questions/24980827/difference-between-two-times-as-percentage-in-javascript
+function totalSeconds(time) {
+    var parts = time.split(':');
+    return parts[0] * 3600 + parts[1] * 60 + parts[2];
+}
+
 // ! Set the Progress Bar First.
 $(document).ready(function (e) {
-    var TimeData = new Date();
-
-    var strInitTemplate = "Time is ";
-    var strSeperator = " | ";
-    var strLastTemplate = " before dismissal.";
-
-    var rawHour = TimeData.getHours();
-    var processedHour = (rawHour > 12) ? rawHour - 12 : rawHour;
-
-    var rawMin = TimeData.getMinutes().toString();
-    var processedMin = (rawMin.length <= 1) ? "0" + rawMin : rawMin;
-
-    var rawSec = TimeData.getSeconds().toString();
-    var processedSec = (rawSec.length <= 1) ? "0" + rawSec : rawSec;
-
-    var meridian = (rawHour > 12) ? "PM" : "AM";
-
-    var timeDiff = Math.abs(rawHour - 20); // This signifies all working time up until 8.
-    var strDiffLiteral = (rawHour >= 19) ? " hour" : " hours";
-    var strContent = strInitTemplate + processedHour + ":" + processedMin + ":" + processedSec + " " + meridian + strSeperator + timeDiff + strDiffLiteral + strLastTemplate;
-
-    // Progress Bar Width Setter
-    progressWidth = ((Math.abs(TimeData.getHours() / 22) * 100))
-
-    $('.time-width').width(progressWidth + '%');
-
-    return $('.local_time_display').text(strContent);
-})
+    getTimePercentage();
+});
 
 // ! Do Repeat the process of the function above.
-
-
 if (document.querySelector('.local_time_display') !== null) {
     setInterval(function (event) {
-        var TimeData = new Date();
-
-        var strInitTemplate = "Time is ";
-        var strSeperator = " | ";
-        var strLast_SessionDone = "Work Dismissed.";
-
-        var rawHour = TimeData.getHours();
-        var processedHour = (rawHour > 12) ? rawHour - 12 : rawHour;
-
-        var rawMin = TimeData.getMinutes().toString();
-        var processedMin = (rawMin.length <= 1) ? "0" + rawMin : rawMin;
-
-        var rawSec = TimeData.getSeconds().toString();
-        var processedSec = (rawSec.length <= 1) ? "0" + rawSec : rawSec;
-
-        var meridian = (rawHour > 12) ? "PM" : "AM";
-
-        var timeDiff = Math.abs(rawHour - 20); // This signifies all working time up until 8.
-        var strDiffLiteral = (rawHour >= 19) ? " hour before dismissal." : " hours before dismissal.";
-        var strContent = strInitTemplate + processedHour + ":" + processedMin + ":" + processedSec + " " + meridian + strSeperator + timeDiff + strDiffLiteral;
-
-        // Progress Bar Width Setter
-        progressWidth = ((Math.abs(TimeData.getHours() / 22) * 100))
-
-        $('.time-width').width(progressWidth + '%');
-
-        return $('.local_time_display').text(strContent);
+        getTimePercentage();
     }, 1000);
 }
+
+function getTimePercentage() {
+    var strInitTemplate = "Current Time is ";
+    var strSeperator = " | ";
+    var strSession = "Work Dismissed.";
+
+    var baseTime = new Date();
+
+    var rawHour = baseTime.getHours().toString();
+
+    var rawMin = baseTime.getMinutes().toString();
+    var baseMinModified = (rawMin.length <= 1) ? "0" + rawMin : rawMin;
+
+    var rawSec = baseTime.getSeconds().toString();
+    var baseSecModified = (rawSec.length <= 1) ? "0" + rawSec : rawSec;
+
+    var rawHourInt = parseInt(rawHour);
+    var processedHour = (rawHourInt > 12) ? rawHourInt - 12 : rawHourInt;
+    var baseHourModified = (processedHour.toString().length <= 1) ? "0" + processedHour.toString() : processedHour.toString();
+    var meridian = (rawHourInt > 12) ? " PM" : " AM";
+
+    var timeTodayReadCompatible = baseHourModified + ":" + baseMinModified + ":" + baseSecModified + meridian; // time elapsed
+
+
+
+
+    var timeToday = rawHour + ":" + baseMinModified + ":" + baseSecModified; // time elapsed
+    var timeTarget = "20:00:00"; // total time
+    var timePercentDiff = (100 * totalSeconds(timeToday) / totalSeconds(timeTarget)).toFixed(2);
+
+    if (baseTime.getHours() == 12) {
+        strSession = "Lunch Time."
+    }
+    else if (baseTime.getHours() > 20) {
+        strSession = "Work Dismissed."
+    }
+    else {
+        strSession = "Typical Work Hours"
+    }
+
+    $('.time-width').width(timePercentDiff + '%');
+
+    var strContent = strInitTemplate + timeTodayReadCompatible + strSeperator + strSession;
+    return $('.local_time_display').text(strContent);
+}
+
+$(document).ready(function (event) {
+    sal({
+        threshold: 0,
+        once: false,
+    });
+});
+
+
 
 // ! Clear Auth Credential Fields
 $('.auth-clear-entry').click(function (e) {
