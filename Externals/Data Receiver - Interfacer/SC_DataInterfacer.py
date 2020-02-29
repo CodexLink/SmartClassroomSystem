@@ -23,18 +23,18 @@ from SCMySQLDB import MySQLEssentialHelper as SCMySQL
 class SC_IoTDriver(SCMySQL):
     # On Starting Point we have to supply the given arguments to __init__() function.
     # ! Because we have to initialize the class from the object itself.
-    def __init__(self, COMPort=None, BaudRate=None, TimeoutCheck=5):
+    def __init__(self, COMPort=None, BaudRate=None, TimeoutCheck=2):
         super().__init__(ServerHost='localhost', UCredential='root', PCredential=None, DB_Target='sc_db') # ! We have to initialize superclass 'MySQLEssentialHelper' to gather functions from 'that' class.
 
         self.TimeoutDevCheck = TimeoutCheck
         return
 
     # ! First Step | Initialization | We check a list of NodeMCUs to be scanned.
-    def checkNodeConn(self):
+    def checkNodeConn(self, CheckBeforeReQueue=False):
         # ! Add Indicators. User actions will be dependent upon this.
         errCount = 0
         passCount = 0
-        devList = self.MySQL_ExecuteState("SELECT Device_Name, Device_IP_Address, Device_Unique_ID from dev_decl WHERE  Device_Status='Online'", "FetchAll")
+        devList = self.MySQL_ExecuteState("SELECT Device_Name, Device_IP_Address, Device_Unique_ID from dev_decl", "FetchAll")
 
         print("Device List | Checking...")
         if not len(devList):
@@ -43,38 +43,52 @@ class SC_IoTDriver(SCMySQL):
         else:
             print("Count Result | The dictionary contains %s devices to be scanned...\n" % (len(devList)))
 
+        print('Additional Step | Setting Timeout Based from CheckBeforeReQueue Parameter.')
+        self.TimeoutDevCheck = 1.3 if CheckBeforeReQueue else 2
+        print('Addtional Step | Timeout Set.\n')
+
     # * IF a device is not included to the list but WAS included to the DJango Database then we set their states as Unknown.
+        if CheckBeforeReQueue:
+            print('Required Reiteration | Device Requeueing...')
+
         for listCandidates in devList:
             try:
+
                 print('Device %s — %s | Checking... |  ' % (listCandidates['Device_Name'], listCandidates['Device_IP_Address']), end='')
                 DevResp = DataGETReq('http://%s/RequestData' % (listCandidates['Device_IP_Address'],), timeout=self.TimeoutDevCheck, auth=(listCandidates['Device_Name'], listCandidates['Device_Unique_ID'].replace("-", "")))
                 if DevResp.ok:
                     print('Response Success.')
+                    self.MySQL_ExecuteState("UPDATE dev_decl SET Device_Status='Online' WHERE Device_Name='%s' AND Device_IP_Address='%s' AND Device_Unique_ID='%s'" % (listCandidates['Device_Name'], listCandidates['Device_IP_Address'], listCandidates['Device_Unique_ID']), "FetchFetchOne")
                     passCount += 1
                 else:
                     print('Response Failed / No Content.')
                     errCount += 1
 
             except RequestException:
+                self.MySQL_ExecuteState("UPDATE dev_decl SET Device_Status='Offline' WHERE Device_Name='%s' AND Device_IP_Address='%s' AND Device_Unique_ID='%s'" % (listCandidates['Device_Name'], listCandidates['Device_IP_Address'], listCandidates['Device_Unique_ID']), "FetchFetchOne")
                 print('Response Failed.')
                 errCount += 1
                 pass
 
         print('\nDevice Checking Finished... (Success: %s, Failed: %s)\n' % (passCount, errCount))
+        if not CheckBeforeReQueue:
+            if passCount and errCount:
+                print("There's are some devices that didn't passed from the connection test. Are you sure you want to continue?")
+                print("NOTE |> They are still included from querying over but will be ignored or passed if they are still not responding from REQUESTs.")
+                userAcc = input(str("Input [Y/N] |> "))
+                return True if userAcc in ('Y', 'y') else False
 
-        if passCount and errCount:
-            print("There's are some devices that didn't passed from the connection test. Are you sure you want to continue?")
-            print("NOTE |> They are still included from querying over but will be ignored or passed if they are still not responding from REQUESTs.")
-            userAcc = input(str("Input [Y/N] |> "))
-            return True if userAcc in ('Y', 'y') else False
+            elif not passCount and errCount:
+                print("All devices were not able to pass from the connection test. Please check the device candidate information!")
+                Terminate()
+        else:
+            print("Device Requeue Done.")
+            return True
 
-        elif not passCount and errCount:
-            print("All devices were not able to pass from the connection test. Please check the device candidate information!")
-            Terminate()
 
     # ! Step 2 | Connect To Them Individual and Check For Datas
     def getNewData(self):
-        devMetaData = self.MySQL_ExecuteState("SELECT Device_Name, Device_IP_Address, Device_Unique_ID from dev_decl WHERE  Device_Status='Online'", "FetchAll")
+        devMetaData = self.MySQL_ExecuteState("SELECT Device_Name, Device_IP_Address, Device_Unique_ID from dev_decl WHERE Device_Status = 'Online'", "FetchAll")
         for listCandidates in devMetaData:
             try:
                 print('\nJob | Device Currently on Process Query is %s — %s'% (listCandidates['Device_Name'], listCandidates['Device_IP_Address'],))
@@ -149,8 +163,10 @@ if __name__ == '__main__':
         try:
             while 1:
                 SessionInstance.getNewData()
-                print('Device Query | Done. Waiting for 2 Minutes Before Re-Querying...\n')
-                delay(2 * 60) # ! 2 Minutes
+                SessionInstance.checkNodeConn(CheckBeforeReQueue=True) # Test All Connections To The IoT Devices.
+                print('Timeout | Resting for 30 Seconds...\n')
+                # Add Scheduler Checker Now.
+                delay(30) # ! 30 Seconds
         except:
             pass
     else:
