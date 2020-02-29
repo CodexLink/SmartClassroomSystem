@@ -75,20 +75,20 @@ BuildingFloors = (
 
 # ! Classroom Action Logs
 ClassroomActionTypes = (
-    ('Classroom was Opened by Toggle Lock.', 'Classroom was Opened by Toggle Lock.'),
-    ('Classroom was Closed by Toggle Lock.', 'Classroom was Closed by Toggle Lock.'),
-    ('Classroom was Opened by Fingerprint.', 'Classroom was Opened by Fingerprint.'),
-    ('Classroom Electricity was Turned On.', 'Classroom Electricity was Turned On.'),
-    ('Classroom Electricity was Turned Off.', 'Classroom Electricity was Turned Off.'),
-    ('Classroom was Closed by Fingerprint.', 'Classroom was Closed by Fingerprint.'),
-    ('Classroom was Closed by Fingerprint.', 'Classroom was Closed by Fingerprint.'),
-    ('Device was reset by a Staff.', 'Device was reset by a Staff.'),
-    ('Action: Set Room Automate to ON.', 'Action: Set Room Automate to ON.'),
-    ('Action: Set Room Automate to OFF.', 'Action: Set Room Automate to OFF.'),
-    ('Unauthorized Access Detected.', 'Unauthorized Access Detected.'),
-    ('Authorized Access Passed.', 'Authorized Access Passed.'),
-    ('Classroom Access was set to Disabled.', 'Classroom Access was set to Disabled.'),
-    ('Classroom Access was set to Enabled.', 'Classroom Access was set to Enabled.'),
+    ('Classroom was Opened by Toggle Lock.', 'Classroom was Opened by Toggle Lock.'), #0
+    ('Classroom was Closed by Toggle Lock.', 'Classroom was Closed by Toggle Lock.'), #1
+    ('Classroom was Opened by Fingerprint.', 'Classroom was Opened by Fingerprint.'), #2
+    ('Classroom was Closed by Fingerprint.', 'Classroom was Closed by Fingerprint.'), #3
+    ('Classroom Electricity was Turned On.', 'Classroom Electricity was Turned On.'), #4
+    ('Classroom Electricity was Turned Off.', 'Classroom Electricity was Turned Off.'), #5
+    ('Device was Reset by a Staff.', 'Device was reset by a Staff.'), #6
+    ('Classroom Access was set to Disabled.', 'Classroom Access was set to Disabled.'), #7
+    ('Classroom Access was set to Enabled.', 'Classroom Access was set to Enabled.'), #8
+    ('Unauthorized Device Reset Detected', 'Unauthorized Device Reset Detected'), #9
+    ('Unauthorized Access Change Detected', 'Unauthorized Access Change Detected'), #10
+    ('Unauthorized Access Detected.', 'Unauthorized Access Detected.'), #11
+    ('Authorized Access Passed.', 'Authorized Access Passed.'), #12
+
 )
 
 # ! Logging Level Declarations
@@ -167,6 +167,12 @@ ClassroomStates = (
 ClassroomAccessStates = (
     ("Enabled", "Enabled"),
     ("Disabled", "Disabled"),
+)
+
+ClassrooAvailabilityStates = (
+    ("Undetermined", "Undetermined"),
+    ("Available", "Available"),
+    ("Not Available", "Not Available"),
 )
 
 DeviceStates = (
