@@ -1,6 +1,37 @@
-// ! Room Scanner | By Janrey "CodexLink" Licas
-// * Created on 01/16/2019
-// For use in room scanning only.
+/*
+    ! Smart Classroom IoT Sketch | NodeSketch_SC.ino
+    * 01/16/2020 | Janrey "CodexLink" Licas | http://github.com/CodexLink
+
+    ! In Collaboration with
+        - Ronald Langaoan Jr. |> Hardware Designer and Manager
+        - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer
+        - Joshua Santos |> Hardware Manager and Builder
+        - Johnell Casey Murillo Panotes |> Hardware Assitant
+
+    @required_by   : Smart Classroom IoT Data Stream Handler | SC_DSH.py
+    @pre-requisites: Smart Classroom IoT Function Declarative Header | SmartClassroom.h
+                   : Smart Classroom IoT Function Definition | SmartClassroom.cpp
+
+    @description: A Sketch Designed To Associate with NodeMCU Devices to Communicate with Django Server.
+                : This sketch is served to many NodeMCU candidates to be used later.
+                : Each will have different configurations. From IP as Client, Target Schedule, Authentication ID and so on.
+                : Things won't work out if the DJango Server Properities Associated to the device that has this sketch has not the same configuration or properties.
+
+    ! Copyright (C) 2020  Janrey "CodexLink" Licas
+
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+
+    * You should have received a copy of the GNU General Public License
+    * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 
 #include "SmartClassroom.h"
 
@@ -87,7 +118,6 @@ void HandleGET_SetInstance()
         NodeServer.send(200, "text/plain", "ELECTRIC_STATE |> CHANGED TO 'DISABLED' |> OK");
     }
 
-
     // This disables all access from the classroom. The relays will be turned off.
     if (NodeServer.arg("cr_access") == "True")
     {
@@ -110,7 +140,6 @@ void HandleGET_SetInstance()
         SC.AUTH_INST_CONT.AUTH_CR_ACCESS = false;
         NodeServer.send(200, "text/plain", "CR_ACCESS |> CHANGED TO 'DISABLED' |> OK");
     }
-
 
     // ! Two of these arguments has need to be supplied both before we can run the if statement scope under it.
     if (NodeServer.arg("dev_uid_replace") && NodeServer.arg("dev_name_replace"))

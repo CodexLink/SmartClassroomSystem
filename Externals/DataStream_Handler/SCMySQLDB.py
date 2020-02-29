@@ -1,14 +1,37 @@
 """
-    ! Smart Classroom IoT Data Receiver | MySQL Wrapper | SCMySQLDB
-    Created by Janrey "CodexLink" Licas — https://github.com/CodexLink
+    ! Smart Classroom IoT Data Stream MySQL Wrapper | SCMySQLDB.py
+    02/29/2020 | Janrey "CodexLink" Licas | http://github.com/CodexLink
 
-#  A Wrapper Class that contains all MySQL functions. Created for Easy Debugging.
+    ! In Collaboration with
+        - Ronald Langaoan Jr. |> Hardware Designer and Manager
+        - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer
+        - Joshua Santos |> Hardware Manager and Builder
+        - Johnell Casey Murillo Panotes |> Hardware Assitant
+
+    @required_by: Smart Classroom IoT Data Stream Handler | SC_DSH.py
+    @descrip: A Wrapper Class that contains all MySQL functions.
+            : It was created to isolate the DB Code from Main Driver Code for SC_DSH.py
+            : This was also meant to be isolated for easy debugging.
+
+    Copyright (C) 2020  Janrey "CodexLink" Licas
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from sys import exit as Terminate
 
 import pymysql as MySQLConnector
-
 
 # ! This Class contains minimal functions that is wrapped. Unlike PyODBC, it contains additional function that can be used for better debugging experience.
 class MySQLEssentialHelper(object):

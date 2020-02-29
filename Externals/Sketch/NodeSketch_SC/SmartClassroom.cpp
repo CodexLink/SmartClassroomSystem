@@ -1,3 +1,36 @@
+/*
+    ! Smart Classroom IoT Function Definition | SmartClassroom.cpp
+    * 01/16/2020 | Janrey "CodexLink" Licas | http://github.com/CodexLink
+
+    ! In Collaboration with
+        - Ronald Langaoan Jr. |> Hardware Designer and Manager
+        - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer
+        - Joshua Santos |> Hardware Manager and Builder
+        - Johnell Casey Murillo Panotes |> Hardware Assitant
+
+    @required_by: Smart Classroom IoT Function Declarative Header | SmartClassroom.h
+                : Smart Classroom IoT Sketch | NodeSketch_SC.ino
+
+    @description: The library used to function the intention of the scanner device in Smart Classroom System.
+                : Each has environment scanning and scheduler sense incorporated with the DJango Server.
+                : This file only contains function definitions of a function declaratives from the first element of the @required_by.
+
+    ! Copyright (C) 2020  Janrey "CodexLink" Licas
+
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+
+    * You should have received a copy of the GNU General Public License
+    * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include "SmartClassroom.h"
 
 SoftwareSerial FP_WIRE(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::FNGR_RX_PIN, SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::FNGR_TX_PIN);
