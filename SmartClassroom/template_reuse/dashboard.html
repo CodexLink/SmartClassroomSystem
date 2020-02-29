@@ -2,7 +2,7 @@
 <div class="container content-offset">
     <div class="row row-cols-lg-2 row-cols-md-1 row-cols-sm-1 dashboard-grid">
         {% if user_role %}
-        <div class="dashboard-item col mb-auto">
+        <div class="dashboard-item col mb-auto" data-sal="fade" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card">
                 <div class="keep-content-top">
                     <div class="card-header border-0">
@@ -17,8 +17,8 @@
                                 aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <div class="container progress-container d-flex justify-content-between align-items-center">
-                            <span class="card-text text-black-secondary progress-label">Start — 7:00AM</span>
-                            <span class="card-text text-black-secondary progress-label">End — 8:00PM</span>
+                            <span class="card-text text-black-secondary progress-label">Day Start — 12:00AM</span>
+                            <span class="card-text text-black-secondary progress-label">Session End — 8:00PM</span>
                         </div>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
         </div>
         {% endif %}
         {% if user_role == "Professor" %}
-        <div class="dashboard-item col mb-auto">
+        <div class="dashboard-item col mb-auto" data-sal="fade" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card">
                 <div class="card-header border-0">
                     <h2 class="card-title">Your Actions</h2>
@@ -76,7 +76,7 @@
                 </div>
             </div>
         </div>
-        <div class="dashboard-grid dashboard-item col mb-auto">
+        <div class="dashboard-item col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card">
                 <div class="card-header border-0">
                     <h2 class="card-title">Your Schedule for Today<h2>
@@ -85,12 +85,12 @@
                 </div>
                 <div class="card-body list-group border-0" id="list-tab" role="tablist">
                     {% for ScheduleCandidates in schedule_candidates %}
-                    <a href="{% if ScheduleCandidates.CourseSchedule_Room.Classroom_State != 'Locked' %}{% url 'classroom_info_view' classUniqueID=ScheduleCandidates.CourseSchedule_Room.Classroom_Unique_ID %}{% else %}#{% endif %}" class="list-group-item list-group-item-action {% if forloop.first %}active{% endif %} {% if ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Offline' %}disabled{% endif %}">
+                    <a href="{% if ScheduleCandidates.CourseSchedule_Room.Classroom_State != 'Locked' or ScheduleCandidates.CourseSchedule_Availability == 'Available' %}{% url 'classroom_info_view' classUniqueID=ScheduleCandidates.CourseSchedule_Room.Classroom_Unique_ID %}{% else %}#{% endif %}" class="list-group-item list-group-item-action {% if forloop.first %}active{% endif %} {% if ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status == 'Offline' or ScheduleCandidates.CourseSchedule_Availability != 'Available' %}disabled{% endif %}">
                         <div class="d-flex w-100 justify-content-between">
                             <h6 class="mb-1 text-dark-primary">{{ ScheduleCandidates.CourseSchedule_CourseReference.Course_Code }} | {{ ScheduleCandidates.CourseSchedule_CourseReference.Course_Name }}</h6>
                         </div>
                         <p class="mb-1 d-flex justify-content-between align-items-center">Course Type: {{ ScheduleCandidates.CourseSchedule_CourseReference.Course_Type }}
-                            <span class="badge badge-primary badge-pill bg-{{ ScheduleCandidates.CourseSchedule_Room.Classroom_State|lower }}">Currently {{ ScheduleCandidates.CourseSchedule_Room.Classroom_State }}</span>
+                            <span class="badge badge-primary badge-pill bg-{{ ScheduleCandidates.CourseSchedule_Room.Classroom_State|lower }}">{% if ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status == "Offline" %}Recently {% else %}Currently {% endif %}{{ ScheduleCandidates.CourseSchedule_Room.Classroom_State }}</span>
                         </p>
                         <p class="mb-1 d-flex justify-content-between align-items-center">{{ ScheduleCandidates.CourseSchedule_Room.Classroom_CompleteString }} | {{ ScheduleCandidates.CourseSchedule_Section.Section_CompleteStringGroup }} | {{ ScheduleCandidates.CourseSchedule_Lecture_Day }} | {{ ScheduleCandidates.CourseSchedule_Session_Start }} — {{ ScheduleCandidates.CourseSchedule_Session_End }}
                             <span class="badge badge-primary badge-pill bg-{{ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status|lower}}">{{ ScheduleCandidates.CourseSchedule_Room.Classroom_Dev.Device_Status }} State</span>
@@ -118,7 +118,7 @@
             </div>
         </div>
         {% elif not user_role == "Professor" %}
-        <div class="dashboard-item col mb-auto">
+        <div class="dashboard-item col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card">
                 <div class="card-header border-0">
                     <h1 class="card-title text-black-primary">Classroom and Device Counter States</h1>
@@ -145,7 +145,7 @@
                 </div>
             </div>
         </div>
-        <div class="dashboard-item col mb-auto">
+        <div class="dashboard-item col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card">
                 <div class="card-header border-0">
                     <h2 class="card-title">Recent Staff Actions</h2>
@@ -179,7 +179,7 @@
                 </div>
             </div>
         </div>
-        <div class="dashboard-item col mb-auto">
+        <div class="dashboard-item col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card">
                 <div class="card-header border-0">
                     <h2 class="card-title">Device Candidate States</h2>
@@ -187,11 +187,11 @@
                 </div>
                 <ul class="nav nav-justified nav-tabs" id="justifiedTab" role="tablist">
                     <li class="nav-item">
-                        <a aria-controls="home" aria-selected="false" class="nav-link {% if not dev_online_candidates %} disabled {% elif not dev_offline_candidates %}active{% elif not dev_offline_candidates and not dev_online_candidates %}{% else %}active{% endif %}" data-toggle="tab"
+                        <a aria-controls="home" aria-selected="false" class="nav-link {% if not dev_online_candidates %} disabled {% elif not dev_offline_candidates %}active{% elif not dev_offline_candidates and not dev_online_candidates %}disabled{% elif dev_offline_candidates and dev_online_candidates %}active{% endif %}" data-toggle="tab"
                             href="#online-dev" id="online-dev-tab" role="tab">Online Devices</a>
                     </li>
                     <li class="nav-item">
-                        <a aria-controls="profile" aria-selected="false" class="nav-link {% if not dev_offline_candidates %} disabled {% elif not dev_online_candidates %}active{% elif not dev_offline_candidates and not dev_online_candidates %}{% else %}active{% endif %}" data-toggle="tab"
+                        <a aria-controls="profile" aria-selected="false" class="nav-link {% if not dev_offline_candidates %} disabled {% elif not dev_online_candidates %}active{% elif not dev_offline_candidates and not dev_online_candidates %}disabled{% elif dev_offline_candidates and dev_online_candidates %}{% endif %}" data-toggle="tab"
                             href="#offline-dev" id="profile-tab" role="tab">Offline Devices</a>
                     </li>
                 </ul>

@@ -2,10 +2,10 @@
     <div class="card-columns class-control-column">
         {% for ClassroomAttr in object_list %}
         {% if forloop.first %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="fade" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card">
                 <div class="card-body">
-                    <h2 class="card-title">{{ ClassroomAttr.CourseSchedule_Room.Classroom_Name }}</h2>
+                    <h2 class="card-title"> {{ ClassroomAttr.CourseSchedule_Room.Classroom_CompleteString }} | {{ ClassroomAttr.CourseSchedule_Room.Classroom_Name }}</h2>
                     <h3 class="card-subtitle text-black-secondary">Some small information that you must need to know.
                     </h3>
                     <p class="card-text text-black-primary">{% if user_class != "Professor" %} This classroom is
@@ -17,7 +17,7 @@
             </div>
         </div>
         {% if DeviceState == 'Online' %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card bg-success">
                 <div class="card-body">
                     <h2 class="card-title text-white-primary">Device is Online</h2>
@@ -28,7 +28,7 @@
             </div>
         </div>
         {% else %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card bg-danger">
                 <div class="card-body">
                     <h2 class="card-title text-white-primary">Device is Not Online or Connection Timed-Out!</h2>
@@ -43,7 +43,7 @@
         {% if ResponseMessage != 'RequestChangeSet' %}
         {% for message in messages %}
         {% if message.message == 'CRAccessRequestChange' %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card bg-warning">
                 <div class="card-body">
                     <h2 class="card-title text-white-primary">Classroom Access Alteration Request Accepted!</h2>
@@ -55,7 +55,7 @@
             </div>
         </div>
         {% elif message.message == 'LockStateRequestChange' %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card bg-disabled">
                 <div class="card-body">
                     <h2 class="card-title text-white-primary">Lock State Alteration Request Accepted!</h2>
@@ -68,7 +68,7 @@
             </div>
         </div>
         {% elif message.message == 'ElectricStateRequestChange' %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card bg-online">
                 <div class="card-body">
                     <h2 class="card-title text-white-primary">Electricity Alteration Accepted!</h2>
@@ -81,7 +81,7 @@
             </div>
         </div>
         {% elif message.message == 'DevRestartRequestChange' %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card bg-warning">
                 <div class="card-body">
                     <h2 class="card-title text-white-primary">Device Restart Accepted!</h2>
@@ -94,7 +94,7 @@
             </div>
         </div>
         {% elif message.message == 'RoomAutomationRequestChange' %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card bg-dark">
                 <div class="card-body">
                     <h2 class="card-title text-white-primary">Command Not Available.</h2>
@@ -104,7 +104,7 @@
             </div>
         </div>
         {% elif message.message == 'InvalidCommand' %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card bg-dark">
                 <div class="card-body">
                     <h2 class="card-title text-white-primary">Stop Right There!</h2>
@@ -115,7 +115,7 @@
             </div>
         </div>
         {% elif message.message == 'IllegalAccess' %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card bg-dark">
                 <div class="card-body">
                     <h2 class="card-title text-white-primary">Hold On, You Cannot Do This!</h2>
@@ -127,7 +127,7 @@
             </div>
         </div>
         {% elif message.message == 'ScheduleNotOnScope' %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card bg-danger">
                 <div class="card-body">
                     <h2 class="card-title text-white-primary">Your Schedule Is Out Of Scope</h2>
@@ -139,7 +139,7 @@
         {% endif %}
         {% endfor %}
         {% endif %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card">
                 <div class="card-header border-0">
                     <h2 class="card-title">Scanner Device Outputs</h2>
@@ -161,19 +161,18 @@
                         href="javascript:void(0)" role="tab">Recent Motion Detection<span
                             class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}warning{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}{{ PIRTTOutput }}{% else %}{% endif %}
                             second/s since
-                            {% if DeviceState == 'Online' %}{{ refresh_recent_time }}{% else %}—{% endif %}.</span></a>
+                            {% if DeviceState == 'Online' %}{{ current_session_time }}{% else %}—{% endif %}</span></a>
                     <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list"
                         href="javascript:void(0)" role="tab">Authentication State<span
                             class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}info{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}Currently
                             {{ AuthCRState }} with ID {{ UserScheduledID }}{% else %}Unknown{% endif %}</span></a>
                 </div>
                 <div class="card-actions border-top d-flex justify-content-between align-items-center">
-                    <span class="text-muted">Updated as of {{ refresh_recent_time }}. (The time you refereshed this
-                        page)</span>
+                    <span class="text-muted">Updated as of {{ current_session_time }}</span>
                 </div>
             </div>
         </div>
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card">
                 <div class="card-header border-0">
                     <h2 class="card-title">Classroom Device Options</h2>
@@ -205,7 +204,7 @@
         </div>
         {% endif %}
         {% empty %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card bg-danger">
                 <div class="card-body">
                     <h2 class="card-title text-white-primary">Classroom Controls Are Not Viable</h2>
@@ -219,7 +218,7 @@
         </div>
         {% endfor %}
         {% if not user_class == "Professor" %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="slide-up" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card">
                 <div class="card-header border-0">
                     <h2 class="card-title">Subjects Involved From This Room</h2>
@@ -261,7 +260,7 @@
             </div>
         </div>
         {% endif %}
-        <div class="col mb-auto">
+        <div class="col mb-auto" data-sal="fade-in" data-sal-duration="300" data-sal-easing="easeOutQuart">
             <div class="card">
                 <div class="card-header border-0">
                     <h2 class="card-title">Classroom Action Records</h2>
