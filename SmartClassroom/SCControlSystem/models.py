@@ -182,7 +182,7 @@ class CourseSchedule(models.Model):
     CourseSchedule_Session_Start = models.TimeField(verbose_name='Course Session Start Time', help_text='Refers to a time start session point.', null=True, blank=True)
     CourseSchedule_Session_End = models.TimeField(verbose_name='Course Session End Time', help_text='Refers to a time end session point.', null=True, blank=True)
     CourseSchedule_Lecture_Day = models.CharField(max_length=9, verbose_name='Course Lecture Day', help_text='Refers to a day in which the course session takes place.', null=True, blank=True, default=SessionDaysClassification[0], choices=SessionDaysClassification, validators=[MinLengthValidator(6), MaxLengthValidator(9)])
-
+    CourseSchedule_Availability = models.CharField(max_length=15, verbose_name='Course Schedule Access Availablility', help_text="Refers to a schedule being able to access based on professor time.", null=True, blank=True, default=' Undetermined', choices=ClassrooAvailabilityStates, editable=False, validators=[MinLengthValidator(9), MaxLengthValidator(15)])
     def __str__(self):
         return 'Schedule of %s | Handled by %s | Every %s | Time: %s-%s' % (self.CourseSchedule_CourseReference, self.CourseSchedule_Instructor, self.CourseSchedule_Lecture_Day, self.CourseSchedule_Session_Start, self.CourseSchedule_Session_End)
 
