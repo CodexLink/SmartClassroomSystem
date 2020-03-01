@@ -34,27 +34,47 @@
 from subprocess import Popen, PIPE, run
 import os
 import time
+from sys import platform as ReturnedOSName
 
 SERVER_IP = '0.0.0.0'
 SERVER_PORT = 8000
+
 try:
     os.system('CLS')
-    print("Launching Smart Classroom Data Receiver / Interfacer... ")
+    print("Smart Classroom IoT Data Stream Handler | SC_DSH.py")
+    print("02/29/2020 | Janrey 'CodexLink' Licas | http://github.com/CodexLink\n")
+    if ReturnedOSName == "win32":
+        print("OS Name | Detected Windows...\n")
+        print("Launching Smart Classroom Data Receiver / Interfacer... ")
 
-    os.chdir('Externals/DataStream_Handler/')
-    Popen("start python SC_DSH.py", stdin=PIPE, stdout=PIPE, shell=True)
-    print("Launched Instance of Smart Classroom Data Receiver / Interfacer")
+        os.chdir('Externals/DataStream_Handler/')
+        Popen("start python SC_DSH.py", stdin=PIPE, stdout=PIPE, shell=True)
+        print("Launched Instance of Smart Classroom Data Receiver / Interfacer")
 
-    print("\nLaunching Smart Classroom DJango Deploymnet Server... ")
-    os.chdir('../../SmartClassroom')
-    Popen("start python manage.py runserver %s:%s" % (SERVER_IP, SERVER_PORT), stdin=PIPE, stdout=PIPE, shell=True)
+        print("\nLaunching Smart Classroom DJango Deploymnet Server... ")
+        os.chdir('../../SmartClassroom')
+        Popen("start python manage.py runserver %s:%s" % (SERVER_IP, SERVER_PORT), stdin=PIPE, stdout=PIPE, shell=True)
 
-    print("Launched Instance of Smart Classroom DJango Deploymnet Server")
-    print("Press Control+C to kill all handler instance and this threader.\n")
-    while True:
-        pass
+        print("Launched Instance of Smart Classroom DJango Deploymnet Server\n")
+        print("Press Control+C to kill all handler instance and this threader.\n")
+        while True:
+            pass
 
-except (KeyboardInterrupt):
-    run("""TASKKILL /F /FI "WINDOWTITLE eq SmartClassroom Data Stream Handler" /T""", shell=False)
-    run("""TASKKILL /F /FI "WINDOWTITLE eq SmartClassroom Django Server Handler" /T""", shell=False)
-    print("All Threads Closed. Thank you!")
+    elif ReturnedOSName == "linux":
+        print("OS Name | Detected Linux..\n.")
+        print("Platform Instance for Linux Will Be Added Soon!")
+        exit(1)
+
+    else:
+        print("Platform Undetermined!")
+        exit(-1)
+
+except KeyboardInterrupt:
+    if ReturnedOSName == "win32":
+        run("""TASKKILL /F /FI "WINDOWTITLE eq SmartClassroom Data Stream Handler" /T""", shell=False)
+        run("""TASKKILL /F /FI "WINDOWTITLE eq SmartClassroom Django Server Handler" /T""", shell=False)
+        print("\nAll Threads Closed. Thank you!\n")
+
+    else:
+        print("Platform Undetermined!")
+        exit(-1)
