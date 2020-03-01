@@ -31,28 +31,30 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from subprocess import CREATE_NEW_CONSOLE, Popen, PIPE, STDOUT
+from subprocess import Popen, PIPE, run
 import os
-import signal
+import time
 
 SERVER_IP = '0.0.0.0'
 SERVER_PORT = 8000
 try:
+    os.system('CLS')
     print("Launching Smart Classroom Data Receiver / Interfacer... ")
 
-    os.chdir('Externals/DataStream_Handler')
-    StreamHandlerInstance = Popen("start python SC_DSH.py", creationflags=CREATE_NEW_CONSOLE, shell=True)
+    os.chdir('Externals/DataStream_Handler/')
+    Popen("start python SC_DSH.py", stdin=PIPE, stdout=PIPE, shell=True)
+    print("Launched Instance of Smart Classroom Data Receiver / Interfacer")
 
-    print("Launching DJango Instance with Arguments... ")
-
+    print("\nLaunching Smart Classroom DJango Deploymnet Server... ")
     os.chdir('../../SmartClassroom')
-    ServerHandlerInstance = Popen("start python manage.py runserver %s:%s" % (
-        SERVER_IP, SERVER_PORT), creationflags=CREATE_NEW_CONSOLE, shell=True)
+    Popen("start python manage.py runserver %s:%s" % (SERVER_IP, SERVER_PORT), stdin=PIPE, stdout=PIPE, shell=True)
 
-    print("Press Control+C to kill all instance and this threader.")
+    print("Launched Instance of Smart Classroom DJango Deploymnet Server")
+    print("Press Control+C to kill all handler instance and this threader.\n")
     while True:
         pass
-except KeyboardInterrupt:
-    Popen("TASKKILL /F /PID %s /T" % (StreamHandlerInstance.pid))
-    Popen("TASKKILL /F /PID %s /T" % (ServerHandlerInstance.pid))
+
+except (KeyboardInterrupt):
+    run("""TASKKILL /F /FI "WINDOWTITLE eq SmartClassroom Data Stream Handler" /T""", shell=False)
+    run("""TASKKILL /F /FI "WINDOWTITLE eq SmartClassroom Django Server Handler" /T""", shell=False)
     print("All Threads Closed. Thank you!")
