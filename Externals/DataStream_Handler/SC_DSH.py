@@ -40,6 +40,7 @@ from requests import get as DataGETReq
 from requests.exceptions import RequestException
 
 from SCMySQLDB import MySQLEssentialHelper as SCMySQL
+from os import system
 
 ## Main Driver Class
 class SC_IoTDriver(SCMySQL):
@@ -47,7 +48,7 @@ class SC_IoTDriver(SCMySQL):
     # ! Because we have to initialize the class from the object itself.
     def __init__(self, COMPort=None, BaudRate=None, TimeoutCheck=2):
         super().__init__(ServerHost='localhost', UCredential='root', PCredential=None, DB_Target='sc_db') # ! We have to initialize superclass 'MySQLEssentialHelper' to gather functions from 'that' class.
-
+        system("title SmartClassroom Data Stream Handler")
         self.TimeoutDevCheck = TimeoutCheck
         return
 
@@ -174,7 +175,7 @@ if __name__ == '__main__':
     CommandLine('CLS', shell=True)
     print('Smart Classroom IoT Data Receiver')
     print("Created by Ronald Langaoan, Janrey Tuazon Licas, Janos Angelo Garcia Jantoc and Johnell Casey Murillo Panotes, and Joshua Santos\n")
-    delay(1.3)
+    delay(0.5)
 
     # * We initialize this class with parameters. You can provide your own container by declaring at this scope.
     # ! Means you can change NodeDevCandidate Declaration Here.
