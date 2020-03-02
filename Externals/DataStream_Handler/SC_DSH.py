@@ -6,7 +6,7 @@
         - Ronald Langaoan Jr. |> Hardware Designer and Manager
         - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer
         - Joshua Santos |> Hardware Manager and Builder
-        - Johnell Casey Murillo Panotes |> Hardware Assitant
+        - Johnell Casey Murillo Panotes |> Hardware Assistant
 
     @required_files: SCMySQLDB.py
     @fork (base work): RGB Name Definition Finder | Python Interfacer Made for Embedded Systems | Prelim Case Study | https://github.com/CodexLink/RGBPotentIdentifier
@@ -32,6 +32,7 @@
 """
 
 import json
+from os import system
 from subprocess import call as CommandLine
 from sys import exit as Terminate
 from time import sleep as delay
@@ -40,7 +41,7 @@ from requests import get as DataGETReq
 from requests.exceptions import RequestException
 
 from SCMySQLDB import MySQLEssentialHelper as SCMySQL
-from os import system
+
 
 ## Main Driver Class
 class SC_IoTDriver(SCMySQL):
@@ -67,7 +68,7 @@ class SC_IoTDriver(SCMySQL):
             print("Count Result | The dictionary contains %s devices to be scanned...\n" % (len(devList)))
 
         print('Additional Step | Setting Timeout Based from CheckBeforeReQueue Parameter.')
-        self.TimeoutDevCheck = 1.3 if CheckBeforeReQueue else 2
+        self.TimeoutDevCheck = 0.5 if CheckBeforeReQueue else 1.5
         print('Addtional Step | Timeout Set.\n')
 
     # * IF a device is not included to the list but WAS included to the DJango Database then we set their states as Unknown.
@@ -187,9 +188,9 @@ if __name__ == '__main__':
             while 1:
                 SessionInstance.getNewData()
                 SessionInstance.checkNodeConn(CheckBeforeReQueue=True) # Test All Connections To The IoT Devices.
-                print('Timeout | Resting for 30 Seconds...\n')
+                print('Timeout | Resting for 5 Seconds...\n')
                 # Add Scheduler Checker Now.
-                delay(30) # ! 30 Seconds
+                delay(5) # ! 5 Seconds
         except:
             pass
     else:

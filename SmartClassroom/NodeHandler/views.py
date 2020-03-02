@@ -55,7 +55,7 @@ class NodeMultiAuthenticator(TemplateView):
 
             classroomPointerInstance = Classroom.objects.filter(Classroom_Unique_ID=validable_CRUUID, Classroom_Dev__Device_Unique_ID=validable_NodeUUID).values('Classroom_CompleteString').distinct()
             professorReference = CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=userInstance.first_name, CourseSchedule_Instructor__middle_name=userInstance.middle_name, CourseSchedule_Instructor__last_name=userInstance.last_name, CourseSchedule_Room=classroomPointerInstance[0]['Classroom_CompleteString'])[0]
-            recordInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[2][0] if context_RoomLockState else ClassroomActionTypes[3][0], ActionLevel=LevelAlert[0][0], Course_Reference=professorReference)
+            recordInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[3][0] if context_RoomLockState else ClassroomActionTypes[2][0], ActionLevel=LevelAlert[0][0], Course_Reference=professorReference)
 
             print("Execution | Action Recorded to User ID: %s" % (self.kwargs['GivenContextLockState'],))
             print("Process | All Done!!!")

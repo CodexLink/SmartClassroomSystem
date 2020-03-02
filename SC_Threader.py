@@ -6,7 +6,7 @@
         - Ronald Langaoan Jr. |> Hardware Designer and Manager
         - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer
         - Joshua Santos |> Hardware Manager and Builder
-        - Johnell Casey Murillo Panotes |> Hardware Assitant
+        - Johnell Casey Murillo Panotes |> Hardware Assistant
 
     @required_files: SCMySQLDB.py
     @fork (base work): RGB Name Definition Finder | Python Interfacer Made for Embedded Systems | Prelim Case Study | https://github.com/CodexLink/RGBPotentIdentifier
@@ -31,9 +31,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from subprocess import Popen, PIPE, run
 import os
 import time
+from subprocess import PIPE, Popen, run
 from sys import platform as ReturnedOSName
 
 SERVER_IP = '0.0.0.0'
@@ -41,6 +41,7 @@ SERVER_PORT = 8000
 
 try:
     os.system('CLS')
+    os.system('title Smart Classroom IoT Data Stream Handler')
     print("Smart Classroom IoT Data Stream Handler | SC_DSH.py")
     print("02/29/2020 | Janrey 'CodexLink' Licas | http://github.com/CodexLink\n")
     if ReturnedOSName == "win32":

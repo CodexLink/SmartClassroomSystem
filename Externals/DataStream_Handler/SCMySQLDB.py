@@ -6,7 +6,7 @@
         - Ronald Langaoan Jr. |> Hardware Designer and Manager
         - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer
         - Joshua Santos |> Hardware Manager and Builder
-        - Johnell Casey Murillo Panotes |> Hardware Assitant
+        - Johnell Casey Murillo Panotes |> Hardware Assistant
 
     @required_by: Smart Classroom IoT Data Stream Handler | SC_DSH.py
     @descrip: A Wrapper Class that contains all MySQL functions.
