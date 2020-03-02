@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-body">
                     <h2 class="card-title"> {{ ClassroomAttr.CourseSchedule_Room.Classroom_CompleteString }} | {{ ClassroomAttr.CourseSchedule_Room.Classroom_Name }}</h2>
-                    <h3 class="card-subtitle text-black-secondary">Some small information that you must need to know.
+                    <h3 class="card-subtitle text-black-secondary">General Information that you need to know.
                     </h3>
                     <p class="card-text text-black-primary">{% if user_class != "Professor" %} This classroom is
                         currently associated with the device
@@ -143,8 +143,7 @@
             <div class="card">
                 <div class="card-header border-0">
                     <h2 class="card-title">Scanner Device Outputs</h2>
-                    <h3 class="card-subtitle text-black-secondary">Sensors available in the device. Last readings were
-                        saved and in the database.</h3>
+                    <h3 class="card-subtitle text-black-secondary">Environmental Data that are available from the scanner provided to this room.</h3>
                 </div>
                 <!-- Insert some extra buttons for admin -->
                 <div class="card-body list-group border-0" id="list-tab" role="tablist">
@@ -158,10 +157,9 @@
                         href="javascript:void(0)" role="tab">Calculated Heat Index<span
                             class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}danger{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}{{ HeatInxOutput }}{% else %}—{% endif %}°C</span></a>
                     <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list"
-                        href="javascript:void(0)" role="tab">Recent Motion Detection<span
-                            class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}warning{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}{{ PIRTTOutput }}{% else %}{% endif %}
-                            second/s since
-                            {% if DeviceState == 'Online' %}{{ current_session_time }}{% else %}—{% endif %}</span></a>
+                        href="javascript:void(0)" role="tab">Motion Detection Probability Breakdown<span
+                            class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}warning{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}{% else %}{% endif %}
+                            {% if DeviceState == 'Online' %}50{% else %}—{% endif %}% | 5 Passed, 5 Failed</span></a>
                     <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list"
                         href="javascript:void(0)" role="tab">Authentication State<span
                             class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}info{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}Currently
@@ -178,7 +176,7 @@
                     <h2 class="card-title">Classroom Device Options</h2>
                     <h3 class="card-subtitle text-black-secondary">{% if user_class == "ITSO Supervisor" %}If you're
                         looking forward to restart the classroom device or change classroom access, you need an
-                        administrator to do that!{% else %}For each actions that you commit, will be recorded by the
+                        administrator to do that!{% else %}Each actions that intend to commit, will be recorded by the
                         system!{% endif %}</h3>
                 </div>
                 <!-- Insert some extra buttons for admin -->
@@ -222,8 +220,7 @@
             <div class="card">
                 <div class="card-header border-0">
                     <h2 class="card-title">Subjects Involved From This Room</h2>
-                    <h3 class="card-subtitle text-black-secondary">A list of subjects along with instructors who are
-                        uses this room.
+                    <h3 class="card-subtitle text-black-secondary">A set of subjects along with professors who take part of using this room.
                     </h3>
                 </div>
                 <div class="card-body list-group border-0" id="list-tab" role="tablist">
@@ -265,7 +262,7 @@
                 <div class="card-header border-0">
                     <h2 class="card-title">Classroom Action Records</h2>
                     <h3 class="card-subtitle text-black-secondary">A set of actions made by
-                        {% if not user_class == "Professor" %}people{% else %}you{% endif %}, recently recorded by the
+                        {% if not user_class == "Professor" %}various staffs{% else %}you{% endif %}, recently recorded by the
                         system.
                     </h3>
                 </div>
