@@ -226,7 +226,7 @@ bool SC_MCU_DRVR::SketchTimeCheck(uint32_t TimeIntervalToMeet)
         sketchForceStop = false;
         sketchRelease = true;
         Serial.println(F("Sketch Time Process Stopped."));
-        return true;
+        return false;
     }
 
     if (sketchRelease)
