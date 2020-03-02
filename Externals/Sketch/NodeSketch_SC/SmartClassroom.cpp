@@ -196,21 +196,32 @@ inline void SC_MCU_DRVR::saveMetaData()
 
 bool SC_MCU_DRVR::checkPresence()
 {
-    if (SketchTimeCheck(CONST_VAL::SCAN_PROC_REQUIRED) && !ENV_INST_CONT.PIR_OPTPT)
+    if (SketchTimeCheck(CONST_VAL::PIR_TRIGGER_SECONDS))
     {
-        //AUTH_INST_CONT.AUTH_CR_DOOR = !AUTH_INST_CONT.AUTH_CR_DOOR;
         digitalWrite(RELAY_FRST_PIN, HIGH);
         digitalWrite(RELAY_SCND_PIN, HIGH);
         digitalWrite(RELAY_THRD_PIN, HIGH);
         AUTH_INST_CONT.AUTH_CR_DOOR = false;
         AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
-        LCD_DRVR.setCursor(0, 3);
-        LCD_DRVR.print(F("> No Presence Dtctd!"));
-        delay(1000);
-        return false;
+
+        if (PIR_isPassed())
+        {
+
+            LCD_DRVR.setCursor(0, 3);
+            LCD_DRVR.print(F("> No Presence Dtctd!"));
+            delay(1000);
+            return false;
+        }
+        else
+        {
+            // Do something with the millis() double the value based on given millis();
+            delay(1000);
+            return true;
+        }
     }
     else
     {
+        PIR_updateArray();
         return true;
     }
 }
@@ -247,6 +258,7 @@ bool SC_MCU_DRVR::SketchTimeCheck(uint32_t TimeIntervalToMeet)
     {
         sketchRelease = true;
         sketchPreviousHit = 0;
+        Serial.println(F("Sketch Time Process Finished From Target Time!"));
         return true;
     }
     else
@@ -514,4 +526,33 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
         LCD_DRVR.print(F("> Ready.            "));
     }
     return;
+}
+
+void SC_MCU_DRVR::PIR_updateArray()
+{
+    PIR_outputState();
+    return;
+}
+void SC_MCU_DRVR::PIR_outputState()
+{
+    return;
+}
+
+bool SC_MCU_DRVR::PIR_isPassed()
+{
+    uint8_t Bool_TrueCount = CONST_VAL::NULL_CONTENT, Bool_FalseCount = CONST_VAL::NULL_CONTENT;
+    float Calcd_Percentage = 0;
+
+    for (size_t PIR_ARR_ELEM = CONST_VAL::NULL_CONTENT; PIR_ARR_ELEM < CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS; PIR_ARR_ELEM++)
+    {
+
+        (PIR_ARR_OUTPUT[PIR_ARR_ELEM]) ? Bool_TrueCount++ : Bool_FalseCount++;
+        PIR_ARR_OUTPUT[PIR_ARR_ELEM] = 0;
+        // Then clear the PIR sensor array state by for loop again.
+    }
+
+    // Do Condition Shorthand here for Return Statement.
+    Calcd_Percentage = (Bool_TrueCount + Bool_FalseCount) / CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS;
+
+    return true;
 }

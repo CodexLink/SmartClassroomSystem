@@ -66,7 +66,8 @@ class SC_MCU_DRVR
         EEPROM_CR_ROOM_CHAR_LEN = 11,
         EEPROM_DEV_USN_CHAR_LEN = 16,
         EEPROM_DEV_UID_CHAR_LEN = 32,
-        SCAN_PROC_REQUIRED = 600000,
+        PIR_TRIGGER_SECONDS = 300000,
+        PIR_DIVIDED_REQUIRED_OUTPUTS = 10,
         // It is always good to skip one byte before getting another data.
         // ! How does this work?
         /*
@@ -111,7 +112,7 @@ class SC_MCU_DRVR
 
     // ! Variables
     uint16_t __BAUD_RATE = CONST_VAL::NULL_CONTENT;
-    uint8_t RELAY_TRIGGER[CONST_VAL::MAX_REL_CHANNEL] = {CONST_VAL::NULL_CONTENT}; // ! We'll be using 4-channel relay module
+
     // ! Object (Class) Instance
     LiquidCrystal_I2C LCD_DRVR{CONST_DEV_PARAM::LCD_ADDR, CONST_DEV_PARAM::LCD_W, CONST_DEV_PARAM::LCD_H};
     DHTesp TempSens;
@@ -181,16 +182,23 @@ public:
         uint16_t AUTH_USER_ID_FNGRPRNT = 0; // Must be set by user.
     } DEV_INST_CREDENTIALS;
 
-    // ! Referrable to saveMetaData and retrieveMetaData
 
+    // ! Referrable to saveMetaData and retrieveMetaData
     // ! The code below is a uin8_t (unsigned char pointer variable) that stores the address of the struct DEV_CREDENTIALS.
     // * They're converted to uint8_t or typecasted to uint8_t to be iterrable as object.
     uint8_t *structStorage = (uint8_t *)&DEV_INST_CREDENTIALS;
     bool sketchForceStop;
+
+    // Make a struct for this one.
     const String SERVER_IP_ADDRESS = "192.168.100.5";
     const uint16_t SERVER_PORT = 8000;
 
-    // General Function To Be Used.
+    bool PIR_ARR_OUTPUT[CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS] = {0};
+    //# of True +0 # of False
+    /* PIR Calculation */
+
+
+    // Constructor
     SC_MCU_DRVR(uint16_t BAUD_RATE, const char *SSID, const char *PW);
     void begin();
     bool mntndWiFiConnection();
@@ -205,6 +213,12 @@ private:
 
     bool checkPresence();
     bool checkWiFiConnection();
+
+    // Outputs PIR Array Set
+    void PIR_updateArray();
+    void PIR_outputState();
+    // Checks if PIR pass the percentage to check if we have to maintain the state of the classroom.
+    bool PIR_isPassed();
     //void InterpretData(DataInterpretTypes DataType);
 };
 
