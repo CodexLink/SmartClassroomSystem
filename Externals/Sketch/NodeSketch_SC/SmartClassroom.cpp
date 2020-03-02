@@ -49,8 +49,8 @@ void SC_MCU_DRVR::begin()
     Serial.begin(__BAUD_RATE);
 
     Serial.println();
-    Serial.println(F("Smart Classroom IoT Function Definition | SmartClassroom.cpp"));
-    Serial.println(F("01/16/2020 | Janrey 'CodexLink' Licas | http://github.com/CodexLink"));
+    Serial.println(F("Smart Classroom IoT Sketch | NodeSketch_SC.ino"));
+    Serial.println(F("01/16/2020 | By Janrey 'CodexLink' Licas | http://github.com/CodexLink"));
 
     Serial.println(F("In Collaboration with:"));
     Serial.println(F("    - Ronald Langaoan Jr. |> Hardware Designer and Manager"));

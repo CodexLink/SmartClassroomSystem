@@ -42,8 +42,15 @@ SERVER_PORT = 8000
 try:
     os.system('CLS')
     os.system('title Smart Classroom IoT Data Stream Handler')
+
     print("Smart Classroom IoT Data Stream Handler | SC_DSH.py")
-    print("02/29/2020 | Janrey 'CodexLink' Licas | http://github.com/CodexLink\n")
+    print('02/29/2020 | By Janrey "CodexLink" Licas | http://github.com/CodexLink\n')
+    print('In Collaboration with')
+    print('    - Ronald Langaoan Jr. |> Hardware Designer and Manager')
+    print('    - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer')
+    print('    - Joshua Santos |> Hardware Manager and Builder')
+    print('    - Johnell Casey Murillo Panotes |> Hardware Assistant\n')
+
     if ReturnedOSName == "win32":
         print("OS Name | Detected Windows...\n")
         print("Launching Smart Classroom Data Receiver / Interfacer... ")
