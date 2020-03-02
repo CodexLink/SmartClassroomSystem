@@ -6,7 +6,7 @@
         - Ronald Langaoan Jr. |> Hardware Designer and Manager
         - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer
         - Joshua Santos |> Hardware Manager and Builder
-        - Johnell Casey Murillo Panotes |> Hardware Assitant
+        - Johnell Casey Murillo Panotes |> Hardware Assistant
 
     @required_by: Smart Classroom IoT Function Declarative Header | SmartClassroom.h
                 : Smart Classroom IoT Sketch | NodeSketch_SC.ino
@@ -47,6 +47,17 @@ SC_MCU_DRVR::SC_MCU_DRVR(uint16_t BAUD_RATE, const char *SSID, const char *PW)
 void SC_MCU_DRVR::begin()
 {
     Serial.begin(__BAUD_RATE);
+
+    Serial.println();
+    Serial.println(F("Smart Classroom IoT Function Definition | SmartClassroom.cpp"));
+    Serial.println(F("01/16/2020 | Janrey 'CodexLink' Licas | http://github.com/CodexLink"));
+
+    Serial.println(F("In Collaboration with:"));
+    Serial.println(F("    - Ronald Langaoan Jr. |> Hardware Designer and Manager"));
+    Serial.println(F("    - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer"));
+    Serial.println(F("    - Joshua Santos |> Hardware Manager and Builder"));
+    Serial.println(F("    - Johnell Casey Murillo Panotes |> Hardware Assistant"));
+
     LCD_DRVR.begin();
     WiFi.begin(WIFI_INST_STRUCT.WIFI_SSID, WIFI_INST_STRUCT.WIFI_PW); //WiFi connection
     FP_WIRE.begin(__BAUD_RATE);
@@ -194,11 +205,14 @@ bool SC_MCU_DRVR::checkPresence()
         AUTH_INST_CONT.AUTH_CR_DOOR = false;
         AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
         LCD_DRVR.setCursor(0, 3);
-        LCD_DRVR.print(F("> No Presence...    "));
+        LCD_DRVR.print(F("> No Presence Dtctd!"));
         delay(1000);
         return false;
     }
-    return true;
+    else
+    {
+        return true;
+    }
 }
 
 bool SC_MCU_DRVR::SketchTimeCheck(uint32_t TimeIntervalToMeet)
@@ -209,29 +223,30 @@ bool SC_MCU_DRVR::SketchTimeCheck(uint32_t TimeIntervalToMeet)
 
     if (sketchForceStop)
     {
-        Serial.println(F("Sketch Time Process Stopper Initialized."));
         sketchForceStop = false;
         sketchRelease = true;
+        Serial.println(F("Sketch Time Process Stopped."));
         return true;
     }
 
     if (sketchRelease)
     {
-        sketchRelease = false;
         sketchPreviousHit = sketchBaseTime;
+        sketchRelease = false;
     }
 
     Serial.print(F("Sketch Time: "));
     Serial.print(sketchBaseTime);
     Serial.print(F(" - "));
     Serial.print(sketchPreviousHit);
-    Serial.print(F(" > "));
     Serial.print(F(" = "));
-    Serial.println(sketchBaseTime - sketchPreviousHit);
-
+    Serial.print(sketchBaseTime - sketchPreviousHit);
+    Serial.print(F(" |> Required Time To Meet: "));
+    Serial.println(TimeIntervalToMeet);
     if (!sketchRelease && (uint_fast32_t)(sketchBaseTime - sketchPreviousHit) >= TimeIntervalToMeet)
     {
         sketchRelease = true;
+        sketchPreviousHit = 0;
         return true;
     }
     else
@@ -416,12 +431,8 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
 
         if (rc != GT5X_OK)
         {
-            digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, HIGH);
-            digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, HIGH);
-            digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, HIGH);
             LCD_DRVR.setCursor(0, 3);
-            AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
-            LCD_DRVR.print(F("> Invalid UID!"));
+            LCD_DRVR.print(F("> Invalid UID!      "));
             return;
         }
         else
@@ -430,7 +441,7 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
 
             String DevUUID_Req = DEV_INST_CREDENTIALS.DEV_UUID;
             String CrUUID_Req = DEV_INST_CREDENTIALS.DEV_CR_UUID;
-            String POSTArgs = DevUUID_Req + "/" + CrUUID_Req + "/" + AUTH_INST_CONT.AUTH_USER_ID_FNGRPRNT + "/LockState=" + AUTH_INST_CONT.AUTH_USER_ID_FNGRPRNT;
+            String POSTArgs = DevUUID_Req + "/" + CrUUID_Req + "/" + AUTH_INST_CONT.AUTH_USER_ID_FNGRPRNT + "/LockState=" + AUTH_INST_CONT.AUTH_CR_DOOR;
             String RequestDest = "http://" + SERVER_IP_ADDRESS + ":" + SERVER_PORT + "/lockRemoteCall/" + POSTArgs;
 
             UpdatePOSTData.begin(RequestDest);
@@ -444,30 +455,33 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
                 Serial.print(F("HTTP Message |> "));
                 Serial.println(ResponseMsg);
 
-                digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, LOW);
-                digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, LOW);
-                digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
-                AUTH_INST_CONT.AUTH_CR_DOOR = true;
-                AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = true;
-
                 LCD_DRVR.setCursor(0, 3);
                 if (!AUTH_INST_CONT.AUTH_FGPRT_STATE)
                 {
+                    digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, LOW);
+                    digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, LOW);
+                    digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
+                    AUTH_INST_CONT.AUTH_CR_DOOR = true;
+                    AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = true;
                     AUTH_INST_CONT.AUTH_FGPRT_STATE = true;
                     LCD_DRVR.print(F("> Access Authorized!"));
-                    delay(1000);
+                    checkPresence();
+                    delay(2000);
                 }
                 else
                 {
+                    digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, HIGH);
+                    digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, HIGH);
+                    digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, HIGH);
                     AUTH_INST_CONT.AUTH_CR_DOOR = false;
                     AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = false;
                     AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
                     sketchForceStop = true;
-                    LCD_DRVR.print(F("> Locking Verified! "));
-                    delay(1000);
+                    LCD_DRVR.print(F("> Locking Commenced!"));
+                    checkPresence();
+                    delay(2000);
                 }
                 return;
-                // Add Relay ON State.
             }
             else
             {
@@ -477,51 +491,28 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
                 Serial.println(ReponseRequest);
                 Serial.print(F("HTTP Message |> "));
                 Serial.println(F("< Failed > | No Response."));
-                LCD_DRVR.print(F("> No Conn. To Srvr! "));
+                LCD_DRVR.setCursor(0, 3);
+                LCD_DRVR.print(F("> No Conn To Server!"));
+                delay(2000);
             }
             UpdatePOSTData.end();
         }
     }
+    else if (!AUTH_INST_CONT.AUTH_CR_ACCESS)
+    {
+        LCD_DRVR.setCursor(0, 3);
+        LCD_DRVR.print(F("> Access Disabled!  "));
+    }
+    else if (AUTH_INST_CONT.AUTH_FGPRT_STATE)
+    {
+        LCD_DRVR.setCursor(0, 3);
+        checkPresence();
+        LCD_DRVR.print(F("> InUse. Lock Ready."));
+    }
     else
     {
         LCD_DRVR.setCursor(0, 3);
-        if (!AUTH_INST_CONT.AUTH_CR_ACCESS)
-        {
-            LCD_DRVR.print(F("> Access Disabled!  "));
-        }
-        else
-        {
-            if (AUTH_INST_CONT.AUTH_FGPRT_STATE)
-            {
-                if (checkPresence() && FPController.is_pressed() && AUTH_INST_CONT.AUTH_CR_ACCESS)
-                {
-                    uint16_t rc = FPController.capture_finger();
-                    if (rc != GT5X_OK)
-                    {
-                        return;
-                    }
-                    rc = FPController.verify_finger_with_template(AUTH_INST_CONT.AUTH_USER_ID_FNGRPRNT);
-                    if (rc != GT5X_OK)
-                    {
-                        LCD_DRVR.print(F("> Invalid UID!"));
-                    }
-                    else
-                    {
-                        AUTH_INST_CONT.AUTH_FGPRT_STATE = true;
-                        sketchForceStop = true;
-                        LCD_DRVR.print(F("> Locking Verified! "));
-                    }
-                }
-                else
-                {
-                    LCD_DRVR.print(F("> InUse. Lock Ready."));
-                }
-            }
-            else
-            {
-                LCD_DRVR.print(F("> Ready.            "));
-            }
-        }
-        return;
+        LCD_DRVR.print(F("> Ready.            "));
     }
+    return;
 }
