@@ -47,9 +47,18 @@ from SCMySQLDB import MySQLEssentialHelper as SCMySQL
 class SC_IoTDriver(SCMySQL):
     # On Starting Point we have to supply the given arguments to __init__() function.
     # ! Because we have to initialize the class from the object itself.
-    def __init__(self, COMPort=None, BaudRate=None, TimeoutCheck=2):
+    def __init__(self, COMPort=None, BaudRate=None, TimeoutCheck=0.8):
         super().__init__(ServerHost='localhost', UCredential='root', PCredential=None, DB_Target='sc_db') # ! We have to initialize superclass 'MySQLEssentialHelper' to gather functions from 'that' class.
+
         system("title SmartClassroom Data Stream Handler")
+
+        print('Smart Classroom IoT Data Stream Handler | SC_DSH.py')
+        print('02/29/2020 | By Janrey "CodexLink" Licas | http://github.com/CodexLink\n')
+        print('In Collaboration with')
+        print('    - Ronald Langaoan Jr. |> Hardware Designer and Manager')
+        print('    - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer')
+        print('    - Joshua Santos |> Hardware Manager and Builder')
+        print('    - Johnell Casey Murillo Panotes |> Hardware Assistant\n')
         self.TimeoutDevCheck = TimeoutCheck
         return
 
@@ -60,16 +69,12 @@ class SC_IoTDriver(SCMySQL):
         passCount = 0
         devList = self.MySQL_ExecuteState("SELECT Device_Name, Device_IP_Address, Device_Unique_ID from dev_decl", "FetchAll")
 
-        print("Device List | Checking...")
+        print("\nDevice List | Checking...")
         if not len(devList):
             print('Count Result | There are no NodeMCUs declared from the container! Please check them and correct them if possible!!!')
             Terminate()
         else:
-            print("Count Result | The dictionary contains %s devices to be scanned...\n" % (len(devList)))
-
-        print('Additional Step | Setting Timeout Based from CheckBeforeReQueue Parameter.')
-        self.TimeoutDevCheck = 0.5 if CheckBeforeReQueue else 1.5
-        print('Addtional Step | Timeout Set.\n')
+            print("Count Result | The dictionary contains %s devices to be monitored! \n" % (len(devList)))
 
     # * IF a device is not included to the list but WAS included to the DJango Database then we set their states as Unknown.
         if CheckBeforeReQueue:
@@ -95,19 +100,17 @@ class SC_IoTDriver(SCMySQL):
                 pass
 
         print('\nDevice Checking Finished... (Success: %s, Failed: %s)\n' % (passCount, errCount))
-        if not CheckBeforeReQueue:
-            if passCount and errCount:
-                print("There's are some devices that didn't passed from the connection test. Are you sure you want to continue?")
-                print("NOTE |> They are still included from querying over but will be ignored or passed if they are still not responding from REQUESTs.")
-                userAcc = input(str("Input [Y/N] |> "))
-                return True if userAcc in ('Y', 'y') else False
-
-            elif not passCount and errCount:
-                print("All devices were not able to pass from the connection test. Please check the device candidate information!")
-                Terminate()
-        else:
-            print("Device Requeue Done.")
+        if passCount and errCount:
+            print("There's are some devices that didn't passed from the connection test!")
+            print("NOTE |> They are still included from querying over but will be ignored or passed if they are still not responding from REQUESTs.")
             return True
+
+        elif not passCount and errCount:
+            print("All devices were not able to pass from the connection test. Please check the device candidate information!")
+            return True
+
+        print("Device Monitoring Done.")
+        return True
 
 
     # ! Step 2 | Connect To Them Individual and Check For Datas
@@ -174,8 +177,6 @@ class SC_IoTDriver(SCMySQL):
 
 if __name__ == '__main__':
     CommandLine('CLS', shell=True)
-    print('Smart Classroom IoT Data Receiver')
-    print("Created by Ronald Langaoan, Janrey Tuazon Licas, Janos Angelo Garcia Jantoc and Johnell Casey Murillo Panotes, and Joshua Santos\n")
     delay(0.5)
 
     # * We initialize this class with parameters. You can provide your own container by declaring at this scope.
@@ -187,10 +188,10 @@ if __name__ == '__main__':
         try:
             while 1:
                 SessionInstance.getNewData()
-                SessionInstance.checkNodeConn(CheckBeforeReQueue=True) # Test All Connections To The IoT Devices.
-                print('Timeout | Resting for 5 Seconds...\n')
+                print('\nTimeout | Resting for 5 Seconds Before Device Data Requery!')
                 # Add Scheduler Checker Now.
                 delay(5) # ! 5 Seconds
+                SessionInstance.checkNodeConn(CheckBeforeReQueue=True) # Test All Connections To The IoT Devices.
         except:
             pass
     else:
