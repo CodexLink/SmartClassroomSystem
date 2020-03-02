@@ -38,7 +38,7 @@ class NodeMultiAuthenticator(TemplateView):
             print("Query | User Found with ID: %s!" % (self.kwargs['GivenContextLockState']))
         else:
             print("Query | User Not Found with ID: %s!" % (self.kwargs['GivenContextLockState']))
-            print("Termination | This Action Request will be Dropped!!!")
+            print("Termination | This Action Request will be Dropped!!!\n")
             return HttpResponseNotAllowed('NODEMCU POST REQ |> LOCK AUTHENTICATION | FAILED | USER NOT FOUND')
 
         print("Query | Checking for Classroom and Device from UUID |> %s and %s" % (validable_CRUUID, validable_NodeUUID))
@@ -58,12 +58,12 @@ class NodeMultiAuthenticator(TemplateView):
             recordInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[2][0] if context_RoomLockState else ClassroomActionTypes[3][0], ActionLevel=LevelAlert[0][0], Course_Reference=professorReference)
 
             print("Execution | Action Recorded to User ID: %s" % (self.kwargs['GivenContextLockState'],))
-            print("Process | All Done!!!")
+            print("Process | All Done!!!\n")
             return HttpResponse('NODEMCU POST REQ |> LOCK AUTHENTICATION | OKAY')
 
         else:
             print("Query | %s or %s does not exists!!!" % (validable_NodeUUID, validable_CRUUID))
-            print("Termination | This Action Request will be Dropped!!!")
+            print("Termination | This Action Request will be Dropped!!!\n")
             return HttpResponseNotAllowed('NODEMCU POST REQ |> LOCK AUTHENTICATION | FAILED | CLASSROOM NOT FOUND')
 
 
