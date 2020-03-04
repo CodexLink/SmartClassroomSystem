@@ -53,17 +53,16 @@ try:
 
     if ReturnedOSName == "win32":
         print("OS Name | Detected Windows...\n")
-        print("Launching Smart Classroom Data Receiver / Interfacer... ")
 
-        os.chdir('Externals/DataStream_Handler/')
-        Popen("start python SC_DSH.py", stdin=PIPE, stdout=PIPE, shell=True)
-        print("Launched Instance of Smart Classroom Data Receiver / Interfacer")
-
-        print("\nLaunching Smart Classroom DJango Deploymnet Server... ")
         os.chdir('../../SmartClassroom')
+        print("\nLaunching Smart Classroom DJango Deployment Server... ")
         Popen("start python manage.py runserver %s:%s" % (SERVER_IP, SERVER_PORT), stdin=PIPE, stdout=PIPE, shell=True)
-
         print("Launched Instance of Smart Classroom DJango Deploymnet Server\n")
+
+        print("Launching Smart Classroom Data Stream Handler in DJango Instance by RunScript... ")
+        Popen("python manage.py runscript SC_DSH", stdin=PIPE, stdout=PIPE, shell=True)
+        print("Launched Instance of Smart Classroom Data Stream Handler\n")
+
         print("Press Control+C to kill all handler instance and this threader.\n")
         while True:
             pass
