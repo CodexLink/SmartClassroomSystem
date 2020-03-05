@@ -162,17 +162,16 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
             Device_MetaData_IP = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).values('CourseSchedule_Room__Classroom_Dev__Device_IP_Address').distinct()[0]
             Device_MetaData_UUID = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).values('CourseSchedule_Room__Classroom_Dev__Device_Unique_ID').distinct()[0]
 
-            passUniqueID = str(Device_MetaData_UUID['CourseSchedule_Room__Classroom_Dev__Device_Unique_ID']).replace('-', '')
-
-            dev_metadata = FetchLiveData('http://%s/RequestData' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address']), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
-
-
             if not current_user.user_role == "Professor":
                 view_context['ClassLogs'] = ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-TimeRecorded')
                 view_context['SubjectsInvolved'] = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-CourseSchedule_Session_Start').values('CourseSchedule_Instructor__first_name', 'CourseSchedule_Instructor__middle_name', 'CourseSchedule_Instructor__last_name', 'CourseSchedule_CourseReference__Course_Name', 'CourseSchedule_CourseReference__Course_Code' , 'CourseSchedule_Section__Section_CompleteStringGroup').distinct()
             else:
                 # ! Add More Context. Do not really output all, just on classlogs
                 view_context['ClassLogs'] = ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Instructor__first_name=current_user.first_name, Course_Reference__CourseSchedule_Instructor__middle_name=current_user.middle_name, Course_Reference__CourseSchedule_Instructor__last_name=current_user.last_name, Course_Reference__CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-TimeRecorded')
+
+            passUniqueID = str(Device_MetaData_UUID['CourseSchedule_Room__Classroom_Dev__Device_Unique_ID']).replace('-', '')
+
+            dev_metadata = FetchLiveData('http://%s/RequestData' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address']), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
 
             if current_user.user_role == "Professor":
                 # First we check, if the one who access matches the name and their course.
@@ -205,9 +204,6 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                                 else:
                                     scheduleListCandidates.CourseSchedule_Availability='Not Available'
                                     scheduleListCandidates.save(update_fields=['CourseSchedule_Availability'])
-
-                        #elif view_context['current_session_time'] > tempStartTimeStr and view_context['current_session_time'] < tempEndTimeStr
-#df826e03-34b8-4f26-89e6-4f2c6b24a6ab/control/
                 else:
                     # Declare illegal access as well even when not checking the time because the user does not exist.
                     messages.error(self.request, 'IllegalAccess')
