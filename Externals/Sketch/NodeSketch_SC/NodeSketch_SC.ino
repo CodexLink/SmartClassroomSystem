@@ -122,7 +122,7 @@ void HandleGET_SetInstance()
     if (NodeServer.arg("cr_access") == "True")
     {
         digitalWrite(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
-        SC.AUTH_INST_CONT.AUTH_CR_DOOR = !SC.AUTH_INST_CONT.AUTH_CR_DOOR;
+        SC.AUTH_INST_CONT.AUTH_CR_DOOR = true;
         digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, LOW);
         digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, LOW);
         digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
@@ -133,7 +133,7 @@ void HandleGET_SetInstance()
     else if (NodeServer.arg("cr_access") == "False")
     {
         digitalWrite(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, HIGH);
-        SC.AUTH_INST_CONT.AUTH_CR_DOOR = !SC.AUTH_INST_CONT.AUTH_CR_DOOR;
+        SC.AUTH_INST_CONT.AUTH_CR_DOOR = false;
         digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, HIGH);
         digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, HIGH);
         digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, HIGH);
@@ -142,10 +142,16 @@ void HandleGET_SetInstance()
     }
 
     // ! Two of these arguments has need to be supplied both before we can run the if statement scope under it.
-    if (NodeServer.arg("dev_uid_replace") && NodeServer.arg("dev_name_replace"))
+    if (NodeServer.arg("dev_sched_cr_uuid_replace") && NodeServer.arg("dev_sched_cr_assign_replace") && NodeServer.arg("dev_sched_user_assign_replace"))
     {
+        SC.DEV_INST_CREDENTIALS.DEV_CR_UUID = NodeServer.arg("dev_sched_cr_uuid_replace");
+        SC.DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT = NodeServer.arg("dev_sched_cr_assign_replace");
+        SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT = NodeServer.arg("dev_sched_user_assign_replace");
 
+        // Call to update the room.
+        SC.saveMetaData();
     }
 
     digitalWrite(SC.RESTATED_DEV_PINS::ESP_LED, HIGH);
+    return;
 }
