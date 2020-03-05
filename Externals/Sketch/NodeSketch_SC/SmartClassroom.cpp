@@ -133,12 +133,12 @@ inline void SC_MCU_DRVR::retrieveMetaData()
         Serial.print(F("AUTH_USER_ID_FNGRPRNT |> "));
         Serial.println(DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
         EEPROM.end();
-        Serial.println(F("EEPROM Data Retrival to Structured Data Done."));
+        Serial.println(F("EEPROM Data Retrival to Structured Data was Finished."));
         Serial.println();
     }
     else
     {
-        Serial.println(F("EEPROM Stored Data is NULL. Please reupload the sketch with structured data to get started!"));
+        Serial.println(F("EEPROM Stored Data is NULL. Please reupload the sketch with a new structured data to get started!"));
         do
         {
             yield();
@@ -153,7 +153,7 @@ inline void SC_MCU_DRVR::retrieveMetaData()
 inline void SC_MCU_DRVR::saveMetaData()
 {
     Serial.println();
-    Serial.println(F("Structured Data with Content Detected. Saving Those Values..."));
+    Serial.println(F("Structured Data with Content Detected Changing nor Updated. Saving Those Values..."));
     Serial.println();
     Serial.println(F("Meta Data From Structured Data: "));
     Serial.print(F("DEV_CR_ASSIGNMENT |> "));
