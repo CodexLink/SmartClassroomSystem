@@ -62,12 +62,3 @@ class NodeMultiAuthenticator(TemplateView):
             print("Query | User Not Found with ID: %s!" % (userInstance.fp_id))
             print("Termination | This Action Request will be Dropped!!!\n")
             return HttpResponseNotAllowed('NODEMCU POST REQ |> LOCK AUTHENTICATION | FAILED | USER NOT FOUND')
-
-
-
-
-class MigrationScheduler(TemplateView):
-    template_name = None
-
-    def get_queryset(self):
-        return
