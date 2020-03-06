@@ -213,7 +213,6 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                 finalMetaData = DictSerialize((dev_metadata.content).decode('utf-8').replace("'", "\"")) if dev_metadata.ok else None
                 view_context['TempOutput'] = finalMetaData['DATA_SENS']['CR_TEMP'] if dev_metadata.ok else None
                 view_context['HumidOutput'] = finalMetaData['DATA_SENS']['CR_HUMD'] if dev_metadata.ok else None
-                view_context['HeatInxOutput'] = finalMetaData['DATA_SENS']['CR_HTINX'] if dev_metadata.ok else None
                 view_context['PIRTTOutput'] = finalMetaData['DATA_SENS']['PIR_MOTION']['PIR_OTPT_TIME_TRIGGER'] if dev_metadata.ok else None# Time Trigger Output
 
                 view_context['ClassAccessState'] = 'Enabled' if int(finalMetaData['DATA_STATE']['ACCESS_STATE']) else 'Disabled' if dev_metadata.ok else None
@@ -248,6 +247,11 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                             objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[13][0] if StateResponseContext else ClassroomActionTypes[12][0], ActionLevel=LevelAlert[2][0], Course_Reference=adminReference)
                             objectInstance.save()
 
+                            # ! Test Needed.
+                            roomInstance = Classroom.objects.filter(Classroom_Unique_ID=self.kwargs['classUniqueID']).distinct()[0]
+                            roomInstance.Classroom_State = ClassroomStates[1][0] if StateResponseContext else ClassroomStates[0][0]
+                            roomInstance.save(update_fields=['Classroom_State'])
+
                             messages.info(self.request, 'CRAccessRequestChange')
                             view_context['ResponseMessage'] = 'RequestChangeSet'
                             return view_context
@@ -275,7 +279,6 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                     return view_context
 
             elif self.ActionState == "LockDoorAccess":
-                print(view_context['LockState'])
                 StateResponseContext = False if view_context['LockState'] == 'Locked' else True
                 dataFetchState = FetchLiveData('http://%s/RequestInstance?lock_state=%s' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address'], StateResponseContext), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
 
