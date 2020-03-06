@@ -52,20 +52,21 @@ class SC_MCU_DRVR
     // ! Container that can be to reference all constant values.
     enum CONST_VAL
     {
-        NULL_CONTENT = 0,
-        MAX_REL_CHANNEL = 5,
-        MAX_IP_ADDR_CHAR = 15,
-        MAX_WIFI_SSD_CHAR = 32,
-        MAX_WIFI_PW_CHAR = 63,
-        ESP_DEFAULT_PORT = 80,
-        MAX_STR_CR = 20,
-        MAX_STR_UUID = 40,
-        MAX_FNGRPRNT_STORABLE = 3000,
         EEPROM_MAX_BYTE = 512,
         EEPROM_CR_ASSIGNED_CHAR_LEN = 6,
         EEPROM_CR_ROOM_CHAR_LEN = 11,
         EEPROM_DEV_USN_CHAR_LEN = 16,
         EEPROM_DEV_UID_CHAR_LEN = 32,
+        EEPROM_COURSE_CODE_LENGTH = 10,
+        ESP_DEFAULT_PORT = 80,
+        MAX_REL_CHANNEL = 5,
+        MAX_IP_ADDR_CHAR = 15,
+        MAX_WIFI_SSD_CHAR = 32,
+        MAX_WIFI_PW_CHAR = 63,
+        MAX_STR_CR = 20,
+        MAX_STR_UUID = 40,
+        NULL_CONTENT = 0,
+        MAX_FNGRPRNT_STORABLE = 3000,
         PIR_TRIGGER_SECONDS = 300000,
         PIR_DIVIDED_REQUIRED_OUTPUTS = 10,
         // It is always good to skip one byte before getting another data.
@@ -167,7 +168,6 @@ public:
         bool AUTH_CR_ACCESS = 1;            // 1 Enabled, 0 Disabled
         bool NON_AUTH_ELECTRIC_STATE = 0;   // 1 Enabled, 0 Disabled
         bool AUTH_FGPRT_STATE = 0;          // 1 For Currently Authenticated, Else Not Authenticated
-        uint16_t AUTH_USER_ID_FNGRPRNT = 0; // Must be set by user.
     } AUTH_INST_CONT;
 
     struct DEV_CREDENTIALS
@@ -179,6 +179,8 @@ public:
 
         char AUTH_DEV_USN[CONST_VAL::EEPROM_DEV_USN_CHAR_LEN + 1] = "NodeMCU | Q-5424" /**/;
         char AUTH_DEV_PWD[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1] = "e776ffc28b524d318624bc39d7efea0e" /**/;
+
+        char CURRENT_COURSE_CODENAME[CONST_VAL::EEPROM_COURSE_CODE_LENGTH + 1];
         uint16_t AUTH_USER_ID_FNGRPRNT = 0; // Must be set by user.
     } DEV_INST_CREDENTIALS;
 
@@ -194,6 +196,7 @@ public:
     const uint16_t SERVER_PORT = 8000;
 
     bool PIR_ARR_OUTPUT[CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS] = {0};
+    bool ForceEEPROMUpdate = false;
     //# of True +0 # of False
     /* PIR Calculation */
 
@@ -206,10 +209,10 @@ public:
     void authCheck_Fngrprnt();
     //void
     bool SketchTimeCheck(uint32_t TimeIntervalToMeet);
+    inline void saveMetaData();
 
 private:
     inline void retrieveMetaData();
-    inline void saveMetaData();
 
     bool checkPresence();
     bool checkWiFiConnection();
