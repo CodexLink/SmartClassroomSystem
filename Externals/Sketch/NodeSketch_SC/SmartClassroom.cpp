@@ -66,7 +66,7 @@ void SC_MCU_DRVR::begin()
     EEPROM.begin(CONST_VAL::EEPROM_MAX_BYTE);
 
     // ! We can execute this function only if we did some factory configuration.
-    if (DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT == NULL || DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME == NULL || DEV_INST_CREDENTIALS.DEV_CR_UUID == NULL || DEV_INST_CREDENTIALS.DEV_UUID == NULL || DEV_INST_CREDENTIALS.AUTH_DEV_USN == NULL || DEV_INST_CREDENTIALS.AUTH_DEV_PWD == NULL || DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT == -1)
+    if (DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT == NULL || DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME == NULL || DEV_INST_CREDENTIALS.DEV_CR_UUID == NULL || DEV_INST_CREDENTIALS.DEV_UUID == NULL || DEV_INST_CREDENTIALS.AUTH_DEV_USN == NULL || DEV_INST_CREDENTIALS.AUTH_DEV_PWD == NULL)
     {
         retrieveMetaData();
     }
@@ -130,6 +130,8 @@ inline void SC_MCU_DRVR::retrieveMetaData()
         Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_USN);
         Serial.print(F("AUTH_DEV_PWD |> "));
         Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_PWD);
+        Serial.print(F("CURRENT_COURSE_CODENAME |> "));
+        Serial.println(DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME);
         Serial.print(F("AUTH_USER_ID_FNGRPRNT |> "));
         Serial.println(DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
         EEPROM.end();
@@ -168,6 +170,8 @@ inline void SC_MCU_DRVR::saveMetaData()
     Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_USN);
     Serial.print(F("AUTH_DEV_PWD |> "));
     Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_PWD);
+    Serial.print(F("CURRENT_COURSE_CODENAME |> "));
+    Serial.println(DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME);
     Serial.print(F("AUTH_USER_ID_FNGRPRNT |> "));
     Serial.println(DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
     Serial.println();
@@ -208,7 +212,26 @@ bool SC_MCU_DRVR::checkPresence()
         {
 
             LCD_DRVR.setCursor(0, 3);
-            LCD_DRVR.print(F("> No Presence Dtctd!"));
+            LCD_DRVR.print(F("> Presence TimeOut!"));
+
+            HTTPClient UpdatePOSTData;
+            String DevUUID_Req = DEV_INST_CREDENTIALS.DEV_UUID;
+            String CrUUID_Req = DEV_INST_CREDENTIALS.DEV_CR_UUID;
+            String POSTArgs = DevUUID_Req + "/" + CrUUID_Req + "/" + DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT + "/LockState=" + AUTH_INST_CONT.AUTH_CR_DOOR;
+            String RequestDest = "http://" + SERVER_IP_ADDRESS + ":" + SERVER_PORT + "/lockRemoteCall/" + POSTArgs;
+
+            UpdatePOSTData.begin(RequestDest);
+            UpdatePOSTData.addHeader("Content-Type", "text/plain");
+            uint8_t ReponseRequest = UpdatePOSTData.POST("NODEMCU POST REQ |> LOCK AUTHENTICATION");
+            String ResponseMsg = UpdatePOSTData.getString();
+
+            delay(1000);
+
+            Serial.print(F("Query | IP Target |> "));
+            Serial.println(RequestDest);
+            Serial.print(F("HTTP Response |> "));
+            Serial.println(ReponseRequest);
+            Serial.print(F("HTTP Message |> "));
             delay(1000);
             return false;
         }
@@ -341,7 +364,6 @@ void SC_MCU_DRVR::displayLCDScreen(DataDisplayTypes Screens)
         digitalWrite(RESTATED_DEV_PINS::MCU_LED, LOW);
         ENV_INST_CONT.DHT11_TEMP = (isnan(ENV_INST_CONT.DHT11_TEMP) == TempSens.getTemperature()) ? ENV_INST_CONT.DHT11_TEMP : TempSens.getTemperature();
         ENV_INST_CONT.DHT11_HUMID = (isnan(ENV_INST_CONT.DHT11_HUMID) == TempSens.getHumidity()) ? ENV_INST_CONT.DHT11_HUMID : TempSens.getHumidity();
-        ENV_INST_CONT.DHT11_HT_INDX = (isnan(ENV_INST_CONT.DHT11_HT_INDX) == TempSens.computeHeatIndex(ENV_INST_CONT.DHT11_TEMP, ENV_INST_CONT.DHT11_HUMID, false)) ? ENV_INST_CONT.DHT11_HT_INDX : TempSens.computeHeatIndex(ENV_INST_CONT.DHT11_TEMP, ENV_INST_CONT.DHT11_HUMID, false);
         ENV_INST_CONT.PIR_OPTPT = digitalRead(SENS_DAT_PINS::PIR_DAT_PIN);
         LCD_DRVR.setCursor(0, 0);
         LCD_DRVR.print(DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT);
@@ -349,17 +371,15 @@ void SC_MCU_DRVR::displayLCDScreen(DataDisplayTypes Screens)
         LCD_DRVR.print(DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME);
         LCD_DRVR.setCursor(0, 1);
         LCD_DRVR.print(F("S:"));
-        LCD_DRVR.print((AUTH_INST_CONT.AUTH_CR_DOOR) ? "UnLkd" : "Lockd");
-        LCD_DRVR.print(F(" | T:"));
-        LCD_DRVR.print(ENV_INST_CONT.DHT11_TEMP, 1);
-        LCD_DRVR.print(F("C"));
+        LCD_DRVR.print((AUTH_INST_CONT.AUTH_CR_DOOR) ? "UnLckd for " : "Locked for ");
+        LCD_DRVR.print(DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME);
         LCD_DRVR.setCursor(0, 2);
-        LCD_DRVR.print(F("H:"));
+        LCD_DRVR.print(F("T:"));
+        LCD_DRVR.print(ENV_INST_CONT.DHT11_TEMP, 1);
+        LCD_DRVR.write(223);
+        LCD_DRVR.print(F("C | H:"));
         LCD_DRVR.print(ENV_INST_CONT.DHT11_HUMID, 1);
-        LCD_DRVR.print(F("% | HTI:"));
-        LCD_DRVR.print(ENV_INST_CONT.DHT11_HT_INDX, 1);
-        LCD_DRVR.print(F("C"));
-
+        LCD_DRVR.print(F("%"));
         //Serial.print("MODULE REPORTS | T: ");
         //Serial.print(ENV_INST_CONT.DHT11_TEMP);
         //Serial.print("C | HTI: ");
@@ -439,7 +459,7 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
             return;
         }
 
-        rc = FPController.verify_finger_with_template(AUTH_INST_CONT.AUTH_USER_ID_FNGRPRNT);
+        rc = FPController.verify_finger_with_template(DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
 
         if (rc != GT5X_OK)
         {
@@ -478,7 +498,7 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
                 LCD_DRVR.print(F("> Locking Commenced!"));
                 checkPresence();
             }
-            String POSTArgs = DevUUID_Req + "/" + CrUUID_Req + "/" + AUTH_INST_CONT.AUTH_USER_ID_FNGRPRNT + "/LockState=" + AUTH_INST_CONT.AUTH_CR_DOOR;
+            String POSTArgs = DevUUID_Req + "/" + CrUUID_Req + "/" + DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT + "/LockState=" + AUTH_INST_CONT.AUTH_CR_DOOR;
             String RequestDest = "http://" + SERVER_IP_ADDRESS + ":" + SERVER_PORT + "/lockRemoteCall/" + POSTArgs;
 
             UpdatePOSTData.begin(RequestDest);
@@ -524,6 +544,12 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
     {
         LCD_DRVR.setCursor(0, 3);
         LCD_DRVR.print(F("> Ready.            "));
+    }
+
+    if (ForceEEPROMUpdate)
+    {
+        ForceEEPROMUpdate = false;
+        saveMetaData();
     }
     return;
 }
