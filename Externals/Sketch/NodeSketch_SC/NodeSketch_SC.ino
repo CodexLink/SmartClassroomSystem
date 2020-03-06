@@ -123,9 +123,6 @@ void HandleGET_SetInstance()
     {
         digitalWrite(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
         SC.AUTH_INST_CONT.AUTH_CR_DOOR = true;
-        digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, LOW);
-        digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, LOW);
-        digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
         SC.AUTH_INST_CONT.AUTH_CR_ACCESS = true;
         NodeServer.send(200, "text/plain", "CR_ACCESS |> CHANGED TO 'ENABLED' |> OK");
     }
@@ -142,14 +139,25 @@ void HandleGET_SetInstance()
     }
 
     // ! Two of these arguments has need to be supplied both before we can run the if statement scope under it.
-    if (NodeServer.arg("dev_sched_cr_uuid_replace") && NodeServer.arg("dev_sched_cr_assign_replace") && NodeServer.arg("dev_sched_user_assign_replace"))
+    if (NodeServer.arg("dev_sched_user_course_replace") && NodeServer.arg("dev_sched_user_assign_replace"))
     {
-        SC.DEV_INST_CREDENTIALS.DEV_CR_UUID = NodeServer.arg("dev_sched_cr_uuid_replace");
-        SC.DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT = NodeServer.arg("dev_sched_cr_assign_replace");
-        SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT = NodeServer.arg("dev_sched_user_assign_replace");
-
+        Serial.println(F("Update | Server Sent Request of Schedule Replacement!"));
+        Serial.println();
+        Serial.print(F("BEFORE | Course Code On Time Scope: "));
+        Serial.println(SC.DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME);
+        Serial.print(F("BEFORE | Fingerprint ID: "));
+        Serial.println(SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
+        Serial.println();
+        NodeServer.arg("dev_sched_user_course_replace").toCharArray(SC.DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME, 11);
+        SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT = NodeServer.arg("dev_sched_user_assign_replace").toInt();
         // Call to update the room.
-        SC.saveMetaData();
+        SC.ForceEEPROMUpdate = true;
+        Serial.print(F("AFTER | Course Code On Time Scope: "));
+        Serial.println(SC.DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME);
+        Serial.print(F("AFTER | Fingerprint ID: "));
+        Serial.println(SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
+        Serial.println(F("NodeMCU | Schedule Sync Data Updated!"));
+        NodeServer.send(200, "text/plain", "SCHEDULE REPLACEMENT |> CHANGED | OK");
     }
 
     digitalWrite(SC.RESTATED_DEV_PINS::ESP_LED, HIGH);
