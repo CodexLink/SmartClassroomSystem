@@ -56,7 +56,7 @@
                         <div class="d-flex w-100">
                             <h6 class="mb-1 text-dark-primary ">{{ AllActionLogs.Course_Reference.CourseSchedule_Room.Classroom_CompleteString }} | {{ AllActionLogs.Course_Reference.CourseSchedule_CourseReference.Course_Code }} | {{ AllActionLogs.Course_Reference.CourseSchedule_Room.Classroom_Name }}</h6>
                         </div>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllActionLogs.Course_Reference.CourseSchedule_Section }} was handled by {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.first_name }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.middle_name }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.last_name }} <span
+                        <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllActionLogs.Course_Reference.CourseSchedule_Section }} was handled by {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.first_name }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.middle_name|default_if_none:'' }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.last_name }} <span
                                 class="badge badge-primary badge-pill bg-{{ AllActionLogs.ActionLevel | lower }}">{{ AllActionLogs.ActionLevel }}</span></p>
                         <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllActionLogs.UserActionTaken }}<small class="text-black-primary"> {{ AllActionLogs.TimeRecorded }}</small></p>
                     </a>
@@ -159,7 +159,7 @@
                         <div class="d-flex w-100">
                             <h6 class="mb-1 text-dark-primary ">{{ AllActionLogs.Course_Reference.CourseSchedule_Room.Classroom_CompleteString }} | {{ AllActionLogs.Course_Reference.CourseSchedule_CourseReference.Course_Code }} | {{ AllActionLogs.Course_Reference.CourseSchedule_Room.Classroom_Name }}</h6>
                         </div>
-                        <p class="mb-1 d-flex justify-content-between align-items-center">{% if AllActionLogs.Course_Reference.CourseSchedule_Section %} {{ AllActionLogs.Course_Reference.CourseSchedule_Section }} was handled by {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.first_name }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.middle_name|default_if_none:"" }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.last_name }}{% else %}Action was made by Administrator or Supervisor.{% endif %}<span
+                        <p class="mb-1 d-flex justify-content-between align-items-center">{% if AllActionLogs.Course_Reference.CourseSchedule_Section %} {{ AllActionLogs.Course_Reference.CourseSchedule_Section }} under {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.first_name }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.middle_name|default_if_none:"" }} {{ AllActionLogs.Course_Reference.CourseSchedule_Instructor.last_name }}{% else %}Action handled by ITSO Administrator or Supervisor.{% endif %}<span
                                 class="badge badge-primary badge-pill bg-{{ AllActionLogs.ActionLevel | lower }}">{{ AllActionLogs.ActionLevel }}</span></p>
                         <p class="mb-1 d-flex justify-content-between align-items-center">{{ AllActionLogs.UserActionTaken }}<small class="text-black-primary"> {{ AllActionLogs.TimeRecorded }}</small></p>
                     </a>
