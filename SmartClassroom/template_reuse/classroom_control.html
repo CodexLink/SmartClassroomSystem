@@ -222,17 +222,16 @@
                 </div>
                 <div class="card-body list-group border-0" id="list-tab" role="tablist">
                     {% for SubjectCandidates in SubjectsInvolved %}
-                    <a href="#" class="list-group-item list-group-item-action {% if forloop.first %} active {% endif %}">
+                    <a href="#" class="list-group-item list-group-item-action {% if current_session_time >= SubjectCandidates.CourseSchedule_Session_Start and current_session_time <= SubjectCandidates.CourseSchedule_Session_End == schedule_weekday_name and SubjectCandidates.CourseSchedule_Lecture_Day and SubjectCandidates.CourseSchedule_CourseReference__Course_Code != 'ITSO 001' and SubjectCandidates.CourseSchedule_CourseReference__Course_Code != 'ITSO 004' %}active{% endif %}">
                         <div class="d-flex w-100">
-                            <h6 class="mb-1 text-dark-primary ">
+                            <h6 class="mb-1 text-dark-primary">
                                 {{ SubjectCandidates.CourseSchedule_CourseReference__Course_Code }} |
                                 {{ SubjectCandidates.CourseSchedule_CourseReference__Course_Name }}</h6>
                         </div>
                         <p class="mb-1 d-flex justify-content-between align-items-center">
-                            {% if SubjectCandidates.CourseSchedule_Section__Section_CompleteStringGroup is None %}Handled
-                            by ITSO
-                            Staff.{% else %}{{ SubjectCandidates.CourseSchedule_Section__Section_CompleteStringGroup }}
-                            handled by {{ SubjectCandidates.CourseSchedule_Instructor__first_name }}
+                            {% if SubjectCandidates.CourseSchedule_Section__Section_CompleteStringGroup is None %}Schedule Handled
+                            by ITSO Administrator or Supervisor.{% else %} {{ SubjectCandidates.CourseSchedule_Lecture_Day|slice:3 }} | {{ SubjectCandidates.CourseSchedule_Session_Start }} — {{ SubjectCandidates.CourseSchedule_Session_End }} | {{ SubjectCandidates.CourseSchedule_Section__Section_CompleteStringGroup }}
+                            under {{ SubjectCandidates.CourseSchedule_Instructor__first_name }}
                             {{ SubjectCandidates.CourseSchedule_Instructor__middle_name|default_if_none:"" }}
                             {{ SubjectCandidates.CourseSchedule_Instructor__last_name }}{% endif %}
                         </p>
@@ -270,10 +269,10 @@
                             <h6 class="mb-1 text-dark-primary">{{ ActionCandidates.UserActionTaken }}</h6>
                         </div>
                         <p class="mb-1 d-flex justify-content-between align-items-center">
-                            {% if ActionCandidates.Course_Reference.CourseSchedule_Section is None %}Action was made by Administrator or Supervisor.{% else %}
+                            {% if ActionCandidates.Course_Reference.CourseSchedule_Section is None %}Action was made by an ITSO Administrator or Supervisor.{% else %}
                             By {{ ActionCandidates.Course_Reference.CourseSchedule_Instructor.first_name }}
                             {{ ActionCandidates.CourseSchedule_Instructor.middle_name|default_if_none:"" }}
-                            {{ ActionCandidates.Course_Reference.CourseSchedule_Instructor.last_name }} along with
+                            {{ ActionCandidates.Course_Reference.CourseSchedule_Instructor.last_name }} with
                             {{ ActionCandidates.Course_Reference.CourseSchedule_Section }}{% endif %}
                             <span class="badge badge-primary badge-pill bg-{{ ActionCandidates.ActionLevel | lower }}">{{ ActionCandidates.ActionLevel }}</span>
                         </p>
