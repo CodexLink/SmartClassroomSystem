@@ -71,7 +71,7 @@ void HandleGET_Sens()
         return NodeServer.requestAuthentication();
     }
     digitalWrite(SC.RESTATED_DEV_PINS::ESP_LED, LOW);
-    NodeServer.send(200, "text/plain", String("{'DATA_HEADER': {'CR_IDENTITY': '") + SC.DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT + String("', 'CR_SHORT_NAME': '") + SC.DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME + String("', 'CR_UUID': '") + SC.DEV_INST_CREDENTIALS.DEV_CR_UUID + String("', 'DEV_NAME': '") + SC.DEV_INST_CREDENTIALS.AUTH_DEV_USN + String("', 'DEV_UUID': '") + SC.DEV_INST_CREDENTIALS.DEV_UUID + String("'}, 'DATA_SENS': {'CR_TEMP': '") + SC.ENV_INST_CONT.DHT11_TEMP + String("', 'CR_HUMD': '") + SC.ENV_INST_CONT.DHT11_HUMID + String("', 'CR_HTINX': '") + SC.ENV_INST_CONT.DHT11_HT_INDX + String("', 'PIR_MOTION': {'PIR_OPTPT':'") + SC.ENV_INST_CONT.PIR_OPTPT + String("', 'PIR_OTPT_TIME_TRIGGER': '") + SC.ENV_INST_CONT.PIR_MILLIS_TRIGGER + String("'}}, 'DATA_AUTH': {'AUTH_ID':'") + SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT + String("', 'AUTH_STATE': '") + SC.AUTH_INST_CONT.AUTH_FGPRT_STATE + String("'}, 'DATA_STATE': {'DOOR_STATE': '") + SC.AUTH_INST_CONT.AUTH_CR_DOOR + String("', 'ACCESS_STATE': '") + SC.AUTH_INST_CONT.AUTH_CR_ACCESS + String("', 'ELECTRIC_STATE': '") + SC.AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE + String("'}}"));
+    NodeServer.send(200, "text/plain", String("{'DATA_HEADER': {'CR_IDENTITY': '") + SC.DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT + String("', 'CR_SHORT_NAME': '") + SC.DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME + String("', 'CR_UUID': '") + SC.DEV_INST_CREDENTIALS.DEV_CR_UUID + String("', 'DEV_NAME': '") + SC.DEV_INST_CREDENTIALS.AUTH_DEV_USN + String("', 'DEV_UUID': '") + SC.DEV_INST_CREDENTIALS.DEV_UUID + String("', 'CURR_COURSE_SESSION': '") + SC.DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME + String("'}, 'DATA_SENS': {'CR_TEMP': '") + SC.ENV_INST_CONT.DHT11_TEMP + String("', 'CR_HUMD': '") + SC.ENV_INST_CONT.DHT11_HUMID + String("', 'CR_HTINX': '") + SC.ENV_INST_CONT.DHT11_HT_INDX + String("', 'PIR_MOTION': {'PIR_OPTPT':'") + SC.ENV_INST_CONT.PIR_OPTPT + String("', 'PIR_OTPT_TIME_TRIGGER': '") + SC.ENV_INST_CONT.PIR_MILLIS_TRIGGER + String("'}}, 'DATA_AUTH': {'AUTH_ID':'") + SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT + String("', 'AUTH_STATE': '") + SC.AUTH_INST_CONT.AUTH_FGPRT_STATE + String("'}, 'DATA_STATE': {'DOOR_STATE': '") + SC.AUTH_INST_CONT.AUTH_CR_DOOR + String("', 'ACCESS_STATE': '") + SC.AUTH_INST_CONT.AUTH_CR_ACCESS + String("', 'ELECTRIC_STATE': '") + SC.AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE + String("'}}"));
     digitalWrite(SC.RESTATED_DEV_PINS::ESP_LED, HIGH);
 }
 
@@ -85,13 +85,13 @@ void HandleGET_SetInstance()
     digitalWrite(SC.RESTATED_DEV_PINS::ESP_LED, LOW);
     if (NodeServer.arg("lock_state") == "True")
     {
-        digitalWrite(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, HIGH);
+        digitalWrite(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, HIGH);
         SC.AUTH_INST_CONT.AUTH_CR_DOOR = false;
         NodeServer.send(200, "text/plain", "LOCK_STATE |> CHANGE TO LOCK |> OK");
     }
     else if (NodeServer.arg("lock_state") == "False")
     {
-        digitalWrite(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
+        digitalWrite(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, LOW);
         SC.AUTH_INST_CONT.AUTH_CR_DOOR = true;
         NodeServer.send(200, "text/plain", "LOCK_STATE |> CHANGE TO UNLOCK |> OK");
     }
@@ -106,14 +106,12 @@ void HandleGET_SetInstance()
     if (NodeServer.arg("electric_state") == "True")
     {
         digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, LOW);
-        digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, LOW);
         SC.AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = true;
         NodeServer.send(200, "text/plain", "ELECTRIC_STATE |> CHANGED TO 'ENABLED' |> OK");
     }
     else if (NodeServer.arg("electric_state") == "False")
     {
         digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, HIGH);
-        digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, HIGH);
         SC.AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = false;
         NodeServer.send(200, "text/plain", "ELECTRIC_STATE |> CHANGED TO 'DISABLED' |> OK");
     }
@@ -121,42 +119,49 @@ void HandleGET_SetInstance()
     // This disables all access from the classroom. The relays will be turned off.
     if (NodeServer.arg("cr_access") == "True")
     {
-        digitalWrite(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
-        SC.AUTH_INST_CONT.AUTH_CR_DOOR = true;
         SC.AUTH_INST_CONT.AUTH_CR_ACCESS = true;
         NodeServer.send(200, "text/plain", "CR_ACCESS |> CHANGED TO 'ENABLED' |> OK");
     }
 
     else if (NodeServer.arg("cr_access") == "False")
     {
-        digitalWrite(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, HIGH);
         SC.AUTH_INST_CONT.AUTH_CR_DOOR = false;
+        SC.AUTH_INST_CONT.AUTH_CR_ACCESS = false;
         digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, HIGH);
         digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, HIGH);
-        digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, HIGH);
-        SC.AUTH_INST_CONT.AUTH_CR_ACCESS = false;
         NodeServer.send(200, "text/plain", "CR_ACCESS |> CHANGED TO 'DISABLED' |> OK");
     }
 
     // ! Two of these arguments has need to be supplied both before we can run the if statement scope under it.
     if (NodeServer.arg("dev_sched_user_course_replace") && NodeServer.arg("dev_sched_user_assign_replace"))
     {
+        char CHECKPOINT_CURRENT_COURSE_CODENAME[11];
+        strcpy(CHECKPOINT_CURRENT_COURSE_CODENAME, SC.DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME);
+        uint16_t CHECKPOINT_AUTH_USER_ID_FNGRPRNT = SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT;
         Serial.println(F("Update | Server Sent Request of Schedule Replacement!"));
-        Serial.println();
-        Serial.print(F("BEFORE | Course Code On Time Scope: "));
-        Serial.println(SC.DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME);
-        Serial.print(F("BEFORE | Fingerprint ID: "));
-        Serial.println(SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
-        Serial.println();
         NodeServer.arg("dev_sched_user_course_replace").toCharArray(SC.DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME, 11);
         SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT = NodeServer.arg("dev_sched_user_assign_replace").toInt();
-        // Call to update the room.
-        SC.ForceEEPROMUpdate = true;
-        Serial.print(F("AFTER | Course Code On Time Scope: "));
-        Serial.println(SC.DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME);
-        Serial.print(F("AFTER | Fingerprint ID: "));
-        Serial.println(SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
-        Serial.println(F("NodeMCU | Schedule Sync Data Updated!"));
+
+        SC.ForceEEPROMUpdate = ((CHECKPOINT_AUTH_USER_ID_FNGRPRNT != SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT || strcmp(CHECKPOINT_CURRENT_COURSE_CODENAME, SC.DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME) != 0)) ? true : false;
+
+        if (SC.ForceEEPROMUpdate)
+        {
+            Serial.println();
+            Serial.print(F("BEFORE | Course Code On Time Scope: "));
+            Serial.println(SC.DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME);
+            Serial.print(F("BEFORE | Fingerprint ID: "));
+            Serial.println(SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
+            Serial.println();
+            Serial.print(F("AFTER | Course Code On Time Scope: "));
+            Serial.println(SC.DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME);
+            Serial.print(F("AFTER | Fingerprint ID: "));
+            Serial.println(SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
+            Serial.println(F("NodeMCU | Schedule Sync Data Updated!"));
+        }
+        else
+        {
+            Serial.println(F("NodeMCU | Schedule Data Remains The Same! Ignoring Save State."));
+        }
         NodeServer.send(200, "text/plain", "SCHEDULE REPLACEMENT |> CHANGED | OK");
     }
 
