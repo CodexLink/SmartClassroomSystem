@@ -47,7 +47,7 @@ class UserDataCredentials(AbstractUser):
     user_role = models.CharField(max_length=27, null=False, blank=False, choices=RoleDeclaredTypes, default=RoleDeclaredTypes[0], help_text="Roles Defined that gives users multiple actions to do. Pick one with RISK.")
     dept_residence = models.ForeignKey(ProgramBranch, to_field="ProgramBranch_Code", verbose_name='Staff Department Residence', help_text='Please refer the program code form where this staff resides.', null=True, blank=True, on_delete=models.CASCADE)
     avatar = models.ImageField(null=True, blank=True, upload_to=user_avatar_path)
-    fp_id = models.PositiveIntegerField(null=True, blank=True, unique=True, verbose_name='User Fingerprint ID', help_text='A Unique User FingerPrint. Required for All Classroom that has User Detection. Keep in mind that, with this ID, it must be registered to all Fingerprints in which the user goes into!!!')
+    fp_id = models.PositiveIntegerField(null=True, blank=True, unique=True, verbose_name='User Fingerprint ID', help_text='A Unique User FingerPrint. Required for All Classroom that has User Detection. Keep in mind that, with this ID, it must be registered to all Fingerprints in which the user goes into!!!', validators=[MinValueValidator(0), MaxValueValidator(3000)])
 
     def __str__(self):
         return '%s | %s %s %s | %s' % (self.username, self.first_name, self.middle_name, self.last_name, self.dept_residence)
