@@ -5,10 +5,12 @@ It gives info respectively on the following:
 + When new data is updated. | Registered in 3 Minutes
 + When Authentication Change State was detected. | Instant Update
     - The problem
-        - We cannot detect what user it is. I think the only solution to this is to depend from the schedule.
+        - We cannot detect what the user is. I think the only solution to this is to depend from the schedule.
         - Since there is only one person that can unlock it. We make spaces from the admin and the user.
 
         - Let Admins from ID=0 to 200
+            - 0 to 10 for Project Associated People
+            - 11 to 200 for Staffs
         - Let Profs from ID=201 to 3000
 
 
