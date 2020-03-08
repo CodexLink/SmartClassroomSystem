@@ -152,9 +152,8 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
         view_context['user_branch'] = current_user.dept_residence
         view_context['ClassInstance'] = self.more_context['ClassInstance']
         view_context['current_session_time'] = datetime.datetime.now().time()
+        view_context['schedule_weekday_name'] = datetime.datetime.today().strftime('%A')
         view_context['Class_UID_Literal'] = self.kwargs['classUniqueID']
-
-
 
         # We wanna set the status of the device with its live sensor literally.
         try:
@@ -164,7 +163,7 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
 
             if not current_user.user_role == "Professor":
                 view_context['ClassLogs'] = ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-TimeRecorded')
-                view_context['SubjectsInvolved'] = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-CourseSchedule_Session_Start').values('CourseSchedule_Instructor__first_name', 'CourseSchedule_Instructor__middle_name', 'CourseSchedule_Instructor__last_name', 'CourseSchedule_CourseReference__Course_Name', 'CourseSchedule_CourseReference__Course_Code' , 'CourseSchedule_Section__Section_CompleteStringGroup').distinct()
+                view_context['SubjectsInvolved'] = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('CourseSchedule_Lecture_Day', 'CourseSchedule_Session_Start').values('CourseSchedule_Instructor__first_name', 'CourseSchedule_Instructor__middle_name', 'CourseSchedule_Instructor__last_name', 'CourseSchedule_CourseReference__Course_Name', 'CourseSchedule_CourseReference__Course_Code' , 'CourseSchedule_Section__Section_CompleteStringGroup', 'CourseSchedule_Lecture_Day', 'CourseSchedule_Session_Start', 'CourseSchedule_Session_End').distinct()
             else:
                 # ! Add More Context. Do not really output all, just on classlogs
                 view_context['ClassLogs'] = ClassroomActionLog.objects.filter(Course_Reference__CourseSchedule_Instructor__first_name=current_user.first_name, Course_Reference__CourseSchedule_Instructor__middle_name=current_user.middle_name, Course_Reference__CourseSchedule_Instructor__last_name=current_user.last_name, Course_Reference__CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID']).order_by('-TimeRecorded')
@@ -175,8 +174,8 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
 
             if current_user.user_role == "Professor":
                 # First we check, if the one who access matches the name and their course.
-                metaClassroomContainer = CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID'])
-
+                #metaClassroomContainer = CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name='Lily Ann' CourseSchedule_Instructor__middle_name='Mae', CourseSchedule_Instructor__last_name='Rastica', CourseSchedule_Session_Start__gte=19:00, CourseSchedule_Room__Classroom_Unique_ID='df826e03-34b8-4f26-89e6-4f2c6b24a6ab')
+                metaClassroomContainer = CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Session_Start__lte=view_context['current_session_time'], CourseSchedule_Session_End__gte=view_context['current_session_time'], CourseSchedule_Room__Classroom_Unique_ID=self.kwargs['classUniqueID'])
                 if metaClassroomContainer.exists():
 
                     # We then check the time.
@@ -184,27 +183,16 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                         tempStartTimeStr = metaClassroomCandidate.CourseSchedule_Session_Start
                         tempEndTimeStr = metaClassroomCandidate.CourseSchedule_Session_End
 
-                        # If time is not in scope and its not available then...
-                        if not view_context['current_session_time'] > tempStartTimeStr and not view_context['current_session_time'] < tempEndTimeStr or metaClassroomCandidate.CourseSchedule_Availability == 'Not Available':
-                            classroomPointer = Classroom.objects.filter(Classroom_Unique_ID=self.kwargs['classUniqueID']).values('Classroom_CompleteString').distinct()
-                            professorReference = CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])[0]
-                            objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[10][0], ActionLevel=LevelAlert[2][0], Course_Reference=professorReference)
-                            objectInstance.save()
-                            messages.error(self.request, 'IllegalAccess')
-                            return view_context
-                        else:
-                            scheduleList = CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name)
-                            for scheduleListCandidates in scheduleList:
-                                tempStartTimeStr = scheduleListCandidates.CourseSchedule_Session_Start
-                                tempEndTimeStr = scheduleListCandidates.CourseSchedule_Session_End
+                        if view_context['current_session_time'] >= tempStartTimeStr and view_context['current_session_time'] <= tempEndTimeStr:
+                            metaClassroomCandidate.CourseSchedule_Availability='Available'
+                            metaClassroomCandidate.save(update_fields=['CourseSchedule_Availability'])
+                            break
 
-                                if view_context['current_session_time'] > tempStartTimeStr and view_context['current_session_time'] < tempEndTimeStr:
-                                    scheduleListCandidates.CourseSchedule_Availability='Available'
-                                    scheduleListCandidates.save(update_fields=['CourseSchedule_Availability'])
-                                else:
-                                    scheduleListCandidates.CourseSchedule_Availability='Not Available'
-                                    scheduleListCandidates.save(update_fields=['CourseSchedule_Availability'])
                 else:
+                    classroomPointer = Classroom.objects.filter(Classroom_Unique_ID=self.kwargs['classUniqueID']).values('Classroom_CompleteString').distinct()
+                    professorReference = CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Session_Start__lte=view_context['current_session_time'], CourseSchedule_Session_End__gte=view_context['current_session_time'], CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])[0]
+                    objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[11][0], ActionLevel=LevelAlert[2][0], Course_Reference=professorReference)
+                    objectInstance.save()
                     # Declare illegal access as well even when not checking the time because the user does not exist.
                     messages.error(self.request, 'IllegalAccess')
                     return view_context
@@ -230,7 +218,6 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
             messages.error(self.request, 'DeviceRequestFailed')
             return view_context
 
-
         if self.ActionState:
             messages.info(self.request, 'DeviceRequestSuccess')
             classroomPointer = Classroom.objects.filter(Classroom_Unique_ID=self.kwargs['classUniqueID']).values('Classroom_CompleteString').distinct()
@@ -244,59 +231,57 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
 
                         if dataFetchState.ok:
                             adminReference = CourseSchedule.objects.get(CourseSchedule_CourseReference__Course_Name="Admin Control Management", CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
-                            objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[13][0] if StateResponseContext else ClassroomActionTypes[12][0], ActionLevel=LevelAlert[2][0], Course_Reference=adminReference)
+                            objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[8][0] if StateResponseContext else ClassroomActionTypes[7][0], ActionLevel=LevelAlert[2][0], Course_Reference=adminReference)
                             objectInstance.save()
 
-                            # ! Test Needed.
-                            roomInstance = Classroom.objects.filter(Classroom_Unique_ID=self.kwargs['classUniqueID']).distinct()[0]
-                            roomInstance.Classroom_State = ClassroomStates[1][0] if StateResponseContext else ClassroomStates[0][0]
-                            roomInstance.save(update_fields=['Classroom_State'])
+                            roomStatusInstance = Classroom.objects.filter(Classroom_Unique_ID=self.kwargs['classUniqueID']).distinct()[0]
+                            roomStatusInstance.Classroom_State = ClassroomStates[0][0] if not StateResponseContext else ClassroomStates[1][0]
+                            roomStatusInstance.Classroom_AccessState = ClassroomAccessStates[0][0] if StateResponseContext else ClassroomAccessStates[1][0]
+                            roomStatusInstance.save(update_fields=['Classroom_State', 'Classroom_AccessState'])
 
                             messages.info(self.request, 'CRAccessRequestChange')
                             view_context['ResponseMessage'] = 'RequestChangeSet'
                             return view_context
 
                         else:
+                            userReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Session_Start__lte=view_context['current_session_time'], CourseSchedule_Session_End__gte=view_context['current_session_time'], CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
+                            objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[10][0], ActionLevel=LevelAlert[2][0], Course_Reference=userReference)
+                            objectInstance.save()
                             messages.error(self.request, 'InvalidCommand')
                             view_context['ResponseMessage'] = 'RequestChangeSet'
-                            userReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
-                            objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[15][0], ActionLevel=LevelAlert[2][0], Course_Reference=userReference)
-                            objectInstance.save()
                             return view_context
 
                     else:
+                        userReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Session_Start__lte=view_context['current_session_time'], CourseSchedule_Session_End__gte=view_context['current_session_time'], CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
+                        objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[10][0], ActionLevel=LevelAlert[2][0], Course_Reference=userReference)
+                        objectInstance.save()
                         messages.error(self.request, 'InvalidCommand')
                         view_context['ResponseMessage'] = 'RequestChangeSet'
-
-                        userReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
-                        objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[15][0], ActionLevel=LevelAlert[2][0], Course_Reference=userReference)
-                        objectInstance.save()
-
                         return view_context
 
-                except (BaseException, RequestException):
+                except (BaseException, RequestException) as Err:
+                    print(Err)
                     messages.error(self.request, 'DeviceRequestFailed')
                     return view_context
 
             elif self.ActionState == "LockDoorAccess":
                 StateResponseContext = False if view_context['LockState'] == 'Locked' else True
-                dataFetchState = FetchLiveData('http://%s/RequestInstance?lock_state=%s' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address'], StateResponseContext), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
-
                 try:
+                    dataFetchState = FetchLiveData('http://%s/RequestInstance?lock_state=%s' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address'], StateResponseContext), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
                     if dataFetchState.ok:
                         if not current_user.user_role in ("Professor", "ITSO Supervisor"):
                             adminReference = CourseSchedule.objects.get(CourseSchedule_CourseReference__Course_Name="Admin Control Management", CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
 
                         else:
-                            adminReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
+                            adminReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Session_Start__lte=view_context['current_session_time'], CourseSchedule_Session_End__gte=view_context['current_session_time'], CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
 
                         objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[1][0] if StateResponseContext else ClassroomActionTypes[0][0], ActionLevel=LevelAlert[0][0], Course_Reference=adminReference)
                         objectInstance.save()
 
+
                         roomInstance = Classroom.objects.filter(Classroom_Unique_ID=self.kwargs['classUniqueID']).distinct()[0]
                         roomInstance.Classroom_State = ClassroomStates[1][0] if StateResponseContext else ClassroomStates[0][0]
                         roomInstance.save(update_fields=['Classroom_State'])
-
                         view_context['ResponseMessage'] = 'RequestChangeSet'
                         messages.info(self.request, 'LockStateRequestChange')
                         return view_context
@@ -319,9 +304,9 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                             adminReference = CourseSchedule.objects.get(CourseSchedule_CourseReference__Course_Name="Admin Control Management", CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
 
                         else:
-                            adminReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
+                            adminReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Session_Start__lte=view_context['current_session_time'], CourseSchedule_Session_End__gte=view_context['current_session_time'], CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
 
-                        objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[3][0] if StateResponseContext else ClassroomActionTypes[4][0], ActionLevel=LevelAlert[1][0], Course_Reference=adminReference)
+                        objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[4][0] if StateResponseContext else ClassroomActionTypes[5][0], ActionLevel=LevelAlert[1][0], Course_Reference=adminReference)
                         objectInstance.save()
 
                         view_context['ResponseMessage'] = 'RequestChangeSet'
@@ -337,14 +322,13 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                     return view_context
 
             elif self.ActionState == "DevRestart":
-
                 try:
                     if not current_user.user_role in ("Professor", "ITSO Supervisor"):
                         dataFetchState = FetchLiveData('http://%s/RequestInstance?dev_rstrt=initiate' % (Device_MetaData_IP['CourseSchedule_Room__Classroom_Dev__Device_IP_Address']), auth=(str(Device_MetaData_Name['CourseSchedule_Room__Classroom_Dev__Device_Name']), passUniqueID), timeout=5)
                         if dataFetchState.ok:
 
                             adminReference = CourseSchedule.objects.get(CourseSchedule_CourseReference__Course_Name="Admin Control Management", CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
-                            objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[7][0], ActionLevel=LevelAlert[2][0], Course_Reference=adminReference)
+                            objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[6][0], ActionLevel=LevelAlert[2][0], Course_Reference=adminReference)
                             objectInstance.save()
 
                             messages.info(self.request, 'DevRestartRequestChange')
@@ -354,19 +338,20 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                         else:
                             messages.error(self.request, 'InvalidCommand')
                             view_context['ResponseMessage'] = 'RequestChangeSet'
-                            userReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
-                            objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[14][0], ActionLevel=LevelAlert[2][0], Course_Reference=userReference)
+                            userReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Session_Start__lte=view_context['current_session_time'], CourseSchedule_Session_End__gte=view_context['current_session_time'], CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
+                            objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[9][0], ActionLevel=LevelAlert[2][0], Course_Reference=userReference)
                             objectInstance.save()
                             return view_context
                     else:
                         messages.info(self.request, 'InvalidCommand')
                         view_context['ResponseMessage'] = 'RequestChangeSet'
-                        userReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
-                        objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[14][0], ActionLevel=LevelAlert[2][0], Course_Reference=userReference)
+                        userReference = CourseSchedule.objects.get(CourseSchedule_Instructor__first_name=current_user.first_name, CourseSchedule_Instructor__middle_name=current_user.middle_name, CourseSchedule_Instructor__last_name=current_user.last_name, CourseSchedule_Session_Start__lte=view_context['current_session_time'], CourseSchedule_Session_End__gte=view_context['current_session_time'], CourseSchedule_Room=classroomPointer[0]['Classroom_CompleteString'])
+                        objectInstance = ClassroomActionLog.objects.create(UserActionTaken=ClassroomActionTypes[9][0], ActionLevel=LevelAlert[2][0], Course_Reference=userReference)
                         objectInstance.save()
                         return view_context
 
-                except (BaseException, RequestException):
+                except (BaseException, RequestException) as Err:
+                    print(Err)
                     messages.error(self.request, 'DeviceRequestFailed')
                     return view_context
 
@@ -396,12 +381,12 @@ class ScheduleListView(PermissionRequiredMixin, ListView):
     permission_required = 'SCControlSystem.course_schedule_viewable'
 
     more_context = {
-        "title_view": "Your Schedules",
+        "title_view": "Your Class Schedule",
         "ClassInstance": str(__qualname__),
     }
 
     def get_queryset(self):
-        return CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=self.request.user.first_name, CourseSchedule_Instructor__middle_name=self.request.user.middle_name, CourseSchedule_Instructor__last_name=self.request.user.last_name).order_by('CourseSchedule_Session_Start')
+        return CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=self.request.user.first_name, CourseSchedule_Instructor__middle_name=self.request.user.middle_name, CourseSchedule_Instructor__last_name=self.request.user.last_name).order_by('CourseSchedule_Lecture_Day', 'CourseSchedule_Session_Start')
         #CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name="Lily Ann", CourseSchedule_Instructor__middle_name="Ann", CourseSchedule_Instructor__last_name="Rastica").order_by('CourseSchedule_Session_Start')
 
     def get_context_data(self, **kwargs): # ! Override Get_Context_Data by adding more data.
@@ -416,7 +401,7 @@ class ScheduleListView(PermissionRequiredMixin, ListView):
 
         view_context['current_session_time'] = datetime.datetime.now().time()
 
-        scheduleContainer = CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=self.request.user.first_name, CourseSchedule_Instructor__middle_name=self.request.user.middle_name, CourseSchedule_Instructor__last_name=self.request.user.last_name).order_by('CourseSchedule_Session_Start')
+        scheduleContainer = CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name=self.request.user.first_name, CourseSchedule_Instructor__middle_name=self.request.user.middle_name, CourseSchedule_Instructor__last_name=self.request.user.last_name, CourseSchedule_Session_Start__lte=view_context['current_session_time'], CourseSchedule_Session_End__gte=view_context['current_session_time'],).order_by('CourseSchedule_Session_Start')
         for scheduleCandidate in scheduleContainer:
             tempStartTimeStr = scheduleCandidate.CourseSchedule_Session_Start
             tempEndTimeStr = scheduleCandidate.CourseSchedule_Session_End
