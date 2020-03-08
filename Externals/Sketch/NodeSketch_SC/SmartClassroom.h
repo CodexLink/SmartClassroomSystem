@@ -102,7 +102,7 @@ class SC_MCU_DRVR
     enum SENS_DAT_PINS
     {
         TEMP_HUD_DAT_PIN = D0,
-        PIR_DAT_PIN = D3,
+        PIR_DAT_PIN = SSD3,
     };
 
     struct WIFI_CRENDENTIALS
@@ -130,9 +130,7 @@ public:
         WAIT_CLEAR,
         DISP_CR_INFO,
         DEBUG_FNGRPRNT_ENROLL,
-        DEBUG_FNGRPRNT_VERIFY,
-        DEBUG_MCU_GENERALIZED, // Generalized Test. Meaning MCU and with its components are being tested.
-
+        DEBUG_FNGRPRNT_VERIFY
     };
 
     enum RESTATED_DEV_PINS
@@ -148,7 +146,7 @@ public:
         FNGR_RX_PIN = D6,
         RELAY_FRST_PIN = D7,
         RELAY_SCND_PIN = TX_OVERRIDE,
-        RELAY_THRD_PIN = SSD3,
+        //RELAY_THRD_PIN = D4,
         //RELAY_FRTH_PIN = D8,  Unused due to PIN Pulled LOW which would result to device not botting up.
     };
 
@@ -165,7 +163,7 @@ public:
     struct AUTH_STATE
     {
         bool AUTH_CR_DOOR = 0;              // 1 Unlocked, 0 Locked
-        bool AUTH_CR_ACCESS = 1;            // 1 Enabled, 0 Disabled
+        bool AUTH_CR_ACCESS = 0;            // 1 Enabled, 0 Disabled
         bool NON_AUTH_ELECTRIC_STATE = 0;   // 1 Enabled, 0 Disabled
         bool AUTH_FGPRT_STATE = 0;          // 1 For Currently Authenticated, Else Not Authenticated
     } AUTH_INST_CONT;
@@ -180,7 +178,7 @@ public:
         char AUTH_DEV_USN[CONST_VAL::EEPROM_DEV_USN_CHAR_LEN + 1] = "NodeMCU | Q-5424" /**/;
         char AUTH_DEV_PWD[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1] = "e776ffc28b524d318624bc39d7efea0e" /**/;
 
-        char CURRENT_COURSE_CODENAME[CONST_VAL::EEPROM_COURSE_CODE_LENGTH + 1];
+        char CURRENT_COURSE_CODENAME[CONST_VAL::EEPROM_COURSE_CODE_LENGTH + 1] = "Unknown";
         uint16_t AUTH_USER_ID_FNGRPRNT = 0; // Must be set by user.
     } DEV_INST_CREDENTIALS;
 
@@ -191,15 +189,18 @@ public:
     uint8_t *structStorage = (uint8_t *)&DEV_INST_CREDENTIALS;
     bool sketchForceStop;
 
+    bool SketchForceStructOverride = false;
+
     // Make a struct for this one.
     const String SERVER_IP_ADDRESS = "192.168.100.5";
     const uint16_t SERVER_PORT = 8000;
 
     bool PIR_ARR_OUTPUT[CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS] = {0};
     bool ForceEEPROMUpdate = false;
-    //# of True +0 # of False
     /* PIR Calculation */
 
+    char SER_INPUT_RAW = '0';
+    uint16_t SER_INPUT_ID = 0;
 
     // Constructor
     SC_MCU_DRVR(uint16_t BAUD_RATE, const char *SSID, const char *PW);
@@ -216,10 +217,7 @@ private:
 
     bool checkPresence();
     bool checkWiFiConnection();
-
-    // Outputs PIR Array Set
-    void PIR_updateArray();
-    void PIR_outputState();
+    inline void PIR_clearArray();
     // Checks if PIR pass the percentage to check if we have to maintain the state of the classroom.
     bool PIR_isPassed();
     //void InterpretData(DataInterpretTypes DataType);
