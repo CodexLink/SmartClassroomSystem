@@ -35,9 +35,9 @@
 
 #include "SmartClassroom.h"
 
-SC_MCU_DRVR SC(9600, "HW_EcLi284255H_Cdx", "@Li2019_b015@");
-//SC_MCU_DRVR SC(9600, "CodexLink", "01010101");
-//SC_MCU_DRVR SC(9600, "SCMainServer", "TIP-QC-SC-NODE-PARENT");
+SC_MCU_DRVR SC(9600, "HW_EcLi284255H_Cdx", "@Li2019_b015@", "192.168.100.5", 8000);
+//SC_MCU_DRVR SC(9600, "CodexLink", "01010101", "192.168.100.5", 8000);
+//SC_MCU_DRVR SC(9600, "SCMainServer", "TIP-QC-SC-NODE-PARENT", "192.168.100.5", 8000);
 ESP8266WebServer NodeServer(80); // ! Make this public. Cause a lot of CONFLICTS.
 
 // Unreferenced / Unclassed functions
@@ -127,6 +127,7 @@ void HandleGET_SetInstance()
     {
         SC.AUTH_INST_CONT.AUTH_CR_DOOR = false;
         SC.AUTH_INST_CONT.AUTH_CR_ACCESS = false;
+        SC.sketchForceStop = true;
         digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, HIGH);
         digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, HIGH);
         NodeServer.send(200, "text/plain", "CR_ACCESS |> CHANGED TO 'DISABLED' |> OK");
