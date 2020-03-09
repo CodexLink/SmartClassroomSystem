@@ -33,19 +33,56 @@
 
 #include "SmartClassroom.h"
 
+/*
+    ! Class Initializations | CPP File — START
+
+    @status: Done
+    @concept: It is a set of class instiantated from local CPP file that contains all class functions but not included in the class given from the SC Library Header.
+    @context:  Why?
+    @context:      - The main reason is, we cannot initialize them with Arguments in Brackets.
+    @context:      - The initialization style is a method from a C++ 14 from which gives us the ability to give the parent object the ability to access functions from the instantiated objects.
+    @context:      - The candidates such as SoftwareSerial, GT5X and GT5X_DeviceInfo (which is correlated with GTX5X Object Initializer) produces an error from which I cannot solve.
+    @context:      - The complexity of the problem given when they're initialized in the class context is very high. To which, I have to do 'this' method as my conclusion since relying on the stackoverflow for so long I cannot fix it.
+    @issue:  Disadvantages
+    @issue:      - I don't know what would be the disadvantage since I'm not that kind of aware from the performance.
+    @issue:      - But in the end, it might violate the CPP rules.
+
+*/
 SoftwareSerial FP_WIRE(SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::FNGR_RX_PIN, SC_MCU_DRVR::SENS_DAT_PINS_PUBLIC::FNGR_TX_PIN);
 GT5X FPController(&FP_WIRE);
 GT5X_DeviceInfo FP_DEV_INFO;
+//  ! Class Initializations | CPP File — END
 
-SC_MCU_DRVR::SC_MCU_DRVR(uint16_t BAUD_RATE, const char *SSID, const char *PW)
+/*
+    ! Class Constructor — START
+
+    @status: Done
+    @concept: The Class Object To Perform when Initialized from any scope as long as the library exist from that desired location of class initialization.
+    @data: Fields Required are (1) BAUD_RATE, (2) SSID of WiFi and (3) PW of WiFi
+    @context: Copies Given Arguments to the Class 'WIFI_INST_STRUCT' Structure
+    @insight: This was the very first function to be finished. This was intended before to make things easier to debug and switch stuffs.
+*/
+SC_MCU_DRVR::SC_MCU_DRVR(uint16_t SUPPLIED_BAUD_RATE, const char *SUPPLIED_SSID, const char *SUPPLIED_PW, const String SUPPLIED_SERVER_IP_ADDRESS, const uint16_t SUPPLIED_SERVER_PORT)
 {
-    __BAUD_RATE = BAUD_RATE;
-    strcpy(WIFI_INST_STRUCT.WIFI_SSID, SSID);
-    strcpy(WIFI_INST_STRUCT.WIFI_PW, PW);
+    __BAUD_RATE = SUPPLIED_BAUD_RATE;
+    strcpy(WIFI_INST_STRUCT.WIFI_SSID, SUPPLIED_SSID);
+    strcpy(WIFI_INST_STRUCT.WIFI_PW, SUPPLIED_PW);
+    SERVER_IP_ADDRESS = SUPPLIED_SERVER_IP_ADDRESS;
+    SERVER_PORT = SUPPLIED_SERVER_IP_ADDRESS;
 }
+//    ! Class Constructor — END
 
+/*
+    ! Parent Class -> Begin() Function — Second Layer of Class Initialization
+
+    @status: Done
+    @concept: Initializes All Other Instantiated Class Sub Initializer Function (This means, instantiated class similar begin() function)
+    @context: This will be the first one to output for each MCU to be rebooted and powered up.
+    @issue: We cannot clear text from which the NodeMCU produces some invalid characters everytime they were booted or restarted from their current state.
+*/
 void SC_MCU_DRVR::begin()
 {
+    // * We first set our Baud RATE to show our Serial Prints everytime it was called.
     Serial.begin(__BAUD_RATE);
 
     Serial.println();
@@ -58,15 +95,15 @@ void SC_MCU_DRVR::begin()
     Serial.println(F("    - Joshua Santos |> Hardware Manager and Builder"));
     Serial.println(F("    - Johnell Casey Murillo Panotes |> Hardware Assistant"));
 
-    LCD_DRVR.begin();
-    WiFi.begin(WIFI_INST_STRUCT.WIFI_SSID, WIFI_INST_STRUCT.WIFI_PW); //WiFi connection
-    FP_WIRE.begin(__BAUD_RATE);
-    FPController.begin(&FP_DEV_INFO);
-    FPController.set_led(false);
-    EEPROM.begin(CONST_VAL::EEPROM_MAX_BYTE);
+    LCD_DRVR.begin(); // * Start LCD I2C 20x4 Instance
+    WiFi.begin(WIFI_INST_STRUCT.WIFI_SSID, WIFI_INST_STRUCT.WIFI_PW); // * We start connecting to our given value of WiFi SSD and PW.
+    FP_WIRE.begin(__BAUD_RATE); // Software Serial, Related to Serial Objects. Start with BAUD Rate similarly to Serial Instantiation to communicate with some devices attached to it. (Technically Used for Fingerprint Communication)
+    FPController.begin(&FP_DEV_INFO); // ! Start FP GT5X Driver
+    FPController.set_led(false); // ! Set Fingerprint LED to False To See if it could follow instruction from the MCU.
+    EEPROM.begin(CONST_VAL::EEPROM_MAX_BYTE); // * Start Emulated EEPROM to be used to Retrieve / Save Data from the Last MCU Session with recent communication with the Server.
 
     // ! We can execute this function only if we did some factory configuration.
-    if (DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT == NULL || DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME == NULL || DEV_INST_CREDENTIALS.DEV_CR_UUID == NULL || DEV_INST_CREDENTIALS.DEV_UUID == NULL || DEV_INST_CREDENTIALS.AUTH_DEV_USN == NULL || DEV_INST_CREDENTIALS.AUTH_DEV_PWD == NULL)
+    if (!SketchForceStructOverride || DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT == NULL || DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME == NULL || DEV_INST_CREDENTIALS.DEV_CR_UUID == NULL || DEV_INST_CREDENTIALS.DEV_UUID == NULL || DEV_INST_CREDENTIALS.AUTH_DEV_USN == NULL || DEV_INST_CREDENTIALS.AUTH_DEV_PWD == NULL)
     {
         retrieveMetaData();
     }
@@ -78,7 +115,7 @@ void SC_MCU_DRVR::begin()
     pinMode(RESTATED_DEV_PINS::ESP_LED, OUTPUT);
     pinMode(RESTATED_DEV_PINS::MCU_LED, OUTPUT);
 
-    pinMode(SENS_DAT_PINS::PIR_DAT_PIN, OUTPUT);
+    pinMode(SENS_DAT_PINS::PIR_DAT_PIN, INPUT);
     TempSens.setup(SENS_DAT_PINS::TEMP_HUD_DAT_PIN, DHTesp::DHT11);
 
     pinMode(SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, OUTPUT);
@@ -87,9 +124,6 @@ void SC_MCU_DRVR::begin()
     pinMode(SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, OUTPUT);
     digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, HIGH);
 
-    pinMode(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, OUTPUT);
-    digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, HIGH);
-
     LCD_DRVR.noBacklight();
     LCD_DRVR.clear();
     delay(500);
@@ -97,6 +131,7 @@ void SC_MCU_DRVR::begin()
     FPController.set_led(true);
     return;
 }
+//  ! Parent Class -> Begin() Function — Second Layer of Class Initialization
 
 // ! A Function to Retrieve EEPROM MetaData
 
@@ -155,7 +190,7 @@ inline void SC_MCU_DRVR::retrieveMetaData()
 inline void SC_MCU_DRVR::saveMetaData()
 {
     Serial.println();
-    Serial.println(F("Structured Data with Content Detected Changing nor Updated. Saving Those Values..."));
+    Serial.println(F("Structured Data with Content Changing nor Updated Detected. Saving Those Values..."));
     Serial.println();
     Serial.println(F("Meta Data From Structured Data: "));
     Serial.print(F("DEV_CR_ASSIGNMENT |> "));
@@ -202,17 +237,13 @@ bool SC_MCU_DRVR::checkPresence()
 {
     if (SketchTimeCheck(CONST_VAL::PIR_TRIGGER_SECONDS))
     {
-        digitalWrite(RELAY_FRST_PIN, HIGH);
-        digitalWrite(RELAY_SCND_PIN, HIGH);
-        digitalWrite(RELAY_THRD_PIN, HIGH);
-        AUTH_INST_CONT.AUTH_CR_DOOR = false;
-        AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
-
-        if (PIR_isPassed())
+        if (!PIR_isPassed())
         {
-
+            digitalWrite(RELAY_FRST_PIN, HIGH);
+            digitalWrite(RELAY_SCND_PIN, HIGH);
             LCD_DRVR.setCursor(0, 3);
-            LCD_DRVR.print(F("> Presence TimeOut!"));
+            LCD_DRVR.print(F("> Presence TimedOut!"));
+            Serial.println(F("Presence PIR Failed! Closing Classroom..."));
 
             HTTPClient UpdatePOSTData;
             String DevUUID_Req = DEV_INST_CREDENTIALS.DEV_UUID;
@@ -222,29 +253,36 @@ bool SC_MCU_DRVR::checkPresence()
 
             UpdatePOSTData.begin(RequestDest);
             UpdatePOSTData.addHeader("Content-Type", "text/plain");
-            uint8_t ReponseRequest = UpdatePOSTData.POST("NODEMCU POST REQ |> LOCK AUTHENTICATION");
+            uint8_t ResponseRequest = UpdatePOSTData.POST("NODEMCU POST REQ |> LOCK AUTHENTICATION");
             String ResponseMsg = UpdatePOSTData.getString();
-
-            delay(1000);
-
             Serial.print(F("Query | IP Target |> "));
             Serial.println(RequestDest);
             Serial.print(F("HTTP Response |> "));
-            Serial.println(ReponseRequest);
+            Serial.println(ResponseRequest);
             Serial.print(F("HTTP Message |> "));
-            delay(1000);
+
+            PIR_clearArray();
+
+            AUTH_INST_CONT.AUTH_CR_DOOR = false;
+            AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = false;
+            AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
+            sketchForceStop = true;
+            //checkPresence();
             return false;
         }
         else
         {
             // Do something with the millis() double the value based on given millis();
             delay(1000);
+            Serial.print(F("Presence PIR Passed! Extending Time Once Again..."));
+            sketchForceStop = false;
+            PIR_clearArray();
             return true;
         }
     }
     else
     {
-        PIR_updateArray();
+        delay(250);
         return true;
     }
 }
@@ -254,12 +292,15 @@ bool SC_MCU_DRVR::SketchTimeCheck(uint32_t TimeIntervalToMeet)
     uint_fast32_t sketchBaseTime = millis();
     static bool sketchRelease = true;
     static uint_fast32_t sketchPreviousHit;
+    static uint_fast32_t PIR_CurrentTime;
+    static uint8_t PIR_ElemIndexFocus;
 
     if (sketchForceStop)
     {
         sketchForceStop = false;
         sketchRelease = true;
-        Serial.println(F("Sketch Time Process Stopped."));
+        PIR_clearArray();
+        Serial.println(F("Sketch Time Process Stopped..."));
         return false;
     }
 
@@ -277,6 +318,25 @@ bool SC_MCU_DRVR::SketchTimeCheck(uint32_t TimeIntervalToMeet)
     Serial.print(sketchBaseTime - sketchPreviousHit);
     Serial.print(F(" |> Required Time To Meet: "));
     Serial.println(TimeIntervalToMeet);
+
+    Serial.println();
+    PIR_ElemIndexFocus = (uint8_t)(((sketchBaseTime - sketchPreviousHit) / 1000) / 30);
+    Serial.print(F("PIR State Array |> (Focused at Index Element "));
+    Serial.print(PIR_ElemIndexFocus);
+    Serial.print(F(") |> ["));
+
+    if (digitalRead(SENS_DAT_PINS::PIR_DAT_PIN) == HIGH)
+        PIR_ARR_OUTPUT[PIR_ElemIndexFocus] = true;
+
+    for (size_t PIR_ARR_ELEM = CONST_VAL::NULL_CONTENT; PIR_ARR_ELEM < CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS; PIR_ARR_ELEM++)
+    {
+        Serial.print(PIR_ARR_OUTPUT[PIR_ARR_ELEM]);
+        Serial.print((PIR_ARR_ELEM + 1 == CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS) ? "" : ", ");
+    }
+    Serial.println(F("]"));
+
+    Serial.println();
+
     if (!sketchRelease && (uint_fast32_t)(sketchBaseTime - sketchPreviousHit) >= TimeIntervalToMeet)
     {
         sketchRelease = true;
@@ -362,9 +422,17 @@ void SC_MCU_DRVR::displayLCDScreen(DataDisplayTypes Screens)
 
     case DataDisplayTypes::DISP_CR_INFO:
         digitalWrite(RESTATED_DEV_PINS::MCU_LED, LOW);
-        ENV_INST_CONT.DHT11_TEMP = (isnan(ENV_INST_CONT.DHT11_TEMP) == TempSens.getTemperature()) ? ENV_INST_CONT.DHT11_TEMP : TempSens.getTemperature();
-        ENV_INST_CONT.DHT11_HUMID = (isnan(ENV_INST_CONT.DHT11_HUMID) == TempSens.getHumidity()) ? ENV_INST_CONT.DHT11_HUMID : TempSens.getHumidity();
-        ENV_INST_CONT.PIR_OPTPT = digitalRead(SENS_DAT_PINS::PIR_DAT_PIN);
+        if (isnan(TempSens.getTemperature() && isnan(TempSens.getHumidity())))
+        {
+            ENV_INST_CONT.DHT11_TEMP = ENV_INST_CONT.DHT11_TEMP;
+            ENV_INST_CONT.DHT11_HUMID = ENV_INST_CONT.DHT11_HUMID;
+        }
+        else
+        {
+            ENV_INST_CONT.DHT11_TEMP = TempSens.getTemperature();
+            ENV_INST_CONT.DHT11_HUMID = TempSens.getHumidity();
+        }
+        ENV_INST_CONT.PIR_OPTPT = (digitalRead(SENS_DAT_PINS::PIR_DAT_PIN) == HIGH) ? true : false;
         LCD_DRVR.setCursor(0, 0);
         LCD_DRVR.print(DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT);
         LCD_DRVR.print(F(" | "));
@@ -380,67 +448,51 @@ void SC_MCU_DRVR::displayLCDScreen(DataDisplayTypes Screens)
         LCD_DRVR.print(F("C | H:"));
         LCD_DRVR.print(ENV_INST_CONT.DHT11_HUMID, 1);
         LCD_DRVR.print(F("%"));
-        //Serial.print("MODULE REPORTS | T: ");
-        //Serial.print(ENV_INST_CONT.DHT11_TEMP);
-        //Serial.print("C | HTI: ");
-        //Serial.print(ENV_INST_CONT.DHT11_HT_INDX);
-        //Serial.print("C | HUD: ");
-        //Serial.print(ENV_INST_CONT.DHT11_HUMID);
-        //Serial.print("%");
-        //Serial.print(" | MOTION SENS: ");
-        //Serial.println(ENV_INST_CONT.PIR_OPTPT);
+        Serial.print(F("MODULE REPORTS | T: "));
+        Serial.print(ENV_INST_CONT.DHT11_TEMP);
+        Serial.print(F("C | HUD: "));
+        Serial.print(ENV_INST_CONT.DHT11_HUMID);
+        Serial.print(F("%"));
+        Serial.print(F(" | MOTION SENS: "));
+        Serial.println(ENV_INST_CONT.PIR_OPTPT);
         digitalWrite(RESTATED_DEV_PINS::MCU_LED, HIGH);
         break;
 
     case DataDisplayTypes::DEBUG_FNGRPRNT_ENROLL:
         LCD_DRVR.setCursor(0, 0);
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
+        LCD_DRVR.print(F("SC FNGRPRNT ENROLL"));
         LCD_DRVR.setCursor(0, 1);
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
+        LCD_DRVR.print(F("User Registration"));
         LCD_DRVR.setCursor(0, 2);
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        break;
+        LCD_DRVR.print(F("> Target ID: "));
+        LCD_DRVR.print(SER_INPUT_ID);
+        LCD_DRVR.setCursor(0, 3);
+        while (1)
+        {
+            while (!Serial.available())
+            {
+                yield();
+            }
+            SER_INPUT_RAW = Serial.read();
+            if (isdigit(SER_INPUT_RAW))
+                break;
+            SER_INPUT_ID *= 10;
+            SER_INPUT_ID += SER_INPUT_RAW - '0';
+            LCD_DRVR.print(F("> Input ID at SERL!"));
+            yield();
+            ;
+        }
+        LCD_DRVR.print(F("> Ready..."));
 
     case DataDisplayTypes::DEBUG_FNGRPRNT_VERIFY:
         LCD_DRVR.setCursor(0, 0);
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
+        LCD_DRVR.print(F("SC FNGRPRNT VERIFY"));
         LCD_DRVR.setCursor(0, 1);
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
+        LCD_DRVR.print(F("User Verification"));
         LCD_DRVR.setCursor(0, 2);
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        break;
-
-    case DataDisplayTypes::DEBUG_MCU_GENERALIZED:
-        LCD_DRVR.setCursor(0, 0);
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        LCD_DRVR.setCursor(0, 1);
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        LCD_DRVR.setCursor(0, 2);
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
-        //LCD_DRVR.print();
+        LCD_DRVR.print(F("> Valid ID: "));
+        LCD_DRVR.setCursor(0, 3);
+        LCD_DRVR.print(F("> Ready To Scan."));
         break;
 
     default:
@@ -479,7 +531,6 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
             {
                 digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, LOW);
                 digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, LOW);
-                digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, LOW);
                 AUTH_INST_CONT.AUTH_CR_DOOR = true;
                 AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = true;
                 AUTH_INST_CONT.AUTH_FGPRT_STATE = true;
@@ -490,7 +541,6 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
             {
                 digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, HIGH);
                 digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, HIGH);
-                digitalWrite(SENS_DAT_PINS_PUBLIC::RELAY_THRD_PIN, HIGH);
                 AUTH_INST_CONT.AUTH_CR_DOOR = false;
                 AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = false;
                 AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
@@ -503,18 +553,17 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
 
             UpdatePOSTData.begin(RequestDest);
             UpdatePOSTData.addHeader("Content-Type", "text/plain");
-            uint8_t ReponseRequest = UpdatePOSTData.POST("NODEMCU POST REQ |> LOCK AUTHENTICATION");
+            uint8_t ResponseRequest = UpdatePOSTData.POST("NODEMCU POST REQ |> LOCK AUTHENTICATION");
             String ResponseMsg = UpdatePOSTData.getString();
 
             delay(1000);
-
             Serial.print(F("Query | IP Target |> "));
             Serial.println(RequestDest);
             Serial.print(F("HTTP Response |> "));
-            Serial.println(ReponseRequest);
+            Serial.println(ResponseRequest);
             Serial.print(F("HTTP Message |> "));
 
-            if (ReponseRequest == HTTP_CODE_OK)
+            if (ResponseRequest == HTTP_CODE_OK)
             {
                 Serial.println(ResponseMsg);
             }
@@ -532,6 +581,7 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
     else if (!AUTH_INST_CONT.AUTH_CR_ACCESS)
     {
         LCD_DRVR.setCursor(0, 3);
+        checkPresence();
         LCD_DRVR.print(F("> Access Disabled!  "));
     }
     else if (AUTH_INST_CONT.AUTH_FGPRT_STATE)
@@ -554,21 +604,24 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
     return;
 }
 
-void SC_MCU_DRVR::PIR_updateArray()
+// Then clear the PIR sensor array state by for loop again.
+inline void SC_MCU_DRVR::PIR_clearArray()
 {
-    PIR_outputState();
-    return;
-}
-void SC_MCU_DRVR::PIR_outputState()
-{
+    Serial.println();
+    Serial.println("PIR Array Output | Clearing...");
+    for (size_t PIR_ARR_ELEM = CONST_VAL::NULL_CONTENT; PIR_ARR_ELEM < CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS; PIR_ARR_ELEM++)
+    {
+        PIR_ARR_OUTPUT[PIR_ARR_ELEM] = 0;
+    }
+    Serial.println("PIR Array Output | Done!");
+    Serial.println();
     return;
 }
 
 bool SC_MCU_DRVR::PIR_isPassed()
 {
-    uint8_t Bool_TrueCount = CONST_VAL::NULL_CONTENT, Bool_FalseCount = CONST_VAL::NULL_CONTENT;
-    float Calcd_Percentage = 0;
-
+    uint8_t Bool_TrueCount = CONST_VAL::NULL_CONTENT, Bool_FalseCount = CONST_VAL::NULL_CONTENT, PIR_Percentage = CONST_VAL::NULL_CONTENT;
+    Serial.println("PIR Calculation Percentage | Time Extension Checking...");
     for (size_t PIR_ARR_ELEM = CONST_VAL::NULL_CONTENT; PIR_ARR_ELEM < CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS; PIR_ARR_ELEM++)
     {
 
@@ -576,9 +629,17 @@ bool SC_MCU_DRVR::PIR_isPassed()
         PIR_ARR_OUTPUT[PIR_ARR_ELEM] = 0;
         // Then clear the PIR sensor array state by for loop again.
     }
+    PIR_Percentage = (Bool_TrueCount * 100) / 10;
 
-    // Do Condition Shorthand here for Return Statement.
-    Calcd_Percentage = (Bool_TrueCount + Bool_FalseCount) / CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS;
+    Serial.print("Time Extension Result |> Present: ");
+    Serial.print(Bool_TrueCount);
+    Serial.print(" | Not-Present: ");
+    Serial.println(Bool_FalseCount);
 
-    return true;
+    Serial.print("Calculation Result | ");
+    Serial.print(PIR_Percentage);
+    Serial.println("%");
+    Serial.println();
+
+    return (PIR_Percentage * 100 >= 50) ? true : false;
 }
