@@ -146,7 +146,7 @@ public:
         FNGR_RX_PIN = D6,
         RELAY_FRST_PIN = D7,
         RELAY_SCND_PIN = TX_OVERRIDE,
-        //RELAY_THRD_PIN = D4,
+        //RELAY_THRD_PIN = D4, Unused
         //RELAY_FRTH_PIN = D8,  Unused due to PIN Pulled LOW which would result to device not botting up.
     };
 
@@ -179,26 +179,23 @@ public:
         char AUTH_DEV_PWD[CONST_VAL::EEPROM_DEV_UID_CHAR_LEN + 1] = "e776ffc28b524d318624bc39d7efea0e" /**/;
 
         char CURRENT_COURSE_CODENAME[CONST_VAL::EEPROM_COURSE_CODE_LENGTH + 1] = "Unknown";
-        uint16_t AUTH_USER_ID_FNGRPRNT = 0; // Must be set by user.
+        uint16_t AUTH_USER_ID_FNGRPRNT = 0;
     } DEV_INST_CREDENTIALS;
-
 
     // ! Referrable to saveMetaData and retrieveMetaData
     // ! The code below is a uin8_t (unsigned char pointer variable) that stores the address of the struct DEV_CREDENTIALS.
     // * They're converted to uint8_t or typecasted to uint8_t to be iterrable as object.
+
+    // @TODO: Make a struct for this one.
     uint8_t *structStorage = (uint8_t *)&DEV_INST_CREDENTIALS;
     bool sketchForceStop;
 
     bool SketchForceStructOverride = false;
-
-    // Make a struct for this one.
-    const String SERVER_IP_ADDRESS = "192.168.100.5";
-    const uint16_t SERVER_PORT = 8000;
+    String SERVER_IP_ADDRESS = "192.168.100.5"; // By Default
+    uint16_t SERVER_PORT = 8000; // By Default
 
     bool PIR_ARR_OUTPUT[CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS] = {0};
     bool ForceEEPROMUpdate = false;
-    /* PIR Calculation */
-
     char SER_INPUT_RAW = '0';
     uint16_t SER_INPUT_ID = 0;
 
@@ -208,19 +205,15 @@ public:
     bool mntndWiFiConnection();
     void displayLCDScreen(DataDisplayTypes Screens);
     void authCheck_Fngrprnt();
-    //void
     bool SketchTimeCheck(uint32_t TimeIntervalToMeet);
     inline void saveMetaData();
 
 private:
     inline void retrieveMetaData();
-
     bool checkPresence();
     bool checkWiFiConnection();
     inline void PIR_clearArray();
-    // Checks if PIR pass the percentage to check if we have to maintain the state of the classroom.
     bool PIR_isPassed();
-    //void InterpretData(DataInterpretTypes DataType);
 };
 
 // END OF FILE SMARTROOM
