@@ -79,8 +79,6 @@ try:
         print("Process | Instantiating Smart Classroom Data Stream Handler in DJango via RunScript... ")
         ScriptInst = Popen("""lxterminal --title="Smart Classroom IoT Data Stream Handler | SC_DSH.py" -e python3 manage.py runscript SC_DSH""", stdin=PIPE, stdout=PIPE, shell=True)
         print("Process | Instantiated!\n")
-        print(ServerInst.pid)
-        print(ScriptInst.pid)
 
     else:
         print("Platform Undetermined!")
@@ -93,8 +91,8 @@ try:
 except KeyboardInterrupt:
     if ReturnedOSName == "win32":
         print("Closing Child Processess of Parent Process Since Detected CTRL_C or CTRL_BREAK Event!")
-        run("""TASKKILL /F /FI "WINDOWTITLE eq SmartClassroom Data Stream Handler" /T""", shell=False)
-        run("""TASKKILL /F /FI "WINDOWTITLE eq SmartClassroom Django Server Handler" /T""", shell=False)
+        run("""TASKKILL /F /FI "WINDOWTITLE eq Smart Classroom Data Stream Handler" /T""", shell=False)
+        run("""TASKKILL /F /FI "WINDOWTITLE eq Smart Classroom Django Server Handler" /T""", shell=False)
         print("\nAll Threads Closed. Thank you!\n")
 
     elif ReturnedOSName == "linux":

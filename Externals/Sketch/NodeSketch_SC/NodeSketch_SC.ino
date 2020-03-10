@@ -119,13 +119,18 @@ void HandleGET_SetInstance()
     // This disables all access from the classroom. The relays will be turned off.
     if (NodeServer.arg("cr_access") == "True")
     {
-        SC.AUTH_INST_CONT.AUTH_CR_ACCESS = true;
+        digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, LOW);
+        digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, LOW);
+        SC.AUTH_INST_CONT.AUTH_CR_DOOR = true;
+        SC.AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = true;
+        SC.AUTH_INST_CONT.AUTH_FGPRT_STATE = true;
         NodeServer.send(200, "text/plain", "CR_ACCESS |> CHANGED TO 'ENABLED' |> OK");
     }
 
     else if (NodeServer.arg("cr_access") == "False")
     {
         SC.AUTH_INST_CONT.AUTH_CR_DOOR = false;
+        SC.AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = false;
         SC.AUTH_INST_CONT.AUTH_CR_ACCESS = false;
         SC.sketchForceStop = true;
         digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, HIGH);
