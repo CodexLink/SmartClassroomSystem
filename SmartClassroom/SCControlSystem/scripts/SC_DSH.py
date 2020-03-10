@@ -91,7 +91,7 @@ class SC_IoTDriver(object):
         print('    - Joshua Santos |> Hardware Manager and Builder')
         print('    - Johnell Casey Murillo Panotes |> Hardware Assistant\n')
         self.TimeoutDevCheck = TimeoutCondition
-        self.IsScheduleSessionChanged = False
+        self.SubjectOnScope = False
         self.RunTriggerRequestOnce = False
         return
 
@@ -210,8 +210,6 @@ class SC_IoTDriver(object):
             timeCurrent = datetime.datetime.now().time()
             dayCurrent = datetime.datetime.now().strftime('%A')
 
-
-
             # First we check if the device is currently associated with one of the rooms. Index 0 to make things clearer that we only need one. And easy to unpack the data.
             classroomPointer = Classroom.objects.filter(Classroom_Dev__Device_Unique_ID=StrToValidUUID(URLSterlData['DATA_HEADER']['DEV_UUID'])).values('Classroom_Unique_ID')[0]
 
@@ -222,57 +220,49 @@ class SC_IoTDriver(object):
 
             print('\nQuery | Classroom with %s Found!\n' % URLSterlData['DATA_HEADER']['DEV_UUID'])
             if classroomPointer:
-                enlistedScheduleCandidates = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=classroomPointer['Classroom_Unique_ID']).order_by('CourseSchedule_Session_Start')
+                enlistedScheduleCandidates = CourseSchedule.objects.filter(CourseSchedule_Room__Classroom_Unique_ID=classroomPointer['Classroom_Unique_ID'], CourseSchedule_Lecture_Day=dayCurrent).order_by('CourseSchedule_Session_Start')
                 print('Schedule Check | Checking Course Schedules for All Classroom Candidates To %s...\n' % (URLSterlData['DATA_HEADER']['DEV_NAME'],))
                 for CourseScheduleItem in enlistedScheduleCandidates:
-                    print('Schedule Override | Checking for Course %s Day and Time Scope...' % (CourseScheduleItem.CourseSchedule_CourseReference.Course_Code,))
-                    if dayCurrent == CourseScheduleItem.CourseSchedule_Lecture_Day:
-                        print('Schedule Override | Day Scope for Course %s is on scope within this day!' % (CourseScheduleItem.CourseSchedule_CourseReference.Course_Code,))
-                        if timeCurrent >= CourseScheduleItem.CourseSchedule_Session_Start and timeCurrent <= CourseScheduleItem.CourseSchedule_Session_End:
-                            #print(timeCurrent, '>=', CourseScheduleItem.CourseSchedule_Session_Start, 'and', timeCurrent,'<=', CourseScheduleItem.CourseSchedule_Session_End)
-                            if CourseScheduleItem.CourseSchedule_Availability == 'Not Available' or CourseScheduleItem.CourseSchedule_Availability == None or URLSterlData['DATA_HEADER']['CURR_COURSE_SESSION'] == "Unknown":
-                                print('Schedule Override | Overriding Device Configuration...')
+                    print("Schedule Check | Checking Course's %s Time Scope for Today (%s)..." % (CourseScheduleItem.CourseSchedule_CourseReference.Course_Code, dayCurrent))
+                    if timeCurrent >= CourseScheduleItem.CourseSchedule_Session_Start and timeCurrent <= CourseScheduleItem.CourseSchedule_Session_End:
+                        #print(timeCurrent, '>=', CourseScheduleItem.CourseSchedule_Session_Start, 'and', timeCurrent,'<=', CourseScheduleItem.CourseSchedule_Session_End)
+                        if CourseScheduleItem.CourseSchedule_Availability == 'Not Available' or CourseScheduleItem.CourseSchedule_Availability == None or URLSterlData['DATA_HEADER']['CURR_COURSE_SESSION'] == "Unknown":
+                            print('Schedule Override | Overriding Device Configuration...')
 
-                                courseTimeOnScope = CourseScheduleItem.CourseSchedule_CourseReference.Course_Code
-                                courseInstructorOnScope = CourseScheduleItem.CourseSchedule_Instructor.fp_id
-                                try:
-                                    devTargetUpdate = DataGETReq('http://%s/RequestInstance?dev_sched_user_course_replace=%s&dev_sched_user_assign_replace=%s&cr_access=%s' % (DevInterpret_IP, courseTimeOnScope, courseInstructorOnScope, True), timeout=5, auth=(URLSterlData['DATA_HEADER']['DEV_NAME'], URLSterlData['DATA_HEADER']['DEV_UUID']))
-                                    if devTargetUpdate.ok:
-                                        CourseScheduleItem.CourseSchedule_Availability='Available'
-                                        CourseScheduleItem.save(update_fields=['CourseSchedule_Availability'])
-                                        print('Schedule Override | Done!')
-                                        self.IsScheduleSessionChanged = False
-                                        break
-                                    else:
-                                        print('Schedule Override | Failed! Response may be Unauthorized or Forbidden! Retrying At Next Query... Info: %s' % (devTargetUpdate,))
+                            courseTimeOnScope = CourseScheduleItem.CourseSchedule_CourseReference.Course_Code
+                            courseInstructorOnScope = CourseScheduleItem.CourseSchedule_Instructor.fp_id
+                            try:
+                                devTargetUpdate = DataGETReq('http://%s/RequestInstance?dev_sched_user_course_replace=%s&dev_sched_user_assign_replace=%s&cr_access=%s' % (DevInterpret_IP, courseTimeOnScope, courseInstructorOnScope, True), timeout=5, auth=(URLSterlData['DATA_HEADER']['DEV_NAME'], URLSterlData['DATA_HEADER']['DEV_UUID']))
+                                if devTargetUpdate.ok:
+                                    CourseScheduleItem.CourseSchedule_Availability='Available'
+                                    CourseScheduleItem.save(update_fields=['CourseSchedule_Availability'])
+                                    print('Schedule Override | Done!')
+                                    self.SubjectOnScope = True
+                                    break
+                                else:
+                                    print('Schedule Override | Failed! Response may be Unauthorized or Forbidden! Retrying At Next Query... Info: %s' % (devTargetUpdate,))
 
-                                except RequestException as Err:
-                                    print('Error While Requesting Replacement... Info: %s' % Err)
-
-                            else:
-                                print('Schedule Override | Override Process was done already! Ignoring it!\n')
-                                self.IsScheduleSessionChanged = False
-                                break
+                            except RequestException as Err:
+                                print('Error While Requesting Replacement... Info: %s' % Err)
                         else:
-                            if CourseScheduleItem.CourseSchedule_Availability == 'Available':
-                                CourseScheduleItem.CourseSchedule_Availability = 'Not Available'
-                                CourseScheduleItem.save(update_fields=['CourseSchedule_Availability'])
-                            self.IsScheduleSessionChanged = True
-                            print('Schedule Override | Time Scope for Course %s is not on scope within this time!\n' % (CourseScheduleItem.CourseSchedule_CourseReference.Course_Code,))
+                            print('Schedule Override | Override Process was done already! Ignoring it!\n')
+                            self.SubjectOnScope = True
+                            break
+                    else:
+                        if CourseScheduleItem.CourseSchedule_Availability == 'Available':
+                            CourseScheduleItem.CourseSchedule_Availability = 'Not Available'
+                            CourseScheduleItem.save(update_fields=['CourseSchedule_Availability'])
 
-                    else:
-                        CourseScheduleItem.CourseSchedule_Availability = 'Not Available'
-                        CourseScheduleItem.save(update_fields=['CourseSchedule_Availability'])
-                        self.IsScheduleSessionChanged = True
-                        print('Schedule Override | Day Scope for Course %s is out of scope within this day.\n' % (CourseScheduleItem.CourseSchedule_CourseReference.Course_Code,))
-                else:
-                    if not self.IsScheduleSessionChanged:
-                        print('Schedule Override | There is a subject currently on schedule runtime! Configuration Remains...')
-                    else:
-                        CourseScheduleItem.CourseSchedule_Availability = 'Not Available'
-                        CourseScheduleItem.save(update_fields=['CourseSchedule_Availability'])
                         devTargetUpdate = DataGETReq('http://%s/RequestInstance?dev_sched_user_course_replace=%s&dev_sched_user_assign_replace=%s&cr_access=%s' % (DevInterpret_IP, "Unknown", 0, False), timeout=5, auth=(URLSterlData['DATA_HEADER']['DEV_NAME'], URLSterlData['DATA_HEADER']['DEV_UUID']))
-                        print('Schedule Override | No Other Such Subject Candidates! Setting Access to Disabled...')
+                        self.SubjectOnScope = False
+                        print('Schedule Override | Time Scope for Course %s is not on scope within this time!\n' % (CourseScheduleItem.CourseSchedule_CourseReference.Course_Code,))
+                else:
+                    if not self.SubjectOnScope:
+                        devTargetUpdate = DataGETReq('http://%s/RequestInstance?dev_sched_user_course_replace=%s&dev_sched_user_assign_replace=%s&cr_access=%s' % (DevInterpret_IP, "Unknown", 0, False), timeout=5, auth=(URLSterlData['DATA_HEADER']['DEV_NAME'], URLSterlData['DATA_HEADER']['DEV_UUID']))
+                        print('Schedule Override | No Other Such Subject Candidates! Device Access Disabled.')
+                    else:
+                        print("Schedule Override | There's a subject currently on schedule runtime! Device Access Enabled.")
+
 
             print('Schedule Check | Course Schedules Availability Updated!')
             # Next, we get all the schedule based on time scope and should be matched with the classroom associated device.
