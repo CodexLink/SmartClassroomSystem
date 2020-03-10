@@ -222,7 +222,7 @@
                 </div>
                 <div class="card-body list-group border-0" id="list-tab" role="tablist">
                     {% for SubjectCandidates in SubjectsInvolved %}
-                    <a href="#" class="list-group-item list-group-item-action {% if current_session_time >= SubjectCandidates.CourseSchedule_Session_Start and current_session_time <= SubjectCandidates.CourseSchedule_Session_End == schedule_weekday_name and SubjectCandidates.CourseSchedule_Lecture_Day and SubjectCandidates.CourseSchedule_CourseReference__Course_Code != 'ITSO 001' and SubjectCandidates.CourseSchedule_CourseReference__Course_Code != 'ITSO 004' %}active{% endif %}">
+                    <a href="#" class="list-group-item list-group-item-action {% if current_session_time >= SubjectCandidates.CourseSchedule_Session_Start and current_session_time <= SubjectCandidates.CourseSchedule_Session_End and SubjectCandidates.CourseSchedule_Lecture_Day == schedule_weekday_name and SubjectCandidates.CourseSchedule_CourseReference__Course_Code != 'ITSO 001' and SubjectCandidates.CourseSchedule_CourseReference__Course_Code != 'ITSO 004' %}active{% endif %}">
                         <div class="d-flex w-100">
                             <h6 class="mb-1 text-dark-primary">
                                 {{ SubjectCandidates.CourseSchedule_CourseReference__Course_Code }} |
