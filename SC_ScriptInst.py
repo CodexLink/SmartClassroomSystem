@@ -1,5 +1,5 @@
 """
-    ! Smart Classroom IoT Data Stream Handler | SC_DSH.py
+    ! Smart Classroom IoT Script Instantiator | SC_ScriptInst.py
     02/29/2020 | Janrey "CodexLink" Licas | http://github.com/CodexLink
 
     ! In Collaboration with
@@ -41,9 +41,9 @@ SERVER_PORT = 8000
 
 try:
     os.system('CLS')
-    os.system('title Smart Classroom IoT Data Stream Handler')
+    os.system('title Smart Classroom IoT Script Instantiator')
 
-    print("Smart Classroom IoT Data Stream Handler | SC_DSH.py")
+    print("Smart Classroom IoT Script Instantiator | SC_ScriptInst.py")
     print('02/29/2020 | By Janrey "CodexLink" Licas | http://github.com/CodexLink\n')
     print('In Collaboration with')
     print('    - Ronald Langaoan Jr. |> Hardware Designer and Manager')
@@ -54,13 +54,13 @@ try:
     if ReturnedOSName == "win32":
         print("OS Name | Detected Windows...\n")
         os.chdir('SmartClassroom/')
-        print("Launching Smart Classroom DJango Deployment Server... ")
+        print("Process | Instantiating Smart Classroom DJango Deployment Server...")
         Popen("start python manage.py runserver %s:%s" % (SERVER_IP, SERVER_PORT), stdin=PIPE, stdout=PIPE, shell=True)
-        print("Launched Instance of Smart Classroom DJango Deploymnet Server!\n")
+        print("Process | Instantiated!\n")
 
-        print("Launching Smart Classroom Data Stream Handler in DJango Instance by RunScript... ")
+        print("Process | Instantiating Smart Classroom Data Stream Handler in DJango via RunScript... ")
         Popen("start python manage.py runscript SC_DSH", stdin=PIPE, stdout=PIPE, shell=True)
-        print("Launched Instance of Smart Classroom Data Stream Handler!\n")
+        print("Process | Instantiated!\n")
 
         print("Press CTRL+C or CTRL+BREAK to kill all handler instance and this threader.\n")
         while True:
