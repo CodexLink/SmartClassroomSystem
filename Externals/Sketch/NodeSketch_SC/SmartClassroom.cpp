@@ -95,21 +95,21 @@ void SC_MCU_DRVR::begin()
     Serial.println(F("    - Joshua Santos |> Hardware Manager and Builder"));
     Serial.println(F("    - Johnell Casey Murillo Panotes |> Hardware Assistant"));
 
-    LCD_DRVR.begin(); // * Start LCD I2C 20x4 Instance
+    LCD_DRVR.begin();                                                 // * Start LCD I2C 20x4 Instance
     WiFi.begin(WIFI_INST_STRUCT.WIFI_SSID, WIFI_INST_STRUCT.WIFI_PW); // * We start connecting to our given value of WiFi SSD and PW.
-    FP_WIRE.begin(__BAUD_RATE); // Software Serial, Related to Serial Objects. Start with BAUD Rate similarly to Serial Instantiation to communicate with some devices attached to it. (Technically Used for Fingerprint Communication)
-    FPController.begin(&FP_DEV_INFO); // ! Start FP GT5X Driver
-    FPController.set_led(false); // ! Set Fingerprint LED to False To See if it could follow instruction from the MCU.
-    EEPROM.begin(CONST_VAL::EEPROM_MAX_BYTE); // * Start Emulated EEPROM to be used to Retrieve / Save Data from the Last MCU Session with recent communication with the Server.
+    FP_WIRE.begin(__BAUD_RATE);                                       // Software Serial, Related to Serial Objects. Start with BAUD Rate similarly to Serial Instantiation to communicate with some devices attached to it. (Technically Used for Fingerprint Communication)
+    FPController.begin(&FP_DEV_INFO);                                 // ! Start FP GT5X Driver
+    FPController.set_led(false);                                      // ! Set Fingerprint LED to False To See if it could follow instruction from the MCU.
+    EEPROM.begin(CONST_VAL::EEPROM_MAX_BYTE);                         // * Start Emulated EEPROM to be used to Retrieve / Save Data from the Last MCU Session with recent communication with the Server.
 
     // ! We can execute this function only if we did some factory configuration.
     if (!SketchForceStructOverride || DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT == NULL || DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME == NULL || DEV_INST_CREDENTIALS.DEV_CR_UUID == NULL || DEV_INST_CREDENTIALS.DEV_UUID == NULL || DEV_INST_CREDENTIALS.AUTH_DEV_USN == NULL || DEV_INST_CREDENTIALS.AUTH_DEV_PWD == NULL)
     {
-        retrieveMetaData();
+        retrieve_EEPROMData();
     }
     else
     {
-        saveMetaData();
+        save_MetaToEEPROM();
     }
 
     pinMode(RESTATED_DEV_PINS::ESP_LED, OUTPUT);
@@ -140,7 +140,7 @@ void SC_MCU_DRVR::begin()
 // ! Contains 32 Bit Address | Device AUTH PWD
 
 // ! We have to make sure that this function DOES only retrieve some functions and then off we go.
-inline void SC_MCU_DRVR::retrieveMetaData()
+inline void SC_MCU_DRVR::retrieve_EEPROMData()
 {
     Serial.println();
     Serial.println(F("Structure Data has No Default Content. Retrieving Values..."));
@@ -187,7 +187,7 @@ inline void SC_MCU_DRVR::retrieveMetaData()
 
 // ! A Function to Save MetaData to EEPROM
 // * Requires Everytime we do REQUEST.
-inline void SC_MCU_DRVR::saveMetaData()
+inline void SC_MCU_DRVR::save_MetaToEEPROM()
 {
     Serial.println();
     Serial.println(F("Structured Data with Content Changing nor Updated Detected. Saving Those Values..."));
@@ -233,11 +233,12 @@ inline void SC_MCU_DRVR::saveMetaData()
     return;
 }
 
-bool SC_MCU_DRVR::checkPresence()
+void SC_MCU_DRVR::triggerPresenceAction()
 {
-    if (SketchTimeCheck(CONST_VAL::PIR_TRIGGER_SECONDS))
+    // ! We process the time only PresenceExtendedScheduler returns true
+    if (PresenceExtendedScheduler(CONST_VAL::PIR_TRIGGER_SECONDS) && AUTH_INST_CONT.AUTH_CR_ACCESS)
     {
-        if (!PIR_isPassed())
+        if (!PresencePassCalculation())
         {
             digitalWrite(RELAY_FRST_PIN, HIGH);
             digitalWrite(RELAY_SCND_PIN, HIGH);
@@ -261,13 +262,13 @@ bool SC_MCU_DRVR::checkPresence()
             Serial.println(ResponseRequest);
             Serial.print(F("HTTP Message |> "));
 
-            PIR_clearArray();
+            clearPresenceCalcData();
 
             AUTH_INST_CONT.AUTH_CR_DOOR = false;
             AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = false;
             AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
             sketchForceStop = true;
-            return false;
+            return;
         }
         else
         {
@@ -275,18 +276,18 @@ bool SC_MCU_DRVR::checkPresence()
             delay(1000);
             Serial.print(F("Presence PIR Passed! Extending Time Once Again..."));
             sketchForceStop = false;
-            PIR_clearArray();
-            return true;
+            clearPresenceCalcData();
+            return;
         }
     }
     else
     {
         delay(250);
-        return true;
+        return;
     }
 }
 
-bool SC_MCU_DRVR::SketchTimeCheck(uint32_t TimeIntervalToMeet)
+bool SC_MCU_DRVR::PresenceExtendedScheduler(uint32_t TimeIntervalToMeet)
 {
     uint_fast32_t sketchBaseTime = millis();
     static bool sketchRelease = true;
@@ -298,58 +299,65 @@ bool SC_MCU_DRVR::SketchTimeCheck(uint32_t TimeIntervalToMeet)
     {
         sketchForceStop = false;
         sketchRelease = true;
-        PIR_clearArray();
-        Serial.println(F("Sketch Time Process Stopped..."));
+        clearPresenceCalcData();
+        Serial.println();
+        Serial.println(F("Schedule Proximity-Dependent Time Process Stopped by User!"));
+        Serial.println();
         return false;
-    }
-
-    if (sketchRelease)
-    {
-        sketchPreviousHit = sketchBaseTime;
-        sketchRelease = false;
-    }
-
-    Serial.print(F("Sketch Time: "));
-    Serial.print(sketchBaseTime);
-    Serial.print(F(" - "));
-    Serial.print(sketchPreviousHit);
-    Serial.print(F(" = "));
-    Serial.print(sketchBaseTime - sketchPreviousHit);
-    Serial.print(F(" |> Required Time To Meet: "));
-    Serial.println(TimeIntervalToMeet);
-
-    Serial.println();
-    PIR_ElemIndexFocus = (uint8_t)(((sketchBaseTime - sketchPreviousHit) / 1000) / 30);
-    Serial.print(F("PIR State Array |> (Focused at Index Element "));
-    Serial.print(PIR_ElemIndexFocus);
-    Serial.print(F(") |> ["));
-
-    if (digitalRead(SENS_DAT_PINS::PIR_DAT_PIN) == HIGH)
-        PIR_ARR_OUTPUT[PIR_ElemIndexFocus] = true;
-
-    for (size_t PIR_ARR_ELEM = CONST_VAL::NULL_CONTENT; PIR_ARR_ELEM < CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS; PIR_ARR_ELEM++)
-    {
-        Serial.print(PIR_ARR_OUTPUT[PIR_ARR_ELEM]);
-        Serial.print((PIR_ARR_ELEM + 1 == CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS) ? "" : ", ");
-    }
-    Serial.println(F("]"));
-
-    Serial.println();
-
-    if (!sketchRelease && (uint_fast32_t)(sketchBaseTime - sketchPreviousHit) >= TimeIntervalToMeet)
-    {
-        sketchRelease = true;
-        sketchPreviousHit = 0;
-        Serial.println(F("Sketch Time Process Finished From Target Time!"));
-        return true;
     }
     else
     {
-        return false;
+        if (sketchRelease)
+        {
+            Serial.println();
+            Serial.print(F("Schedule Proximity-Dependent Process Start!"));
+            Serial.println();
+            sketchPreviousHit = sketchBaseTime;
+            sketchRelease = false;
+        }
+
+        Serial.println();
+        Serial.print(F("Sketch Time: "));
+        Serial.print(sketchBaseTime);
+        Serial.print(F(" - "));
+        Serial.print(sketchPreviousHit);
+        Serial.print(F(" = "));
+        Serial.print(sketchBaseTime - sketchPreviousHit);
+        Serial.print(F(" |> Required Time To Meet: "));
+        Serial.println(TimeIntervalToMeet);
+
+        PIR_ElemIndexFocus = (uint8_t)(((sketchBaseTime - sketchPreviousHit) / 1000) / 30);
+        Serial.print(F("PIR State Array |> (Focused at Index Element "));
+        Serial.print(PIR_ElemIndexFocus);
+        Serial.print(F(") |> ["));
+
+        if (digitalRead(SENS_DAT_PINS::PIR_DAT_PIN) == HIGH)
+            PIR_ARR_OUTPUT[PIR_ElemIndexFocus] = true;
+
+        for (size_t PIR_ARR_ELEM = CONST_VAL::NULL_CONTENT; PIR_ARR_ELEM < CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS; PIR_ARR_ELEM++)
+        {
+            Serial.print(PIR_ARR_OUTPUT[PIR_ARR_ELEM]);
+            Serial.print((PIR_ARR_ELEM + 1 == CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS) ? "" : ", ");
+        }
+        Serial.println(F("]"));
+
+        Serial.println();
+
+        if (!sketchRelease && (uint_fast32_t)(sketchBaseTime - sketchPreviousHit) >= TimeIntervalToMeet)
+        {
+            sketchRelease = true;
+            sketchPreviousHit = 0;
+            Serial.println(F("Sketch Time Process Finished From Target Time!"));
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
 
-bool SC_MCU_DRVR::checkWiFiConnection()
+bool SC_MCU_DRVR::checkWiFiConn()
 {
     displayLCDScreen(DataDisplayTypes::CLEAR);
     displayLCDScreen(DataDisplayTypes::WAITPOINT);
@@ -375,7 +383,7 @@ bool SC_MCU_DRVR::checkWiFiConnection()
     return true;
 }
 
-bool SC_MCU_DRVR::mntndWiFiConnection()
+bool SC_MCU_DRVR::waitStateWiFiConn()
 {
     if (WiFi.status() == WL_CONNECTED)
     {
@@ -384,7 +392,7 @@ bool SC_MCU_DRVR::mntndWiFiConnection()
     else
     {
         Serial.println(F("Connection to WiFi was lost. Attempting ReConnection..."));
-        return (checkWiFiConnection() ? true : false);
+        return (checkWiFiConn() ? true : false);
     }
 }
 
@@ -500,7 +508,7 @@ void SC_MCU_DRVR::displayLCDScreen(DataDisplayTypes Screens)
     return;
 }
 
-void SC_MCU_DRVR::authCheck_Fngrprnt()
+void SC_MCU_DRVR::authStateCheck_FNGRPRNT()
 {
     if (FPController.is_pressed() && AUTH_INST_CONT.AUTH_CR_ACCESS)
     {
@@ -534,7 +542,7 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
                 AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = true;
                 AUTH_INST_CONT.AUTH_FGPRT_STATE = true;
                 LCD_DRVR.print(F("> Access Authorized!"));
-                checkPresence();
+                triggerPresenceAction();
             }
             else
             {
@@ -545,7 +553,7 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
                 AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
                 sketchForceStop = true;
                 LCD_DRVR.print(F("> Locking Commenced!"));
-                checkPresence();
+                triggerPresenceAction();
             }
             String POSTArgs = DevUUID_Req + "/" + CrUUID_Req + "/" + DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT + "/LockState=" + AUTH_INST_CONT.AUTH_CR_DOOR;
             String RequestDest = "http://" + SERVER_IP_ADDRESS + ":" + SERVER_PORT + "/lockRemoteCall/" + POSTArgs;
@@ -580,13 +588,12 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
     else if (!AUTH_INST_CONT.AUTH_CR_ACCESS)
     {
         LCD_DRVR.setCursor(0, 3);
-        checkPresence();
         LCD_DRVR.print(F("> Access Disabled!  "));
     }
     else if (AUTH_INST_CONT.AUTH_FGPRT_STATE)
     {
         LCD_DRVR.setCursor(0, 3);
-        checkPresence();
+        triggerPresenceAction();
         LCD_DRVR.print(F("> InUse. Lock Ready."));
     }
     else
@@ -598,26 +605,25 @@ void SC_MCU_DRVR::authCheck_Fngrprnt()
     if (ForceEEPROMUpdate)
     {
         ForceEEPROMUpdate = false;
-        saveMetaData();
+        save_MetaToEEPROM();
     }
     return;
 }
 
 // Then clear the PIR sensor array state by for loop again.
-inline void SC_MCU_DRVR::PIR_clearArray()
+inline void SC_MCU_DRVR::clearPresenceCalcData()
 {
     Serial.println();
-    Serial.println("PIR Array Output | Clearing...");
+    Serial.println("PIR Array Output | Clearing Segment Data...");
     for (size_t PIR_ARR_ELEM = CONST_VAL::NULL_CONTENT; PIR_ARR_ELEM < CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS; PIR_ARR_ELEM++)
     {
         PIR_ARR_OUTPUT[PIR_ARR_ELEM] = 0;
     }
     Serial.println("PIR Array Output | Done!");
-    Serial.println();
     return;
 }
 
-bool SC_MCU_DRVR::PIR_isPassed()
+bool SC_MCU_DRVR::PresencePassCalculation()
 {
     uint8_t Bool_TrueCount = CONST_VAL::NULL_CONTENT, Bool_FalseCount = CONST_VAL::NULL_CONTENT, PIR_Percentage = CONST_VAL::NULL_CONTENT;
     Serial.println("PIR Calculation Percentage | Time Extension Checking...");
