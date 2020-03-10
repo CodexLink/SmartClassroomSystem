@@ -182,13 +182,13 @@ public:
         uint16_t AUTH_USER_ID_FNGRPRNT = 0;
     } DEV_INST_CREDENTIALS;
 
-    // ! Referrable to saveMetaData and retrieveMetaData
+    // ! Referrable to saveMetaData and retrieve_EEPROMData
     // ! The code below is a uin8_t (unsigned char pointer variable) that stores the address of the struct DEV_CREDENTIALS.
     // * They're converted to uint8_t or typecasted to uint8_t to be iterrable as object.
 
     // @TODO: Make a struct for this one.
     uint8_t *structStorage = (uint8_t *)&DEV_INST_CREDENTIALS;
-    bool sketchForceStop;
+    bool sketchForceStop = false;
 
     bool SketchForceStructOverride = false;
     String SERVER_IP_ADDRESS = "192.168.100.5"; // By Default
@@ -202,18 +202,18 @@ public:
     // Constructor
     SC_MCU_DRVR(uint16_t SUPPLIED_BAUD_RATE, const char *SUPPLIED_SSID, const char *SUPPLIED_PW, const String SUPPLIED_SERVER_IP_ADDRESS, const uint16_t SUPPLIED_SERVER_PORT);
     void begin();
-    bool mntndWiFiConnection();
+    bool waitStateWiFiConn();
     void displayLCDScreen(DataDisplayTypes Screens);
-    void authCheck_Fngrprnt();
-    bool SketchTimeCheck(uint32_t TimeIntervalToMeet);
-    inline void saveMetaData();
+    void authStateCheck_FNGRPRNT();
+    bool PresenceExtendedScheduler(uint32_t TimeIntervalToMeet);
+    inline void save_MetaToEEPROM();
 
 private:
-    inline void retrieveMetaData();
-    bool checkPresence();
-    bool checkWiFiConnection();
-    inline void PIR_clearArray();
-    bool PIR_isPassed();
+    inline void retrieve_EEPROMData();
+    void triggerPresenceAction();
+    bool checkWiFiConn();
+    inline void clearPresenceCalcData();
+    bool PresencePassCalculation();
 };
 
 // END OF FILE SMARTROOM
