@@ -68,7 +68,7 @@ SC_MCU_DRVR::SC_MCU_DRVR(uint16_t SUPPLIED_BAUD_RATE, const char *SUPPLIED_SSID,
     strcpy(WIFI_INST_STRUCT.WIFI_SSID, SUPPLIED_SSID);
     strcpy(WIFI_INST_STRUCT.WIFI_PW, SUPPLIED_PW);
     SERVER_IP_ADDRESS = SUPPLIED_SERVER_IP_ADDRESS;
-    SERVER_PORT = SUPPLIED_SERVER_IP_ADDRESS;
+    SERVER_PORT = SUPPLIED_SERVER_PORT;
 }
 //    ! Class Constructor — END
 
@@ -218,17 +218,17 @@ inline void SC_MCU_DRVR::saveMetaData()
         {
             EEPROM.write(storageBytes, 0);
         }
-        Serial.println(F("EEPROM Data Deleted."));
+        Serial.println(F("EEPROM Data Deleted!"));
     }
 
-    Serial.println(F("Saving Structured Data to EEPROM."));
+    Serial.println(F("Saving Structured Data to EEPROM..."));
     for (size_t structBytes = CONST_VAL::NULL_CONTENT; structBytes < sizeof(DEV_CREDENTIALS); structBytes++)
     {
         EEPROM.write(CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_START_ADDR + structBytes, structStorage[structBytes]);
     }
     EEPROM.commit();
     EEPROM.end();
-    Serial.println(F("EEPROM Data Save Done."));
+    Serial.println(F("EEPROM Data Save Done!"));
     Serial.println();
     return;
 }
@@ -267,7 +267,6 @@ bool SC_MCU_DRVR::checkPresence()
             AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = false;
             AUTH_INST_CONT.AUTH_FGPRT_STATE = false;
             sketchForceStop = true;
-            //checkPresence();
             return false;
         }
         else

@@ -200,7 +200,7 @@ public:
     uint16_t SER_INPUT_ID = 0;
 
     // Constructor
-    SC_MCU_DRVR(uint16_t BAUD_RATE, const char *SSID, const char *PW);
+    SC_MCU_DRVR(uint16_t SUPPLIED_BAUD_RATE, const char *SUPPLIED_SSID, const char *SUPPLIED_PW, const String SUPPLIED_SERVER_IP_ADDRESS, const uint16_t SUPPLIED_SERVER_PORT);
     void begin();
     bool mntndWiFiConnection();
     void displayLCDScreen(DataDisplayTypes Screens);
