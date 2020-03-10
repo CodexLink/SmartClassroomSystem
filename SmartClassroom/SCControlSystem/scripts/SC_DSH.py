@@ -76,7 +76,7 @@ class SC_IoTDriver(object):
     def __init__(self, TimeoutCondition=0.3):
         if ReturnedOSName == "win32":
             system("CLS")
-            system("title SmartClassroom Data Stream Handler")
+            system("title Smart Classroom Data Stream Handler")
         elif ReturnedOSName == "linux":
             system("clear")
         else:
