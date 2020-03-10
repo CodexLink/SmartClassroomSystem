@@ -55,10 +55,10 @@ void setup()
 
 void loop()
 {
-    while (SC.mntndWiFiConnection())
+    while (SC.waitStateWiFiConn())
     {
         SC.displayLCDScreen(SC.DataDisplayTypes::DISP_CR_INFO);
-        SC.authCheck_Fngrprnt();
+        SC.authStateCheck_FNGRPRNT();
         NodeServer.handleClient();
         delay(100);
     }
@@ -119,11 +119,7 @@ void HandleGET_SetInstance()
     // This disables all access from the classroom. The relays will be turned off.
     if (NodeServer.arg("cr_access") == "True")
     {
-        digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_FRST_PIN, LOW);
-        digitalWrite(SC.SENS_DAT_PINS_PUBLIC::RELAY_SCND_PIN, LOW);
-        SC.AUTH_INST_CONT.AUTH_CR_DOOR = true;
-        SC.AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE = true;
-        SC.AUTH_INST_CONT.AUTH_FGPRT_STATE = true;
+        SC.AUTH_INST_CONT.AUTH_CR_ACCESS = true;
         NodeServer.send(200, "text/plain", "CR_ACCESS |> CHANGED TO 'ENABLED' |> OK");
     }
 
