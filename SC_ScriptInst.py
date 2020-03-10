@@ -67,7 +67,6 @@ try:
         print("Process | Instantiating Smart Classroom DJango Deployment Server...")
         Popen("start python manage.py runserver %s:%s" % (SERVER_IP, SERVER_PORT), stdin=PIPE, stdout=PIPE, shell=True)
         print("Process | Instantiated!\n")
-
         print("Process | Instantiating Smart Classroom Data Stream Handler in DJango via RunScript... ")
         Popen("start python manage.py runscript SC_DSH", stdin=PIPE, stdout=PIPE, shell=True)
         print("Process | Instantiated!\n")
@@ -75,11 +74,13 @@ try:
     elif ReturnedOSName == "linux":
         os.chdir('SmartClassroom/')
         print("Process | Instantiating Smart Classroom DJango Deployment Server...")
-        Popen("""lxterminal --title="SmartClassroom Django Server Handler | < Django Project Caller >" -e python3 manage.py runserver %s:%s""" % (SERVER_IP, SERVER_PORT), stdin=PIPE, stdout=PIPE, shell=True)
+        ServerInst = Popen("""lxterminal --title="SmartClassroom Django Server Handler | < Django Project Caller >" -e python3 manage.py runserver %s:%s""" % (SERVER_IP, SERVER_PORT), stdin=PIPE, stdout=PIPE, shell=True)
         print("Process | Instantiated!\n")
         print("Process | Instantiating Smart Classroom Data Stream Handler in DJango via RunScript... ")
-        Popen("""lxterminal --title="Smart Classroom IoT Data Stream Handler | SC_DSH.py" -e python3 manage.py runscript SC_DSH""", stdin=PIPE, stdout=PIPE, shell=True)
+        ScriptInst = Popen("""lxterminal --title="Smart Classroom IoT Data Stream Handler | SC_DSH.py" -e python3 manage.py runscript SC_DSH""", stdin=PIPE, stdout=PIPE, shell=True)
         print("Process | Instantiated!\n")
+        print(ServerInst.pid)
+        print(ScriptInst.pid)
 
     else:
         print("Platform Undetermined!")
@@ -98,7 +99,8 @@ except KeyboardInterrupt:
 
     elif ReturnedOSName == "linux":
         print("\nClosing Child Processess of Parent Process Since Detected CTRL_C or CTRL_BREAK Event!")
-        # Do nothing...
+        os.system("""pkill -f "python3 manage.py runscript SC_DSH" """)
+        os.system("""pkill -f "python3 manage.py runserver 0.0.0.0:8000" """)
         print("All Threads Closed. Thank you!\n")
     else:
         print("Platform Undetermined!")
