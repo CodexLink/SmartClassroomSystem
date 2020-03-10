@@ -31,17 +31,21 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import datetime
 import json
 from os import system
 from subprocess import call as CommandLine
 from sys import exit as Terminate
+from sys import platform as ReturnedOSName
 from time import sleep as delay
-
-from requests import get as DataGETReq, post as DevDataUpdate
-from requests.exceptions import RequestException
 from uuid import UUID as StrToValidUUID
+
+from requests import get as DataGETReq
+from requests import post as DevDataUpdate
+from requests.exceptions import RequestException
+
 from ..models import *
-import datetime
+
 
 # * We initialize this class with parameters. You can provide your own container by declaring at this scope.
 # ! Means you can change NodeDevCandidate Declaration Here.
@@ -70,8 +74,14 @@ class SC_IoTDriver(object):
     # On Starting Point we have to supply the given arguments to __init__() function.
     # ! Because we have to initialize the class from the object itself.
     def __init__(self, TimeoutCondition=0.3):
-        system("CLS")
-        system("title SmartClassroom Data Stream Handler")
+        if ReturnedOSName == "win32":
+            system("CLS")
+            system("title SmartClassroom Data Stream Handler")
+        elif ReturnedOSName == "linux":
+            system("clear")
+        else:
+            print("Platform Undetermined!")
+            exit(-1)
 
         print('Smart Classroom IoT Data Stream Handler | SC_DSH.py')
         print('02/29/2020 | By Janrey "CodexLink" Licas | http://github.com/CodexLink\n')
@@ -136,7 +146,6 @@ class SC_IoTDriver(object):
 
         print("Device Monitoring Done.")
         return True
-
 
     # ! Step 2 | Connect To Them Individual and Check For Datas
     def getNewData(self):

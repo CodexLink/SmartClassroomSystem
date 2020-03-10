@@ -35,24 +35,34 @@ import os
 import time
 from subprocess import PIPE, Popen, run
 from sys import platform as ReturnedOSName
+import signal
 
 SERVER_IP = '0.0.0.0'
 SERVER_PORT = 8000
 
-try:
-    os.system('CLS')
+
+if ReturnedOSName == "win32":
+    print("OS Name | Detected Windows...\n")
     os.system('title Smart Classroom IoT Script Instantiator')
+    os.system('CLS')
 
-    print("Smart Classroom IoT Script Instantiator | SC_ScriptInst.py")
-    print('02/29/2020 | By Janrey "CodexLink" Licas | http://github.com/CodexLink\n')
-    print('In Collaboration with')
-    print('    - Ronald Langaoan Jr. |> Hardware Designer and Manager')
-    print('    - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer')
-    print('    - Joshua Santos |> Hardware Manager and Builder')
-    print('    - Johnell Casey Murillo Panotes |> Hardware Assistant\n')
+elif ReturnedOSName == "linux":
+    print("OS Name | Detected Linux / Ubuntu | Any Distro...")
+    print("Setups will be concatenated with commands later.\n")
+else:
+    print("Platform Undetermined!")
+    exit(-1)
 
+print("Smart Classroom IoT Script Instantiator | SC_ScriptInst.py")
+print('02/29/2020 | By Janrey "CodexLink" Licas | http://github.com/CodexLink\n')
+print('In Collaboration with')
+print('    - Ronald Langaoan Jr. |> Hardware Designer and Manager')
+print('    - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer')
+print('    - Joshua Santos |> Hardware Manager and Builder')
+print('    - Johnell Casey Murillo Panotes |> Hardware Assistant\n')
+
+try:
     if ReturnedOSName == "win32":
-        print("OS Name | Detected Windows...\n")
         os.chdir('SmartClassroom/')
         print("Process | Instantiating Smart Classroom DJango Deployment Server...")
         Popen("start python manage.py runserver %s:%s" % (SERVER_IP, SERVER_PORT), stdin=PIPE, stdout=PIPE, shell=True)
@@ -62,25 +72,34 @@ try:
         Popen("start python manage.py runscript SC_DSH", stdin=PIPE, stdout=PIPE, shell=True)
         print("Process | Instantiated!\n")
 
-        print("Press CTRL+C or CTRL+BREAK to kill all handler instance and this threader.\n")
-        while True:
-            pass
-
     elif ReturnedOSName == "linux":
-        print("OS Name | Detected Linux..\n.")
-        print("Platform Instance for Linux Will Be Added Soon!")
-        exit(1)
+        os.chdir('SmartClassroom/')
+        print("Process | Instantiating Smart Classroom DJango Deployment Server...")
+        Popen("""lxterminal --title="SmartClassroom Django Server Handler | < Django Project Caller >" -e python3 manage.py runserver %s:%s""" % (SERVER_IP, SERVER_PORT), stdin=PIPE, stdout=PIPE, shell=True)
+        print("Process | Instantiated!\n")
+        print("Process | Instantiating Smart Classroom Data Stream Handler in DJango via RunScript... ")
+        Popen("""lxterminal --title="Smart Classroom IoT Data Stream Handler | SC_DSH.py" -e python3 manage.py runscript SC_DSH""", stdin=PIPE, stdout=PIPE, shell=True)
+        print("Process | Instantiated!\n")
 
     else:
         print("Platform Undetermined!")
         exit(-1)
 
+    print("Press CTRL+C or CTRL+BREAK to kill all script instance and this instantiator.\n")
+    while True:
+        pass
+
 except KeyboardInterrupt:
     if ReturnedOSName == "win32":
+        print("Closing Child Processess of Parent Process Since Detected CTRL_C or CTRL_BREAK Event!")
         run("""TASKKILL /F /FI "WINDOWTITLE eq SmartClassroom Data Stream Handler" /T""", shell=False)
         run("""TASKKILL /F /FI "WINDOWTITLE eq SmartClassroom Django Server Handler" /T""", shell=False)
         print("\nAll Threads Closed. Thank you!\n")
 
+    elif ReturnedOSName == "linux":
+        print("\nClosing Child Processess of Parent Process Since Detected CTRL_C or CTRL_BREAK Event!")
+        # Do nothing...
+        print("All Threads Closed. Thank you!\n")
     else:
         print("Platform Undetermined!")
         exit(-1)
