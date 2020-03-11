@@ -71,7 +71,25 @@ void HandleGET_Sens()
         return NodeServer.requestAuthentication();
     }
     digitalWrite(SC.RESTATED_DEV_PINS::ESP_LED, LOW);
-    NodeServer.send(200, "text/plain", String("{'DATA_HEADER': {'CR_IDENTITY': '") + SC.DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT + String("', 'CR_SHORT_NAME': '") + SC.DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME + String("', 'CR_UUID': '") + SC.DEV_INST_CREDENTIALS.DEV_CR_UUID + String("', 'DEV_NAME': '") + SC.DEV_INST_CREDENTIALS.AUTH_DEV_USN + String("', 'DEV_UUID': '") + SC.DEV_INST_CREDENTIALS.DEV_UUID + String("', 'CURR_COURSE_SESSION': '") + SC.DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME + String("'}, 'DATA_SENS': {'CR_TEMP': '") + SC.ENV_INST_CONT.DHT11_TEMP + String("', 'CR_HUMD': '") + SC.ENV_INST_CONT.DHT11_HUMID + String("', 'CR_HTINX': '") + SC.ENV_INST_CONT.DHT11_HT_INDX + String("', 'PIR_MOTION': {'PIR_OPTPT':'") + SC.ENV_INST_CONT.PIR_OPTPT + String("', 'PIR_OTPT_TIME_TRIGGER': '") + SC.ENV_INST_CONT.PIR_MILLIS_TRIGGER + String("'}}, 'DATA_AUTH': {'AUTH_ID':'") + SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT + String("', 'AUTH_STATE': '") + SC.AUTH_INST_CONT.AUTH_FGPRT_STATE + String("'}, 'DATA_STATE': {'DOOR_STATE': '") + SC.AUTH_INST_CONT.AUTH_CR_DOOR + String("', 'ACCESS_STATE': '") + SC.AUTH_INST_CONT.AUTH_CR_ACCESS + String("', 'ELECTRIC_STATE': '") + SC.AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE + String("'}}"));
+
+    String DevPPayload = String("{'DATA_HEADER': {'CR_IDENTITY': '") + SC.DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT + String("', ");
+    DevPPayload += String("'CR_SHORT_NAME': '") + SC.DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME + String("', ");
+    DevPPayload += String("'CR_UUID': '") + SC.DEV_INST_CREDENTIALS.DEV_CR_UUID + String("', ");
+    DevPPayload += String("'DEV_NAME': '") + SC.DEV_INST_CREDENTIALS.AUTH_DEV_USN + String("', ");
+    DevPPayload += String("'DEV_UUID': '") + SC.DEV_INST_CREDENTIALS.DEV_UUID + String("', ");
+    DevPPayload += String("'CURR_COURSE_SESSION': '") + SC.DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME + String("'}, ");
+    DevPPayload += String("'DATA_SENS': {'CR_TEMP': '") + SC.ENV_INST_CONT.DHT11_TEMP + String("', ");
+    DevPPayload += String("'CR_HUMD': '") + SC.ENV_INST_CONT.DHT11_HUMID + String("', ");
+    DevPPayload += String("'CR_HTINX': '") + SC.ENV_INST_CONT.DHT11_HT_INDX + String("', ");
+    DevPPayload += String("'PIR_MOTION': {'PIR_OPTPT':'") + SC.ENV_INST_CONT.PIR_OPTPT + String("', ");
+    DevPPayload += String("'PIR_PRESENCE_PRCNT': '") + SC.ENV_INST_CONT.PIR_PRESENCE_PERCENTAGE + String("'}}, ");
+    DevPPayload += String("'DATA_AUTH': {'AUTH_ID':'") + SC.DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT + String("', ");
+    DevPPayload += String("'AUTH_STATE': '") + SC.AUTH_INST_CONT.AUTH_FGPRT_STATE + String("'}, ");
+    DevPPayload += String("'DATA_STATE': {'DOOR_STATE': '") + SC.AUTH_INST_CONT.AUTH_CR_DOOR + String("', ");
+    DevPPayload += String("'ACCESS_STATE': '") + SC.AUTH_INST_CONT.AUTH_CR_ACCESS + String("', ");
+    DevPPayload += String("'ELECTRIC_STATE': '") + SC.AUTH_INST_CONT.NON_AUTH_ELECTRIC_STATE + String("'}}");
+
+    NodeServer.send(200, "text/plain", DevPPayload);
     digitalWrite(SC.RESTATED_DEV_PINS::ESP_LED, HIGH);
 }
 
