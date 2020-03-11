@@ -157,7 +157,7 @@
                             | {{ ClassroomActionLog.Course_Reference.CourseSchedule_Session_Start }} —
                             {{ ClassroomActionLog.Course_Reference.CourseSchedule_Session_End }} |
                             {{ ClassroomActionLog.Course_Reference.CourseSchedule_Lecture_Day }}</h3>
-                        <span class="card-text text-black-primary">{{ ClassroomActionLog.UserActionTaken }} | Action was Associated to {% if user_class == "Professor" %}{{ ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.first_name }} {{ ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.middle_name|default_if_none:"" }} {{ ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.last_name }}{% else %}an Administrator / Staff.{% endif %}</span>
+                        <span class="card-text text-black-primary">{{ ClassroomActionLog.UserActionTaken }} | Action was Associated to {% if ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.first_name is not None and ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.middle_name is not None and ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.last_name is not None %}{{ ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.first_name }} {{ ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.middle_name|default_if_none:"" }} {{ ClassroomActionLog.Course_Reference.CourseSchedule_Instructor.last_name }}.{% else %}Administrator or Supervisor.{% endif %}</span>
                     </div>
                     <div class="card-actions d-flex justify-content-between align-items-center">
                         <span
