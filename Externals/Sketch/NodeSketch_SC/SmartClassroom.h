@@ -157,7 +157,7 @@ public:
         float DHT11_HUMID;
         float DHT11_HT_INDX;
         bool PIR_OPTPT;
-        uint32_t PIR_MILLIS_TRIGGER;
+        uint8_t PIR_PRESENCE_PERCENTAGE;
     } ENV_INST_CONT;
 
     struct AUTH_STATE
@@ -197,8 +197,7 @@ public:
     bool PIR_ARR_OUTPUT[CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS] = {0};
     bool ForceEEPROMUpdate = false;
     char SER_INPUT_RAW = '0';
-    uint16_t SER_INPUT_ID = 0;
-
+    uint16_t SER_INPUT_ID = CONST_VAL::NULL_CONTENT;
     // Constructor
     SC_MCU_DRVR(uint16_t SUPPLIED_BAUD_RATE, const char *SUPPLIED_SSID, const char *SUPPLIED_PW, const String SUPPLIED_SERVER_IP_ADDRESS, const uint16_t SUPPLIED_SERVER_PORT);
     void begin();

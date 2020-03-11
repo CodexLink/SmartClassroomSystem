@@ -625,7 +625,7 @@ inline void SC_MCU_DRVR::clearPresenceCalcData()
 
 bool SC_MCU_DRVR::PresencePassCalculation()
 {
-    uint8_t Bool_TrueCount = CONST_VAL::NULL_CONTENT, Bool_FalseCount = CONST_VAL::NULL_CONTENT, PIR_Percentage = CONST_VAL::NULL_CONTENT;
+    uint8_t Bool_TrueCount = CONST_VAL::NULL_CONTENT, Bool_FalseCount = CONST_VAL::NULL_CONTENT;
     Serial.println("PIR Calculation Percentage | Time Extension Checking...");
     for (size_t PIR_ARR_ELEM = CONST_VAL::NULL_CONTENT; PIR_ARR_ELEM < CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS; PIR_ARR_ELEM++)
     {
@@ -634,7 +634,7 @@ bool SC_MCU_DRVR::PresencePassCalculation()
         PIR_ARR_OUTPUT[PIR_ARR_ELEM] = 0;
         // Then clear the PIR sensor array state by for loop again.
     }
-    PIR_Percentage = (Bool_TrueCount * 100) / 10;
+    ENV_INST_CONT.PIR_PRESENCE_PERCENTAGE = (Bool_TrueCount * 100) / 10;
 
     Serial.print("Time Extension Result |> Present: ");
     Serial.print(Bool_TrueCount);
@@ -642,9 +642,9 @@ bool SC_MCU_DRVR::PresencePassCalculation()
     Serial.println(Bool_FalseCount);
 
     Serial.print("Calculation Result | ");
-    Serial.print(PIR_Percentage);
+    Serial.print(ENV_INST_CONT.PIR_PRESENCE_PERCENTAGE);
     Serial.println("%");
     Serial.println();
 
-    return (PIR_Percentage * 100 >= 50) ? true : false;
+    return (ENV_INST_CONT.PIR_PRESENCE_PERCENTAGE * 100 >= 50) ? true : false;
 }
