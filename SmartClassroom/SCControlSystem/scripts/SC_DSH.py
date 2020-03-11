@@ -181,7 +181,7 @@ class SC_IoTDriver(object):
             'DATA_HEADER': {'CR_IDENTITY': 'DEV_CR_ASSIGNMENT',  'CR_SHORT_NAME': 'DEV_CR_SHORT_NAME', 'CR_UUID': 'DEV_CR_UUID', 'DEV_NAME': 'AUTH_DEV_USN' ,'DEV_UUID': 'DEV_UUID', 'CURR_COURSE_SESSION': 'CURRENT_COURSE_CODENAME'},
             'DATA_SENS': {'CR_TEMP': 'DHT22_Temp', 'CR_HUMD': 'DHT22_Humid',
             'PIR_MOTION':
-                {'PIR_MOTION': 'PIR_Bool', 'PIR_OTPT_TIME_TRIGGER': 'PIR_MILLIS_TRIGGER'}
+                {'PIR_MOTION': 'PIR_Bool', 'PIR_PRESENCE_PRCNT': 'ENV_INST_CONT.PIR_PRESENCE_PERCENTAGE'}
             },
             'DATA_AUTH': {'AUTH_ID':'-1', 'AUTH_STATE': 'AUTH_FGPRT_STATE'},
             'DATA_STATE': {
@@ -202,7 +202,7 @@ class SC_IoTDriver(object):
             print('Interpreting Given Context for %s | %s...\n' % (DevInterpret_Name, DevInterpret_IP))
             print("DATA_HEADER => ROOM_ASSIGNMENT: %s | ROOM_NAME: %s | ROOM_UID: %s | DEVICE_NAME: %s | DEVICE_UUID: %s | CURR_COURSE_SESSION: %s" % (URLSterlData['DATA_HEADER']['CR_IDENTITY'], URLSterlData['DATA_HEADER']['CR_SHORT_NAME'], URLSterlData['DATA_HEADER']['CR_UUID'], URLSterlData['DATA_HEADER']['DEV_NAME'], URLSterlData['DATA_HEADER']['DEV_UUID'], URLSterlData['DATA_HEADER']['CURR_COURSE_SESSION']))
             print("DATA_SENS => TEMP: %s | HUMD: %s" % (URLSterlData['DATA_SENS']['CR_TEMP'], URLSterlData['DATA_SENS']['CR_HUMD']))
-            print("DATA_SENS => PIR_MOTION => OUTPUT: %s | TIME_TRIGGER: %s" % (URLSterlData['DATA_SENS']['PIR_MOTION']['PIR_OPTPT'], URLSterlData['DATA_SENS']['PIR_MOTION']['PIR_OTPT_TIME_TRIGGER']))
+            print("DATA_SENS => PIR_MOTION => OUTPUT: %s | CALCULATED_PRESENCE: %s" % (URLSterlData['DATA_SENS']['PIR_MOTION']['PIR_OPTPT'], URLSterlData['DATA_SENS']['PIR_MOTION']['PIR_PRESENCE_PRCNT']))
             print("DATA_AUTH => AUTH_ID: %s | AUTH_STATE: %s" % (URLSterlData['DATA_AUTH']['AUTH_ID'], URLSterlData['DATA_AUTH']['AUTH_STATE']))
             print("DATA_STATE => DOOR_STATE: %s | ACCESS_STATE: %s | ELECTRIC_STATE: %s" % (URLSterlData['DATA_STATE']['DOOR_STATE'], URLSterlData['DATA_STATE']['ACCESS_STATE'], URLSterlData['DATA_STATE']['ELECTRIC_STATE']))
 
@@ -253,8 +253,8 @@ class SC_IoTDriver(object):
                             CourseScheduleItem.CourseSchedule_Availability = 'Not Available'
                             CourseScheduleItem.save(update_fields=['CourseSchedule_Availability'])
 
-                        devTargetUpdate = DataGETReq('http://%s/RequestInstance?dev_sched_user_course_replace=%s&dev_sched_user_assign_replace=%s&cr_access=%s' % (DevInterpret_IP, "Unknown", 0, False), timeout=5, auth=(URLSterlData['DATA_HEADER']['DEV_NAME'], URLSterlData['DATA_HEADER']['DEV_UUID']))
-                        self.SubjectOnScope = False
+                        #devTargetUpdate = DataGETReq('http://%s/RequestInstance?dev_sched_user_course_replace=%s&dev_sched_user_assign_replace=%s&cr_access=%s' % (DevInterpret_IP, "Unknown", 0, False), timeout=5, auth=(URLSterlData['DATA_HEADER']['DEV_NAME'], URLSterlData['DATA_HEADER']['DEV_UUID']))
+                        #self.SubjectOnScope = False
                         print('Schedule Override | Time Scope for Course %s is not on scope within this time!\n' % (CourseScheduleItem.CourseSchedule_CourseReference.Course_Code,))
                 else:
                     if not self.SubjectOnScope:

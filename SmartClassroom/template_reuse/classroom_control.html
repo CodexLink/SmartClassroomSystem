@@ -156,7 +156,7 @@
                     <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list"
                         href="javascript:void(0)" role="tab">Motion Detection Probability Breakdown<span
                             class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}warning{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}{% else %}{% endif %}
-                            {% if DeviceState == 'Online' %}50{% else %}—{% endif %}% | 5 Passed, 5 Failed</span></a>
+                            {% if DeviceState == 'Online' %}{{ PIRPercentageOutput }}{% else %}—{% endif %}% | Currently {% if PIRPresenceOutput %}{{ PIRPresenceOutput }}{% else %}Unknown{% endif %}</span></a>
                     <a class="list-group-item d-flex justify-content-between align-items-center" data-toggle="list"
                         href="javascript:void(0)" role="tab">Authentication State<span
                             class="badge badge-primary badge-pill bg-{% if DeviceState == 'Online' %}info{% else %}offline{% endif %}">{% if DeviceState == 'Online' %}Currently

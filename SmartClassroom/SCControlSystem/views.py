@@ -201,7 +201,8 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
                 finalMetaData = DictSerialize((dev_metadata.content).decode('utf-8').replace("'", "\"")) if dev_metadata.ok else None
                 view_context['TempOutput'] = finalMetaData['DATA_SENS']['CR_TEMP'] if dev_metadata.ok else None
                 view_context['HumidOutput'] = finalMetaData['DATA_SENS']['CR_HUMD'] if dev_metadata.ok else None
-                view_context['PIRTTOutput'] = finalMetaData['DATA_SENS']['PIR_MOTION']['PIR_OTPT_TIME_TRIGGER'] if dev_metadata.ok else None# Time Trigger Output
+                view_context['PIRPresenceOutput'] = "Detecting" if int(finalMetaData['DATA_SENS']['PIR_MOTION']['PIR_OPTPT']) else "Idle" #  Time Trigger Output
+                view_context['PIRPercentageOutput'] = finalMetaData['DATA_SENS']['PIR_MOTION']['PIR_PRESENCE_PRCNT'] if dev_metadata.ok else None # Time Trigger Output
 
                 view_context['ClassAccessState'] = 'Enabled' if int(finalMetaData['DATA_STATE']['ACCESS_STATE']) else 'Disabled' if dev_metadata.ok else None
                 view_context['LockState'] = 'Unlocked' if int(finalMetaData['DATA_STATE']['DOOR_STATE']) else 'Locked' if dev_metadata.ok else None
