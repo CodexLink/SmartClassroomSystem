@@ -1,6 +1,5 @@
 from django import forms
 from django.core.validators import MaxValueValidator, MinValueValidator
-from .externs.subject_types import RoleDeclaredTypes
 from .models import UserDataCredentials
 from django.contrib.auth.forms import AuthenticationForm
 
