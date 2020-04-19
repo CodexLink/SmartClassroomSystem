@@ -1,22 +1,167 @@
-<h1 align="center">Smart Classroom </h1>
+<h1 align="center">⛩  🏗 Smart Classroom ⌨ 🔥 </h1>
 
-<h4 align="center"> An Embedded Systems and IoT Project | Ease your class workflow by automating classroom access without the need of staff to open them for you.
+<h4 align="center"> An Embedded Systems and IoT 2nd Semester Project | Ease your class workflow by automating classroom access without the need of staff to open them for you. (Unless, you want to open parts of the room that is not designed to be accessed to you...)
 </h4>
-<p align="center">
-<a href="https://www.codefactor.io/repository/github/codexlink/SmartClassroomSystem"><img src="https://www.codefactor.io/repository/github/codexlink/SmartClassroomSystem/badge" alt="CodeFactor" /></a>
-<a href="https://www.codacy.com/manual/CodexLink/SmartClassroomSystem?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CodexLink/SmartClassroomSystem&amp;utm_campaign=Badge_Grade"><img src="https://api.codacy.com/project/badge/Grade/f649c48ccc3a431a84cad2f7e7ac65ca"/></a>
-<a href="https://badgen.net/dependabot/CodexLink/SmartClassroomSystem/?icon=dependabot"><img src="https://badgen.net/dependabot/CodexLink/SmartClassroomSystem/?icon=dependabot"></a>
-</p>
+<div align="center">
 
-# Welcome!
+![Code Formatter](https://img.shields.io/badge/Code%20Formatter-YAPF-important)
+![GitHub License](https://img.shields.io/github/license/CodexLink/SmartClassroomSystem?color=purple&label=Repo%20License)
+</div>
+
+<div align="center">
+
+![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/codexlink/SmartClassroomSystem/master?label=CodeFactor%20Code%20Quality&logo=codefactor&logoColor=white)
+![Codacy Branch Grade](https://img.shields.io/codacy/grade/f649c48ccc3a431a84cad2f7e7ac65ca/master?label=Codacy%20Code%20Quality&logo=codacy&logoColor=White)
+![Dependabot Dependency Status](https://badgen.net/dependabot/CodexLink/SmartClassroomSystem/?icon=dependabot)
+
+</div>
+
+# Welcome
 
 # Table of Contents
 
-# How it works?
+# "How it really works?"
+
+# 🔥 📁 File Structure Deconstruction
+This repository contains a lot of varieties. Meaning you really have to know the path you're going before navigating any further without realizing where the heck are you even going... Just read it in a bare-minimum way and you will be fine 💯
+
+```text
+. <Repo Root Folder>/
+├── .dependabot/ # Contains Dependabot Dependency Configuration...
+│   └── config.yml
+│
+├── .github/ # Contains Workflow File...
+│   └── workflow/
+│       └── SketchWorker.yml # It is a sketch validator and worker. It outputs whether those sketches inside of the folder `NodeSketch_SC` will work or uploadable in MCU's memory.
+│
+├── .vscode/ # VSCode configuration.
+│   └── *.json
+│
+├── Externals/
+│   ├── AdLibs/ # Contains acknowledgement by talking to self on how to do it | Specifically made for CodexLink
+│   │   └── *.md
+│   │
+│   ├── Commands/ # Contains only few preset commands that can be used to certain extreme conditions.
+│   │   └── *.txt
+│   │
+│   ├── Project Plan/ # It consists of important notes to look up from what should be context of the project.
+│   │   └── * .md
+│   │
+│   └── Sketch/
+│       └── NodeSketch_SC/ # Specifically for NodeMCU Sketches.
+│           ├── *.cpp
+│           ├── *.h
+│           └── *.ino
+│
+├── SmartClassroom/ # Django Project Folder
+│   ├── DataSetBackups/
+│   │   └── *.json
+│   │
+│   ├── NodeHandler/ # Django Micro App. This acknowledges any IoT MCUs by their own POST requests. This app could make changes to the databases.
+│   │   ├── migrations/
+│   │   │   ├── __pycache__/
+│   │   │   │   └── *.pyc
+│   │   │   │
+│   │   │   └── __init__.py
+│   │   │
+│   │   ├── __init__.py
+│   │   ├── apps.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   │
+│   ├── SCControlSystem/ # Django Main Web App. This renders EVERYTHING that any user could access to...
+│   │   ├── externs/
+│   │   │   ├── __pycache__/
+│   │   │   │   └── *.pyc
+│   │   │   │
+│   │   │   └── __init__.py
+│   │   │
+│   │   ├── management/
+│   │   │   ├── __pycache__/
+│   │   │   │   └── *.pyc
+│   │   │   │
+│   │   │   └── commands/
+│   │   │       ├── backup_datasets.py
+│   │   │       ├── create_definitive_groups.py
+│   │   │       └── get_all_permissions.py
+│   │   │
+│   │   ├── migrations/ # Literally migrations...
+│   │   │   ├── __pycache__/
+│   │   │   │   └── *.pyc
+│   │   │   │
+│   │   │   └── __init__.py
+│   │   │   └── ***(migrations_auto_...).py
+│   │   │
+│   │   ├── scripts/
+│   │   │   ├── __pycache__/
+│   │   │   │   └── *.pyc
+│   │   │   │
+│   │   │   └── SC_DSH.py # A script used by SC_ScriptInst.py. It was instantiated (spawns another window) to acknowledge IoT device communicating with the server. Requires Django-Extension to use this script.
+│   │   │
+│   │   ├── __init__.py
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── forms.py
+│   │   ├── models.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   │
+│   ├── SmartClassroom/ # Django Base Project Folder. Auto-generated by Django-admin.
+│   │   ├── __pycache__/
+│   │   │   └── *.pyc
+│   │   │
+│   │   ├── __init__.py
+│   │   ├── asgi.py
+│   │   ├── settings.py
+│   │   └── urls.py
+│   │
+│   ├── static_src/ # Known as static source files. Those are used for rendering of styles and used for extra functionalities of the web-app itself.
+│   │   └── css/
+│   │   │   └── *.css / *.css.map
+│   │   │
+│   │   └── js/
+│   │   │   └── *.js / *.min.js / *.js.map
+│   │   │
+│   │   └── rsrc/
+│   │       └── *.jpg / *.png
+│   │
+│   ├── template_CALLABLE/ # Known as Preset Components. Those are callables and referrable to Class-Basediews.
+│   │   ├── elem_inst_view.html
+│   │   └── *noContextReponseOnly.html
+│   │
+│   ├── template_REQUIRE/ # Known as Modular Components. Those are Required Templates To Use by the template_CALLABLE HTML Candidates.
+│   │   ├── footer.html
+│   │   ├── header.html
+│   │   ├── modals.html
+│   │   ├── nav.html
+│   │   └── sidebar.html
+│   │
+│   ├── template_REUSE/ # Known as Reusable Components. Those templates have it's own content and cannot be paired with another reusable component.
+│   │   ├── 404.html
+│   │   ├── classroom_control.html
+│   │   ├── dashboard.html
+│   │   ├── instance_listviewer.html
+│   │   └── login.html
+│   │
+│   ├── usersrc/ # Contents that are user-generated. They will be used in rendering if provided by the user.
+│   │   └── <Confidential...>
+│   │
+│   └── manage.py
+│
+├── .gitignore
+├── LICENSE
+├── README.md
+├── requirements.txt
+└── SC_ScriptInst.py
+```
 
 # Requirements
 
+In this section, we're going to talk in the software-side and hardware-side. This should be enough if you're willing to duplicate this project both physically and virtually. Keep in mind that this will be a bit hectic. So take a time if you're willing to do something about this project.
+
 ## Hardware-Side
+
+This project is so expensive asf in the hardware stuff so that should be a spoiler alert for you . It took our allowance by 75% by the time we're buying the components. Especially CodexLink...
 
 ### Microcontroller
 
@@ -26,10 +171,37 @@
 
 # Deployment
 
-# Authors
+In this section, we're going to talk about how to deploy this project. Unfortunately, we were able to deploy this project by Computer. We're supposed to deploy it in Raspberry Pi 4B but that didn't happened due to the pandemic.
 
-# License
+`Coming Soon.`
+
+# 💁 ❔ Frequently Asked Questions
+
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+
+# 🏆 ✍ Authors
+
+
+# 📜 Credits
+
+- Personnels
+
+- Libraries
+
+
+# 📚 License
 
 This project is licensed under the GNU v3 License - see the [LICENSE](https://github.com/CodexLink/SmartClassroomSystem/blob/master/LICENSE) file for details
-
-# Credits
