@@ -171,7 +171,7 @@ The most common typical microcontroller that the project uses is the NodeMCU v2 
 
 #### "Why should I use ESP32 instead of ESP8266 / ESP8266EX?"
 
-The reason why is because of PINs Availability. I believe ESP32 pins are more accessible and less restrict when booting up than ESP8266. Sure, you could put a data pin on some parts of NodeMCU v2 ESP8266. But at some point in time, that would lead to boot failure. Please refer to some guide such as this [one](https://randomnerdtutorials.com/esp8266-pinout-reference-gpios/). This site will really help you out on why investing to ESP32 is better than NodeMCU v2 Lua. The issue is quite the same as NodeMCU v3. So be wise on what MCU to choose.
+The reason why is because of Pin's Availability. I believe ESP32 pins are more accessible and less restrict when booting up than ESP8266. Sure, you could put a data pin on some parts of NodeMCU v2 ESP8266. But at some point in time, that would lead to boot failure. Please refer to some guides such as this [one](https://randomnerdtutorials.com/esp8266-pinout-reference-gpios/). This site will really help you out on why investing to ESP32 is better than NodeMCU v2 Lua. The issue is quite the same as NodeMCU v3. So be wise on what MCU to choose.
 
 #### Required Components
 
@@ -211,7 +211,7 @@ This section should be enough to know on what you're dealing in this project.
   - For compatibility, of course. Since I didn't provide for the schematics, you could use different components or MCUs to your liking.
 
 - ***How did you come with this project?***
-  - Long story short, I wanted to achieve ideal time for what allocated time was for the discussions and for the waiting time to open the room. In our school, you need a staff / administrator to open the room door for you. And I as for what I know, I don't like how we wasting our time for nothing. That's because they are late as usual. One thing to mention is that we have one course-dedicated room from the technological building and the one who is assigned to that building is taking a while to open our room because he was always **LATE**, and that is always the scenario during Monday, Wednesday, and Friday. It makes me feel bad, the fact that building is highly focused on technology! So, to make atleast a solution, we were able to think of this project, without actually us thinking on how hard it is gonna be. And with that, few weeks later, this project was born.
+  - Long story short, I wanted to achieve ideal time for what allocated time was for the discussions and for the waiting time to open the room. In our school, you need a staff / administrator to open the room door for you. And I as for what I know, I don't like how we wasting our time for nothing. That's because they are late as usual. One thing to mention is that we have one course-dedicated room from the technological building and the one who is assigned to that building is taking a while to open our room because he was always **LATE**, and that is always the scenario during Monday, Wednesday, and Friday. It makes me feel bad, the fact that building is highly focused on technology! So, to make at least a solution, we were able to think of this project, without actually us thinking on how hard it is gonna be. And with that, a few weeks later, this project was born.
 
 - ***Why did you open-sourced this!? And aren't you afraid it as the Lead Developer?***
   - I don't want to put any of my works in the bookshelf from which other people doesn't see it. I want things to be accessible because that makes me want to value the hard work and sleepless nights that I throw off especially on this project. And yes, I'm not afraid of getting stolen. I always assume we could do things legal and proper. And I'm already a victim of it and know how it feels to get stolen by someone else.
@@ -220,13 +220,13 @@ This section should be enough to know on what you're dealing in this project.
   - I might close this one down. But I believe this project is very hard to replicate physically. I just do hope I could get something on it, or even just credits were just fine. Keep in mind that the project is just a ***bare-minimum*** setup that could be possibly done in-home or from small-scale buildings with multiple rooms. I know this type of setup is possibly expensive, but we're just showing here the concept of what IoT can do nowadays.
 
 - ***Can I submit issues and submit a proposal for alternative methods?***
-  - That's a nice of you! Yes you can, just make things a bit formal. Even though I don't have a template for making it descent and formal as possible. I would just give you freedom on how would you laid out the proposals or issue. Just label things out accordingly in my labels that I made.
+  - That's nice of you! Yes you can, just make things a bit formal. Even though I don't have a template for making it descent and formal as possible. I would just give you freedom on how would you laid out the proposals or issues. Just label things out accordingly in the labels that I made.
 
 - ***This was such a medium-scale project!? How did you survive working on this one alone???***
-  - I don't even know how I were able to survive this while learning throughout the semester. But hey, at least I wasn't suicidal or didn't got grave inside of a depression. But to be honest, I did survive by just literally working on it **non-stop**. You really have to sacrafice having fun and being go-happy with others. You really have to focus on it. Which in the end, **I was now quite emotionless, not being able to be happy at things that I want to be happy.** - ***DISCLAIMER - I'm not scaring you or other people at trying to sacrafice for the better, this was literally just happened due to circumstances. Maybe there's a better way to code productively and not by just coding all times and ending up at being emotionless and blame self for such stupid reasons...***
+  - I don't even know how I were able to survive this while learning throughout the semester. But hey, at least I wasn't suicidal or didn't got grave inside of depression. But to be honest, I did survive by just literally working on it **non stop**. You really have to sacrifice having fun and being go-happy with others. You really have to focus on it. Which in the end, **I was now quite emotionless, not being able to be happy at things that I want to be happy.** - ***DISCLAIMER - I'm not scaring you or other people at trying to sacrifice for the better, this was literally just happened due to circumstances. Maybe there's a better way to code productively and not by just coding all times and ending up at being emotionless and blame self for such stupid reasons...***
 
 - ***I just checked the documentation and your recommendation is SO LONG! What the hell? So that means the project has a lot of flaws???***
-  - I would literally agree that it has quite few flaws. **NOT** a lot. Because majority of the functionalities of the system pretty works well in my own perspective. I could be wrong, because the fact that, we realized that during the pandemic online sessions. And we only fixed few things. But that fixes and adjustments didn't get committed in repository. Which is quite dissapointing. Anyway, IIRC the only problems or recommendations that I had is all about the implementation and how should I be using another components instead of having of what I currently have in the inventory.
+  - I would literally agree that it has quite a few flaws. **NOT** a lot. Because the majority of the functionalities of the system pretty works well in my own perspective. I could be wrong, because the fact that, we realized that during the pandemic online sessions. And we only fixed a few things. But that fixes and adjustments didn't get committed in the repository. Which is quite disappointing. Anyway, IIRC the only problems or recommendations that I had is all about the implementation and how should I be using other components instead of having of what I currently have in the inventory.
 
 - ***Can I ask question/s?***
   - Sure thing! Just be polite and I'll answer your question through my email indicated in my Github Profile!
@@ -247,12 +247,41 @@ Here are the list of authors who is taking part of the project.
   - **Joshua Santos** - *Initial Build Supporter and Joint Project Leader from Logic Circuits and Design* - No Account
 
 
-## 📜 Credits
+## 📜 Various Credits
 
-- Personals
+### Personal Credits
 
-- Libraries
+As a maintainer, I would like to give gratitude to several people who take part on this project. Those people helped / contributed that is considered gold for us.
 
+- **Charles Ian Mascarenas** - *Schematic Inspector and for Insights Given Regarding Buck Converter and Voltage Regulator Due To Current Exactly Caught by NodeMCU's Diode for Relays and Other Such Components* - [ci-mascarenas](https://github.com/ci-mascarenas)
+- **Engr. Cris Paulo Hate** - *Embedded System Instructor, Insights Given for Proper Components to Use for Locking Rooms such as *Solenoid Lock* and Insights were given for the future steps of the project. *Such as the proper use of IoT components like ESP8266*.* - Account Not Recognized.
+- **Engr. Jan Justin Razon** - *Internet-of-Things Instructor, Insights Given for what things should be considered and how should the system work. Also insights given on what locking mechanism should be used for the room.* - Account Not Recognized.
+
+### Library Credits
+
+- [Coveralls](https://www.coveralls.io/) for Code Coverage and Software Testing.
+- [Coveralls for Django Plugin](https://pypi.org/project/django-coverage-plugin/) for Django Coverage Support.
+- [Coveralls Github Action](https://github.com/marketplace/actions/coveralls-github-action) for Github Action Plugin Support for each Commit Instantiated.
+- [Dependabot](https://dependabot.com/) for Library Dependency Version Tracking.
+- [Shields_IO](https://shields.io/) for Badge Display and Live State Servicing.
+- [YAPF](https://github.com/google/yapf) for Standard Python Code Formatting.
+- [Visual Studio Code](https://code.visualstudio.com/) for Robust IDE and Dependable.
+- [Django Framework](https://www.djangoproject.com/) for Easy To Use(For Basic Usage) Web Framework.
+- [Classy Class-Based Views | Django Class-Based View Inspector](https://ccbv.co.uk/) for Proper Documentation of Views used in the project.
+- [Django Documentations (Docs for v3.0)](https://docs.djangoproject.com/en/3.0/) for slight clarifications. Used for the base on learning Django in the majority.
+- [Django Extensions](https://django-extensions.readthedocs.io/en/latest/) for Extra Features eliminating the unease of database management and for script runnable on the server instance.
+- [Github Actions](https://github.com/features/actions) for CLI in-built within repository context to use for automation stuff.
+- [Codacy](https://www.codacy.com/) and [CodeFactor](https://www.codefactor.io/dashboard/) for Code Quality Checking
+- [Arduino DHT-ESP](https://github.com/beegee-tokyo/arduino-DHTesp) for Proper [DHT11/22](https://learn.adafruit.com/dht) Support in ESP Variant Devices.
+- [GT5X](https://github.com/brianrho/GT5X) for Proper [GT-521F52 Support](https://learn.sparkfun.com/tutorials/fingerprint-scanner-gt-521fxx-hookup-guide) instead of [official support](https://github.com/sparkfun/Fingerprint_Scanner-TTL). (This one saves my entire dignity throughout the use of the GT-521F52 Fingerprint Sensor. Kudos to this guy!)
+- [SAL](https://mciastek.github.io/sal/) for Robust Animation Transition on Page Load.
+- [Material 2](https://djibe.github.io/material/) for Continuously Supporting Daemonite's Material 1 Work Throughout the Whole Year.
+- [Isotope](https://isotope.metafizzy.co/) and [Packery](https://packery.metafizzy.co/) for Dynamic Layout Positioning based on User-Browser Space.
+
+## Documentation Credits
+1. R. Yesodharan, R. Prince, S. Karthick, V. HariKrishnan and D. Bennaiah, "IoT based Classroom Automation using Arduino," International Open Access Journal, vol. II, no. 2, pp. 306-307, 2018.
+2. T. Sali, C. Pardeshi, V. Malshette, A. Jadhav and V. Thombare, "Classroom Automation System," International Journal of Innovations in Engineering and Technology(IJIET), vol. VIII, no. 3, p. 27, 2017.
+3.	Creately.com. 2020. Django Architecture Flowchart | Creately. [online] Available at: <https://creately.com/diagram/iqjshero1/Django%20Architecture%20Flowchart> [Accessed 23 March 2020].
 
 ## 📚 License
 
