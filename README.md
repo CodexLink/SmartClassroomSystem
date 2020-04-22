@@ -249,7 +249,9 @@ Here are the list of authors who is taking part of the project.
 
 ## 📜 Various Credits
 
-### Personal Credits
+In this section, the maintainer will credits to various types of entities.
+
+### 🙇 Personal Credits
 
 As a maintainer, I would like to give gratitude to several people who take part on this project. Those people helped / contributed that is considered gold for us.
 
@@ -257,7 +259,7 @@ As a maintainer, I would like to give gratitude to several people who take part 
 - **Engr. Cris Paulo Hate** - *Embedded System Instructor, Insights Given for Proper Components to Use for Locking Rooms such as *Solenoid Lock* and Insights were given for the future steps of the project. *Such as the proper use of IoT components like ESP8266*.* - Account Not Recognized.
 - **Engr. Jan Justin Razon** - *Internet-of-Things Instructor, Insights Given for what things should be considered and how should the system work. Also insights given on what locking mechanism should be used for the room.* - Account Not Recognized.
 
-### Library Credits
+### 🏆  Library Credits
 
 - [Coveralls](https://www.coveralls.io/) for Code Coverage and Software Testing.
 - [Coveralls for Django Plugin](https://pypi.org/project/django-coverage-plugin/) for Django Coverage Support.
@@ -278,7 +280,7 @@ As a maintainer, I would like to give gratitude to several people who take part 
 - [Material 2](https://djibe.github.io/material/) for Continuously Supporting Daemonite's Material 1 Work Throughout the Whole Year.
 - [Isotope](https://isotope.metafizzy.co/) and [Packery](https://packery.metafizzy.co/) for Dynamic Layout Positioning based on User-Browser Space.
 
-## Documentation Credits
+### 📑  Documentation Credits
 1. R. Yesodharan, R. Prince, S. Karthick, V. HariKrishnan and D. Bennaiah, "IoT based Classroom Automation using Arduino," International Open Access Journal, vol. II, no. 2, pp. 306-307, 2018.
 2. T. Sali, C. Pardeshi, V. Malshette, A. Jadhav and V. Thombare, "Classroom Automation System," International Journal of Innovations in Engineering and Technology(IJIET), vol. VIII, no. 3, p. 27, 2017.
 3.	Creately.com. 2020. Django Architecture Flowchart | Creately. [online] Available at: <https://creately.com/diagram/iqjshero1/Django%20Architecture%20Flowchart> [Accessed 23 March 2020].
