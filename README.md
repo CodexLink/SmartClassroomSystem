@@ -4,9 +4,10 @@
 </h4>
 <div align="center">
 
-[![Coverage Status](https://coveralls.io/repos/github/CodexLink/SmartClassroomSystem/badge.svg?branch=master)](https://coveralls.io/github/CodexLink/SmartClassroomSystem?branch=master)
+![Coverage Status](https://img.shields.io/coveralls/github/CodexLink/SmartClassroomSystem?label=Code%20Coverage&logo=coveralls)
 ![Code Formatter](https://img.shields.io/badge/Code%20Formatter-YAPF-important)
 ![GitHub License](https://img.shields.io/github/license/CodexLink/SmartClassroomSystem?color=purple&label=Repo%20License)
+
 </div>
 
 <div align="center">
@@ -18,10 +19,17 @@
 </div>
 
 # Welcome
-
+Hello! This is a repository dedicated to show what
 ## Table of Contents
 
 ## "How it really works?"
+
+Please consume the following poorly made diagram below.
+
+```text
+asdas
+
+```
 
 ## 🔥 📁 File Structure Deconstruction
 
@@ -163,28 +171,127 @@ In this section, we're going to talk in the software-side and hardware-side. Thi
 
 ### Hardware-Side Introduction
 
-In this section, we will be slightly talking about the **required **microcontroller**,and the **required components**... Just so you know, ****this project is so expensive asf**** in the hardware stuff so that should be a spoiler alert for you. It took our allowance by 75% by the time we're buying the components.
+In this section, we will be slightly talking about the **required **microcontroller**,and the **required components**... Just so you know, ****this project is so expensive asf**** in the hardware stuff so that should be a spoiler alert for you. It took our allowance by 75% by the time we're buying the components. Anyway, let's get started.
 
 #### Required Microcontroller
 
-The most common typical microcontroller that the project uses is the NodeMCU v2 Lua ESP8266EX Version. We generally recommend using ESP32 which is just a slight realization after finishing this project.
+The most common typical microcontroller that the project uses is the NodeMCU v2 Lua ESP8266EX Version. We generally recommend using ESP32 which is just a slight realization after finishing this project. I myself, might guess this the PINS used in NodeMCU v2 Lua ESP8266EX Version is the same as ESP32. Though, I can't investigate further since I don't have ESP32 at the moment.
 
 #### "Why should I use ESP32 instead of ESP8266 / ESP8266EX?"
 
-The reason why is because of Pin's Availability. I believe ESP32 pins are more accessible and less restrict when booting up than ESP8266. Sure, you could put a data pin on some parts of NodeMCU v2 ESP8266. But at some point in time, that would lead to boot failure. Please refer to some guides such as this [one](https://randomnerdtutorials.com/esp8266-pinout-reference-gpios/). This site will really help you out on why investing to ESP32 is better than NodeMCU v2 Lua. The issue is quite the same as NodeMCU v3. So be wise on what MCU to choose.
+The reason why is because of the Pin's Availability. I believe ESP32 pins are more accessible and less restrict when booting up than ESP8266. Sure, you could put a data pins on some parts of NodeMCU v2 ESP8266. But at some point in time, that would lead to boot failure. Please refer to some guides such as this [one](https://randomnerdtutorials.com/esp8266-pinout-reference-gpios/). This site will really help you out on why investing to ESP32 is better than NodeMCU v2 Lua. Though if you think going for NodeMCU v3. The issue is literally quite the same. So be wise on what MCU to choose.
+
+As long as the MCU has the capability to handle GT5X Instructions (For Fingerprint specifically...) and able to handle tasks by responding to requests both in POST and GET forms. And has the ability to handle the extensive stacked task as we have a Millis Management for Room Locks. Then you're good to go. Keep in mind the RAM is one of the factors to consider. As far as I developed it, I might be able to consume a lot of RAM for the tests.
 
 #### Required Components
 
+The components that we used, were essentially in my inventory already. So the cost of the project gets higher than I thought. That's because as a hobbyist, I find one of those are bare-minimum to withstand this project and able to make something out of it. So here's the list along with their intentions.
+
+1. GT-521F32 Fingerprint Sensor
+2. LCD 20x4 with (I^2)C Backpack
+3. Two-Sided DIP Switch x2
+4. PIR Motion Sensor HC-SR501
+5. DC-DC Buck Converter 3A MP1584EN
+6. DHT 11/22 Humidity and Temperature Module
+7. Dupont-Type Jumper Wires (10 to 30 cm)
+8. 12 V Powered Solenoid Lock (Magnetic)
+9. 3-Channel Relay Module (with Octocoupler)
+10. 12V Adapter to Jack Output (Recommended: 12V, Minimum: 9V)
+11. (***Optional***) Bulb [1]
+12. (***Optional***) Extension Cord [2]
+13. (***Optional***) Raspberry Pi 4B [3]
+14. (***Optional***) Router or Repeater [4]
+15. (***Optional***) Power Jack [5]
+
+- What's with the Adapter?
+  - The reason why I gave parameters is because the project requires a voltage with sufficient reliability and better current. If you intent to make the project work by directly connecting the PWR to NodeMCU and let all components connected to it to VCC. You will feel that your NodeMCU's diode will collapse. This is where the buck converter comes in. You have to feed 9-12V to buck converter. Set output to 5.4 to 5.7V respectively. And put output in rail to be used by components + to be used by MCU via VIN pin.
+
+  - Also, I included the minimum as a possible best minimum setup. As per the requirements says, we have 12V powered solenoid lock. That is where 12 V has to do something on it. If for in case, you have a solenoid lock or any kind of locks rated to 9V respectively. Then it is best to go for 9V Adapter. Just do the same setup as usual by setting buck converter output to given said respectively voltage and you're ready to go.
+
+- Some components were indicated as ***optional***. Why?
+  - We have ***several reasons***. For **[1]** and **[2]**, we have to indicate it as optional since we didn't provide schematics for our project. This was intended for the test of relay functionalities. For **[3]** and **[4]**, this was our usual setup. But due to Pandemic, we're unable to set it up. So instead of using it, we just use our home router and laptop to host the server. Though in this project, we already set compatibility for Raspberry Pi 4B Project Launch. Kinda a waste of time but support for it was a success. And lastly but not the least, the **[5]** power jack. This is indeed unusual, but if you're planning to use this, even as a module, it would be great! The setup of this project has a required parameter especially in the Voltage. The voltage of the project should be set to 5.4V to 5.7V. Going further down or going further up will result in unexpected behaviors!
+
+I don't provide links to these components. That's because the supplier is not supporting different countries. So let's say we bought our parts in local shop. Which technically true. We will only provide links that supports delivery to other countries.
+
 ## Software-Side Introduction
 
+In this section, I'll be talking from the scratch. Since this will be long enough, it's best to check the Demo and Resources Section and watch **Youtube Video Installation**. To get the knowledge on how to install the components of the project.
+
+**DISCLAIMER**: The setup and deployment may slightly be different from what is being demonstrated in the youtube video! But the output will be the same.
+
+### Installation of Pre-requisites
+
+In order to move further to deployment section, I don't want to assume if you have anything installed. So it's best to install the packages / modules inside of the `requirements.txt`
+
+1. To install, you have to change directory to the repository root level.
+2. Type `pip install -r requirements.txt` and press enter.
+
+With that, you should have the following packages / modules installed in your pip:
+
+```text
+Django (Version 3.0.5 and Above)
+django_extensions (Version 2.2.9 and Above)
+python-coveralls (Version 2.9.3 and Above)
+coveralls (Version 2.0.0 and Above)
+django-coverage-plugin (Version 1.8.0 and Above)
+coverage (Version 5.1 and Above)
+```
+
+Since you have installed all of them its time to assume that you have a MariaDB Server that is online.
+
+3. You have to create a database named `sc_db`. And leave it blank.
+
+There will be a next step on how to put content in the `sc_db` database, so don't worry.
+
+4. Next, we have to put models and migrations content in the `sc_db` database. With that, type `python manage.py makemigrations`.
+5. Once done, type `python manage.py migrate` to apply all migrations that the Django did.
+6. After that, setup up your superuser! Type `python manage.py createsuperuser` to fill the bare-minimum information needed.
+7. Then, run `python manage.py runserver` and navigate to `localhost:8000` to see if things are working.
+
+Congratulations! You did it. But that doesn't stop there. Because you have one thing left to do.
+
+.... (***Required***) Upload NodeMCU Sketch.
+
+#### Upload the NodeMCU Sketch
+
+This is required since this will be your communicator in the server. To get started, follow the instructions below.
+
+1. By File Manager / File Explorer, navigate to `Externals\Sketch\NodeSketch_SC`.
+
+2. Open `NodeSketch_SC.ino`
+
+3. At Line 38 Do EDIT the WiFi Target and it's credentials. The following has its own labels or required positional arguments / parameters, check `SmartClassroom.cpp` or `SmartClassroom.h`.
+   - Ensure that you're connecting to where the server or the Django Server lives!
+
+4. Connect all components to their corresponding PIN definitions declared at `SmartClassroom.h`.
+
+5. Assuming you have NodeMCU device candidate in the board selection. (You can check by Tools > Board: XXXXXX). If NodeMCU did not show up. Then you might want to install esp8266 package for Arduino IDE.
+
+6. If for instance you, already have one. Then set the NodeMCU board as the target board. Set Upload Sketch From Ranges (115200 - 256000). The higher the better, the higher it is, the capacitory has to exist from EN to GND. (10uF Eletrolytic Cap).
+
+7. Press Upload.
+
+And... Done! Wait further and let the screen of the device to show the information such as the temperature and humidity, classroom subject and lock states.
 
 ### Deployment
 
-In this section, we're going to talk about how to deploy this project. Unfortunately, we were able to deploy this project by Computer. We're supposed to deploy it in Raspberry Pi 4B but that didn't happened due to the pandemic.
+In this section, we're going to talk about on how to deploy this project. The way you open the project is not intended or the usual way for this one. The project contains a script that could launch multiple instance of Command Prompts / Terminals.
 
-`Coming Soon.`
+Just to make things clear, there are at least three command prompt / terminal instances and those are:
 
-If you're trying to make things and things doesn't go well. Please check the videos from the Demo and Resources Section. Which is located just below!
+1. Smart Classroom | Script Instantiator (***Base System*** | The One You Should Open)
+2. Django Server Instance (Literally Runs inside ***SCControlSystem***)
+3. Smart Classroom | Data Stream Handler (Inside ***SCControlSystem***, at Scripts Directory named SC_DSH.py)
+
+#### Getting Started
+
+1. Open your MySQL Server / MariaDB Server.
+2. At the root of the repository folder, just launch `SC_ScriptInst.py`.
+3. Let it do the work.
+
+***That's it!***
+
+If you're attempting things and it didn't go well. Please check the videos from the Demo and Resources Section. Which is located just below!
 
 ## Demo and Resources
 
@@ -249,7 +356,7 @@ Here are the list of authors who is taking part of the project.
 
 ## 📜 Various Credits
 
-In this section, the maintainer will credits to various types of entities.
+In this section, the maintainer will creditsto various types of entities.
 
 ### 🙇 Personal Credits
 
@@ -281,6 +388,7 @@ As a maintainer, I would like to give gratitude to several people who take part 
 - [Isotope](https://isotope.metafizzy.co/) and [Packery](https://packery.metafizzy.co/) for Dynamic Layout Positioning based on User-Browser Space.
 
 ### 📑  Documentation Credits
+
 1. R. Yesodharan, R. Prince, S. Karthick, V. HariKrishnan and D. Bennaiah, "IoT based Classroom Automation using Arduino," International Open Access Journal, vol. II, no. 2, pp. 306-307, 2018.
 2. T. Sali, C. Pardeshi, V. Malshette, A. Jadhav and V. Thombare, "Classroom Automation System," International Journal of Innovations in Engineering and Technology(IJIET), vol. VIII, no. 3, p. 27, 2017.
 3.	Creately.com. 2020. Django Architecture Flowchart | Creately. [online] Available at: <https://creately.com/diagram/iqjshero1/Django%20Architecture%20Flowchart> [Accessed 23 March 2020].
