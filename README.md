@@ -4,6 +4,7 @@
 </h4>
 <div align="center">
 
+[![Coverage Status](https://coveralls.io/repos/github/CodexLink/SmartClassroomSystem/badge.svg?branch=master)](https://coveralls.io/github/CodexLink/SmartClassroomSystem?branch=master)
 ![Code Formatter](https://img.shields.io/badge/Code%20Formatter-YAPF-important)
 ![GitHub License](https://img.shields.io/github/license/CodexLink/SmartClassroomSystem?color=purple&label=Repo%20License)
 </div>
@@ -23,6 +24,7 @@
 ## "How it really works?"
 
 ## 🔥 📁 File Structure Deconstruction
+
 This repository contains a lot of varieties. Meaning you really have to know the path you're going before navigating any further without realizing where the heck are you even going... Just read it in a bare-minimum way and you will be fine 💯
 
 ```text
@@ -155,19 +157,26 @@ This repository contains a lot of varieties. Meaning you really have to know the
 └── SC_ScriptInst.py
 ```
 
-## Requirements
+## Introduction to Requirements
 
 In this section, we're going to talk in the software-side and hardware-side. This should be enough if you're willing to duplicate this project both physically and virtually working. Keep in mind that this will be a bit hectic. So take time if you're willing to do something about this project.
 
-### Hardware-Side
+### Hardware-Side Introduction
 
-This project is so expensive asf in the hardware stuff so that should be a spoiler alert for you. It took our allowance by 75% by the time we're buying the components.
+In this section, we will be slightly talking about the **required **microcontroller**,and the **required components**... Just so you know, ****this project is so expensive asf**** in the hardware stuff so that should be a spoiler alert for you. It took our allowance by 75% by the time we're buying the components.
 
-#### Microcontroller
+#### Required Microcontroller
 
-#### Components
+The most common typical microcontroller that the project uses is the NodeMCU v2 Lua ESP8266EX Version. We generally recommend using ESP32 which is just a slight realization after finishing this project.
 
-## Software-Side
+#### "Why should I use ESP32 instead of ESP8266 / ESP8266EX?"
+
+The reason why is because of PINs Availability. I believe ESP32 pins are more accessible and less restrict when booting up than ESP8266. Sure, you could put a data pin on some parts of NodeMCU v2 ESP8266. But at some point in time, that would lead to boot failure. Please refer to some guide such as this [one](https://randomnerdtutorials.com/esp8266-pinout-reference-gpios/). This site will really help you out on why investing to ESP32 is better than NodeMCU v2 Lua. The issue is quite the same as NodeMCU v3. So be wise on what MCU to choose.
+
+#### Required Components
+
+## Software-Side Introduction
+
 
 ### Deployment
 
@@ -175,15 +184,15 @@ In this section, we're going to talk about how to deploy this project. Unfortuna
 
 `Coming Soon.`
 
-If you're trying to make things and things doesn't go well. Please check the videos from the Demo and Resources Section. Which is located just belo!
+If you're trying to make things and things doesn't go well. Please check the videos from the Demo and Resources Section. Which is located just below!
 
 ## Demo and Resources
 
 This section should be enough to know on what you're dealing in this project.
 
-- Documentation: <https://docs.google.com/document/d/1oyZ-jKiQFd_voRn4EIxYd09oBhy7ZOXVMwA2KruXPwU/edit>
-- Youtube Video Demonstration: <https://www.youtube.com/watch?v=jpxtz1-mhd8>
-- Youtube Video Installation: <https://www.youtube.com/watch?v=1NmTDPHD-Js>
+- **Documentation**: <https://docs.google.com/document/d/1oyZ-jKiQFd_voRn4EIxYd09oBhy7ZOXVMwA2KruXPwU/edit>
+- **Youtube Video Demonstration**: <https://www.youtube.com/watch?v=jpxtz1-mhd8>
+- **Youtube Video Installation**: <https://www.youtube.com/watch?v=1NmTDPHD-Js>
 
 ## 💁 ❔ Frequently Asked Questions
 
@@ -202,19 +211,22 @@ This section should be enough to know on what you're dealing in this project.
   - For compatibility, of course. Since I didn't provide for the schematics, you could use different components or MCUs to your liking.
 
 - ***How did you come with this project?***
-  - Long story short, I wanted to achieve ideal time for what allocated time was for the discussions and for the waiting time to open the room. In our school, you need a staff / administrator to open the room door for you. And I as for what I know, I don't like how we wasting our time for nothing. That's because they are late as usual. One thing to mention is that we have one course-dedicated room from the technological building and the one who is assigned to that building is taking a while to open our room because he was always **LATE**, and that is always the scenario during monday, wednesday, and friday. It makes me feel bad, the fact that building is highly focused on technology! So, to make atleast a solution, we were able to think of this project, without actually us thinking on how hard it is gonna be. And with that, few weeks later, this project was born.
+  - Long story short, I wanted to achieve ideal time for what allocated time was for the discussions and for the waiting time to open the room. In our school, you need a staff / administrator to open the room door for you. And I as for what I know, I don't like how we wasting our time for nothing. That's because they are late as usual. One thing to mention is that we have one course-dedicated room from the technological building and the one who is assigned to that building is taking a while to open our room because he was always **LATE**, and that is always the scenario during Monday, Wednesday, and Friday. It makes me feel bad, the fact that building is highly focused on technology! So, to make atleast a solution, we were able to think of this project, without actually us thinking on how hard it is gonna be. And with that, few weeks later, this project was born.
 
 - ***Why did you open-sourced this!? And aren't you afraid it as the Lead Developer?***
-  - I don't want to put any of my works in the bookshelf from which other people doesn't see it. I want things to be accessible because that makes me want to value the hardworks and sleepless nights that I throw off especially on this project. And yes, I'm not afraid of getting stolen. I always assume we could do things legal and proper. And I'm already a victim of it and know how it feels to get stolen by someone else.
+  - I don't want to put any of my works in the bookshelf from which other people doesn't see it. I want things to be accessible because that makes me want to value the hard work and sleepless nights that I throw off especially on this project. And yes, I'm not afraid of getting stolen. I always assume we could do things legal and proper. And I'm already a victim of it and know how it feels to get stolen by someone else.
 
 - ***What would you do if someone got **stonks** from this project?***
-  - I might close this one down. But I believe this project is very hard to replicate physically. I just do hope I could get something on it, or even just credits were just fine. Keep in mind that the project is just a ***bare-minimum*** setup that could be possibly done in home or from small-scale buildings with multiple rooms. I know this type of setup is possibly expensive, but we're just showing here the concept of what IoT can do nowadays.
+  - I might close this one down. But I believe this project is very hard to replicate physically. I just do hope I could get something on it, or even just credits were just fine. Keep in mind that the project is just a ***bare-minimum*** setup that could be possibly done in-home or from small-scale buildings with multiple rooms. I know this type of setup is possibly expensive, but we're just showing here the concept of what IoT can do nowadays.
 
-- ***Can I submit issues and submit proposal for alternative methods?***
+- ***Can I submit issues and submit a proposal for alternative methods?***
   - That's a nice of you! Yes you can, just make things a bit formal. Even though I don't have a template for making it descent and formal as possible. I would just give you freedom on how would you laid out the proposals or issue. Just label things out accordingly in my labels that I made.
 
 - ***This was such a medium-scale project!? How did you survive working on this one alone???***
   - I don't even know how I were able to survive this while learning throughout the semester. But hey, at least I wasn't suicidal or didn't got grave inside of a depression. But to be honest, I did survive by just literally working on it **non-stop**. You really have to sacrafice having fun and being go-happy with others. You really have to focus on it. Which in the end, **I was now quite emotionless, not being able to be happy at things that I want to be happy.** - ***DISCLAIMER - I'm not scaring you or other people at trying to sacrafice for the better, this was literally just happened due to circumstances. Maybe there's a better way to code productively and not by just coding all times and ending up at being emotionless and blame self for such stupid reasons...***
+
+- ***I just checked the documentation and your recommendation is SO LONG! What the hell? So that means the project has a lot of flaws???***
+  - I would literally agree that it has quite few flaws. **NOT** a lot. Because majority of the functionalities of the system pretty works well in my own perspective. I could be wrong, because the fact that, we realized that during the pandemic online sessions. And we only fixed few things. But that fixes and adjustments didn't get committed in repository. Which is quite dissapointing. Anyway, IIRC the only problems or recommendations that I had is all about the implementation and how should I be using another components instead of having of what I currently have in the inventory.
 
 - ***Can I ask question/s?***
   - Sure thing! Just be polite and I'll answer your question through my email indicated in my Github Profile!
