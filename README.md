@@ -19,10 +19,27 @@
 </div>
 
 # Welcome
-Hello! This is a repository dedicated to show what
-## Table of Contents
+Hello! This is a repository dedicated to show the concept of a bare minimum IoT to server interaction and implementation. The concept consists of the system itself (excluding only the physical side of the project) which this concludes the context as the Smart Classroom System. It has the capabilities to reduce time consumption upon entering rooms that are authorized within the scope of a particular time.
 
-## "How it really works?"
+## The Problem
+
+Most of the day, one of the problems that the teacher and students always encountered when the class starts is the classroom locked. Sometimes, when your class is at 7:30 AM, it's safe to assume that your classroom is not yet opened. The fact that, any staff who is under those rooms are either late or literally just missing, for instance (breaktime, went out to go somewhere, etc.). Since, some of them never really learn. We have to do something about it. As those issues occur within the technology building. It's best to suit all classrooms with smart padlocks and other such. But the thing is, it is quite simple. So we have to come a more complex idea from the smart padlocks.
+
+## The Solution
+
+The solution was to create a Smart Classroom. The context was not all about the locks being smart padlocks. But rather, we should be able to control the whole classroom itself! From locks to electricity to environmental states. This kind of solution looks typical when looked from the outside. But if you look in the system itself, it is quite complex to do so, as it involves time and subject included and user fingerprint assignments.
+
+## How does it work
+
+### The Context
+
+So basically, we want something to automate, right? The group managed to think of something that would help the techno core building of their school to be more technology-dependent. That is by, making all instructional rooms to be accessible without any on sight staff but only the authentication within your hands.
+
+### The Wide Range of How It Works
+
+So, **how does it really works!?**. In this system, we have a server and a client. The server can be Raspberry Pi 4B or any Server Computer and the Client is the NodeMCU. The server contains an accessible website to be used by staff and professors. The client which those are nodes, act as a receiver and status transmitter. Everytime there is a change in the classroom, the NodeMCU prepares the states in Dictionary Form everytime the server wants to query on the Nodes. Then the server process that state and assign those values in the database. Other than that, the server has the capability to send requests to the Nodes to change particular attributes of it. Such as the subject code to be assigned in front of the screen, explicitly change electricity and lock state without any authentication (exclusive for administrators only!).
+
+## Table of Contents
 
 Please consume the following poorly made diagram below.
 
@@ -265,9 +282,9 @@ This is required since this will be your communicator in the server. To get star
 
 4. Connect all components to their corresponding PIN definitions declared at `SmartClassroom.h`.
 
-5. Assuming you have NodeMCU device candidate in the board selection. (You can check by Tools > Board: XXXXXX). If NodeMCU did not show up. Then you might want to install esp8266 package for Arduino IDE.
+5. Assuming you have NodeMCU device candidate in the board selection. (You can check by Tools > Board: XXXXXX). If NodeMCU did not show up. Then you might want to install ESP8266 package for Arduino IDE.
 
-6. If for instance you, already have one. Then set the NodeMCU board as the target board. Set Upload Sketch From Ranges (115200 - 256000). The higher the better, the higher it is, the capacitory has to exist from EN to GND. (10uF Eletrolytic Cap).
+6. If for instance you, already have one. Then set the NodeMCU board as the target board. Set Upload Sketch From Ranges (115200 - 256000). The higher the better, the higher it is, the capacitor has to exist from EN to GND. (10uF Eletrolytic Cap).
 
 7. Press Upload.
 
@@ -275,9 +292,9 @@ And... Done! Wait further and let the screen of the device to show the informati
 
 ### Deployment
 
-In this section, we're going to talk about on how to deploy this project. The way you open the project is not intended or the usual way for this one. The project contains a script that could launch multiple instance of Command Prompts / Terminals.
+In this section, we're going to talk about on how to deploy this project. The way you open the project is not intended or the usual way for this one. The project contains a script that could launch multiple instances of Command Prompts / Terminals.
 
-Just to make things clear, there are at least three command prompt / terminal instances and those are:
+Just to make things clear, there are at least three command prompts / terminal instances and those are:
 
 1. Smart Classroom | Script Instantiator (***Base System*** | The One You Should Open)
 2. Django Server Instance (Literally Runs inside ***SCControlSystem***)
@@ -300,6 +317,24 @@ This section should be enough to know on what you're dealing in this project.
 - **Documentation**: <https://docs.google.com/document/d/1oyZ-jKiQFd_voRn4EIxYd09oBhy7ZOXVMwA2KruXPwU/edit>
 - **Youtube Video Demonstration**: <https://www.youtube.com/watch?v=jpxtz1-mhd8>
 - **Youtube Video Installation**: <https://www.youtube.com/watch?v=1NmTDPHD-Js>
+
+### Advanced Context: Protocol
+
+In this section, it shows a list of protocols to better understand how the system works.
+
+#### Shutdown Timer Based on Motion Sensor Protocol
+
+For every subject, we have a time limit. In our system, everytime it is unlocked for a particular time. Every 5 minutes, the motion sensor has to detect person for every 30 seconds. Now 10 scans for 30 minutes is equivalent for 5 minutes. If the scanner is in 50% state, it will continue for another 5 minutes. If the scanner is in 50% state less, it will shutdown the classroom itself.
+
+#### Classroom Locked State Change Protocol
+
+For every node, for it be controllable, it has receive a subject code on it. Those are automatically given by the Data Stream Handler on the system. So it may need priviledge for explicit assignment of subjects. Anyway, any other such explicit actions without any subject assignment to the classroom. Will result to its functionality as defaulted to be locked, electricity turned off. So for maintaince for instance, there should be a custom made admin subject along with time.
+
+If for instance, the subject is the last subject, any other circumstance may be stopped in the middle of a session. So time has to be considered when using this system.
+
+#### Restrictive Accessibility Protocol
+
+When the accessibilities handed out to the user. Some user might even tampered it without any hindrance to it. For instance if user wants to access rooms not assigned to them. So for us to keep things safe, we have to disable links from other rooms but only displays their states to the rooms. Some rooms will only be enabled to you only if your subject linked to you is on the current time scope of the server time, it will be accessible and controllable within outside range. Any user who attempts to access rooms, will technically make you get in but you'll be recorded for the actions that is not quite acceptable. Meaning your name is in the list of logs who misused or accessed a particular room not currently assigned / focused to you.
 
 ## 💁 ❔ Frequently Asked Questions
 
@@ -391,7 +426,7 @@ As a maintainer, I would like to give gratitude to several people who take part 
 
 1. R. Yesodharan, R. Prince, S. Karthick, V. HariKrishnan and D. Bennaiah, "IoT based Classroom Automation using Arduino," International Open Access Journal, vol. II, no. 2, pp. 306-307, 2018.
 2. T. Sali, C. Pardeshi, V. Malshette, A. Jadhav and V. Thombare, "Classroom Automation System," International Journal of Innovations in Engineering and Technology(IJIET), vol. VIII, no. 3, p. 27, 2017.
-3.	Creately.com. 2020. Django Architecture Flowchart | Creately. [online] Available at: <https://creately.com/diagram/iqjshero1/Django%20Architecture%20Flowchart> [Accessed 23 March 2020].
+3. Creately.com. 2020. Django Architecture Flowchart | Creately. [online] Available at: <https://creately.com/diagram/iqjshero1/Django%20Architecture%20Flowchart> [Accessed 23 March 2020].
 
 ## 📚 License
 
