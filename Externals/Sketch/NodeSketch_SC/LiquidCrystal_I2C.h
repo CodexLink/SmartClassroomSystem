@@ -46,9 +46,9 @@
 #define LCD_BACKLIGHT 0x08
 #define LCD_NOBACKLIGHT 0x00
 
-#define En B00000100  // Enable bit
-#define Rw B00000010  // Read/Write bit
-#define Rs B00000001  // Register select bit
+#define En B00000100 // Enable bit
+#define Rw B00000010 // Read/Write bit
+#define Rs B00000001 // Register select bit
 
 /**
  * This is the driver for the Liquid Crystal LCD displays that use the I2C bus.
@@ -57,7 +57,8 @@
  * The backlight is on by default, since that is the most likely operating mode in
  * most cases.
  */
-class LiquidCrystal_I2C : public Print {
+class LiquidCrystal_I2C : public Print
+{
 public:
 	/**
 	 * Constructor
@@ -75,7 +76,7 @@ public:
 	 */
 	void begin();
 
-	 /**
+	/**
 	  * Remove all the characters currently shown. Next print/write operation will start
 	  * from the first position on LCD display.
 	  */
@@ -86,7 +87,7 @@ public:
 	 */
 	void home();
 
-	 /**
+	/**
 	  * Do not show any characters on the LCD display. Backlight state will remain unchanged.
 	  * Also all characters written on the display will return, when the display in enabled again.
 	  */
@@ -142,9 +143,9 @@ public:
 	inline void cursor_on() { cursor(); }
 	inline void cursor_off() { noCursor(); }
 
-// Compatibility API function aliases
-	void setBacklight(uint8_t new_val);				// alias for backlight() and nobacklight()
-	void load_custom_character(uint8_t char_num, uint8_t *rows);	// alias for createChar()
+	// Compatibility API function aliases
+	void setBacklight(uint8_t new_val);							 // alias for backlight() and nobacklight()
+	void load_custom_character(uint8_t char_num, uint8_t *rows); // alias for createChar()
 	void printstr(const char[]);
 
 private:

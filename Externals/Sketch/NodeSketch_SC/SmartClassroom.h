@@ -162,10 +162,10 @@ public:
 
     struct AUTH_STATE
     {
-        bool AUTH_CR_DOOR = 0;              // 1 Unlocked, 0 Locked
-        bool AUTH_CR_ACCESS = 0;            // 1 Enabled, 0 Disabled
-        bool NON_AUTH_ELECTRIC_STATE = 0;   // 1 Enabled, 0 Disabled
-        bool AUTH_FGPRT_STATE = 0;          // 1 For Currently Authenticated, Else Not Authenticated
+        bool AUTH_CR_DOOR = 0;            // 1 Unlocked, 0 Locked
+        bool AUTH_CR_ACCESS = 0;          // 1 Enabled, 0 Disabled
+        bool NON_AUTH_ELECTRIC_STATE = 0; // 1 Enabled, 0 Disabled
+        bool AUTH_FGPRT_STATE = 0;        // 1 For Currently Authenticated, Else Not Authenticated
     } AUTH_INST_CONT;
 
     struct DEV_CREDENTIALS
@@ -192,7 +192,7 @@ public:
 
     bool SketchForceStructOverride = false;
     String SERVER_IP_ADDRESS = "192.168.100.5"; // By Default
-    uint16_t SERVER_PORT = 8000; // By Default
+    uint16_t SERVER_PORT = 8000;                // By Default
 
     bool PIR_ARR_OUTPUT[CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS] = {0};
 
@@ -211,7 +211,6 @@ public:
 
     // 50% > EXTEND 5 MINUTES
     // 50 < SHUTDOWN YUNG CLASSROOM
-
 
     bool ForceEEPROMUpdate = false;
     char SER_INPUT_RAW = '0';

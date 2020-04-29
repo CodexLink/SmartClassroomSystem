@@ -421,7 +421,7 @@ float DHTesp::getComfortRatio(ComfortState &destComfortStatus, float temperature
 {
 	float ratio = 100; //100%
 	float distance = 0;
-	float kTempFactor = 3;	//take into account the slope of the lines
+	float kTempFactor = 3;	  //take into account the slope of the lines
 	float kHumidFactor = 0.1; //take into account the slope of the lines
 	uint8_t tempComfort = 0;
 
