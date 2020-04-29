@@ -195,6 +195,24 @@ public:
     uint16_t SERVER_PORT = 8000; // By Default
 
     bool PIR_ARR_OUTPUT[CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS] = {0};
+
+    //5 MINUTES, 1 MINUTE = 60 SECONDS
+
+    // [0] = 30 SECONDS = 1
+    // [1] = 30 SECONDS = 1
+    // [2] = 30 SECONDS = 1
+    // [3] = 30 SECONDS = 1
+    // [4] = 30 SECONDS = 0
+    // [5] = 30 SECONDS = 0
+    // [6] = 30 SECONDS = 0
+    // [7] = 30 SECONDS = 0
+    // [8] = 30 SECONDS = 0
+    // [9] = 30 SECONDS = 0
+
+    // 50% > EXTEND 5 MINUTES
+    // 50 < SHUTDOWN YUNG CLASSROOM
+
+
     bool ForceEEPROMUpdate = false;
     char SER_INPUT_RAW = '0';
     uint16_t SER_INPUT_ID = CONST_VAL::NULL_CONTENT;

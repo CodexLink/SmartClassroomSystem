@@ -205,25 +205,25 @@ This repository contains a lot of varieties. Meaning you really have to know the
 └── SC_ScriptInst.py
 ```
 
-###### [Go Back To Top Section](#table-of-contents) | [Go Back to TOC](#table-of-contents)
+**[Go Back To Top Section](#table-of-contents)** | **[Go Back to TOC](#table-of-contents)**
 
 ## Introduction to Requirements
 
 In this section, we're going to talk in the software-side and hardware-side. This should be enough if you're willing to duplicate this project both physically and virtually working. Keep in mind that this will be a bit hectic. So take time if you're willing to do something about this project.
 
-###### [Go Back to TOC](#table-of-contents)
+**[Go Back to TOC](#table-of-contents)**
 
 ### Hardware-Side Introduction
 
 In this section, we will be slightly talking about the **required microcontroller**,and the **required components**... Just so you know, ****this project is so expensive asf**** in the hardware stuff so that should be a spoiler alert for you. It took our allowance by 75% by the time we're buying the components. Anyway, let's get started.
 
-###### [Go Back to TOC](#table-of-contents)
+**[Go Back to TOC](#table-of-contents)**
 
 #### Required Microcontroller
 
 The most common typical microcontroller that the project uses is the NodeMCU v2 Lua ESP8266EX Version. We generally recommend using ESP32 which is just a slight realization after finishing this project. I myself, might guess this the PINS used in NodeMCU v2 Lua ESP8266EX Version is the same as ESP32. Though, I can't investigate further since I don't have ESP32 at the moment.
 
-###### [Go Back to TOC](#table-of-contents)
+**[Go Back to TOC](#table-of-contents)**
 
 #### "Why should I use ESP32 instead of ESP8266 / ESP8266EX?"
 
@@ -231,7 +231,7 @@ The reason why is because of the Pin's Availability. I believe ESP32 pins are mo
 
 As long as the MCU has the capability to handle GT5X Instructions (For Fingerprint specifically...) and able to handle tasks by responding to requests both in POST and GET forms. And has the ability to handle the extensive stacked task as we have a Millis Management for Room Locks. Then you're good to go. Keep in mind the RAM is one of the factors to consider. As far as I developed it, I might be able to consume a lot of RAM for the tests.
 
-###### [Go Back to TOC](#table-of-contents)
+**[Go Back to TOC](#table-of-contents)**
 
 #### Required Components
 
@@ -263,7 +263,7 @@ The components that we used, were essentially in my inventory already. So the co
 
 I don't provide links to these components. That's because the supplier is not supporting different countries. So let's say we bought our parts in local shop. Which technically true. We will only provide links that supports delivery to other countries.
 
-###### [Go Back To Top Section](#table-of-contents) | [Go Back to TOC](#table-of-contents)
+**[Go Back To Top Section](#table-of-contents)** | **[Go Back to TOC](#table-of-contents)**
 
 ## Software-Side Introduction
 
@@ -271,7 +271,7 @@ In this section, I'll be talking from the scratch. Since this will be long enoug
 
 **DISCLAIMER**: The setup and deployment may slightly be different from what is being demonstrated in the youtube video! But the output will be the same.
 
-###### [Go Back to TOC](#table-of-contents)
+**[Go Back to TOC](#table-of-contents)**
 
 ### Installation of Pre-requisites
 
@@ -306,7 +306,7 @@ Congratulations! You did it. But that doesn't stop there. Because you have one t
 
 .... (***Required***) Upload NodeMCU Sketch.
 
-###### [Go Back To Top Section](#table-of-contents) | [Go Back to TOC](#table-of-contents)
+**[Go Back To Top Section](#table-of-contents)** | **[Go Back to TOC](#table-of-contents)**
 
 #### Upload the NodeMCU Sketch
 
@@ -329,7 +329,7 @@ This is required since this will be your communicator in the server. To get star
 
 And... Done! Wait further and let the screen of the device to show the information such as the temperature and humidity, classroom subject and lock states.
 
-###### [Go Back To Top Section](#table-of-contents) | [Go Back to TOC](#table-of-contents)
+**[Go Back To Top Section](#table-of-contents)** | **[Go Back to TOC](#table-of-contents)**
 
 ### Deployment
 
@@ -341,7 +341,7 @@ Just to make things clear, there are at least three command prompts / terminal i
 2. Django Server Instance (Literally Runs inside ***SCControlSystem***)
 3. Smart Classroom | Data Stream Handler (Inside ***SCControlSystem***, at Scripts Directory named SC_DSH.py)
 
-###### [Go Back to TOC](#table-of-contents)
+**[Go Back to TOC](#table-of-contents)**
 
 #### Getting Started
 
@@ -353,7 +353,7 @@ Just to make things clear, there are at least three command prompts / terminal i
 
 If you're attempting things and it didn't go well. Please check the videos from the Demo and Resources Section. Which is located just below!
 
-###### [Go Back to TOC](#table-of-contents)
+**[Go Back to TOC](#table-of-contents)**
 
 ## Demo and Resources
 
@@ -363,7 +363,7 @@ This section should be enough to know on what you're dealing in this project.
 - **Youtube Video Demonstration**: <https://www.youtube.com/watch?v=jpxtz1-mhd8>
 - **Youtube Video Installation**: <https://www.youtube.com/watch?v=1NmTDPHD-Js>
 
-###### [Go Back to TOC](#table-of-contents)
+**[Go Back to TOC](#table-of-contents)**
 
 ### Advanced Context: Protocol
 
@@ -373,7 +373,7 @@ In this section, it shows a list of protocols to better understand how the syste
 
 For every subject, we have a time limit. In our system, everytime it is unlocked for a particular time. Every 5 minutes, the motion sensor has to detect person for every 30 seconds. Now 10 scans for 30 minutes is equivalent for 5 minutes. If the scanner is in 50% state, it will continue for another 5 minutes. If the scanner is in 50% state less, it will shutdown the classroom itself.
 
-###### [Go Back to TOC](#table-of-contents)
+**[Go Back to TOC](#table-of-contents)**
 
 #### Classroom Locked State Change Protocol
 
@@ -381,13 +381,13 @@ For every node, for it be controllable, it has receive a subject code on it. Tho
 
 If for instance, the subject is the last subject, any other circumstance may be stopped in the middle of a session. So time has to be considered when using this system.
 
-###### [Go Back to TOC](#table-of-contents)
+**[Go Back to TOC](#table-of-contents)**
 
 #### Restrictive Accessibility Protocol
 
 When the accessibilities handed out to the user. Some user might even tampered it without any hindrance to it. For instance if user wants to access rooms not assigned to them. So for us to keep things safe, we have to disable links from other rooms but only displays their states to the rooms. Some rooms will only be enabled to you only if your subject linked to you is on the current time scope of the server time, it will be accessible and controllable within outside range. Any user who attempts to access rooms, will technically make you get in but you'll be recorded for the actions that is not quite acceptable. Meaning your name is in the list of logs who misused or accessed a particular room not currently assigned / focused to you.
 
-###### [Go Back to TOC](#table-of-contents)
+**[Go Back to TOC](#table-of-contents)**
 
 ## 💁 ❔ Frequently Asked Questions
 
@@ -426,7 +426,7 @@ When the accessibilities handed out to the user. Some user might even tampered i
 - ***Can I ask question/s?***
   - Sure thing! Just be polite and I'll answer your question through my email indicated in my Github Profile!
 
-###### [Go Back To Top Section](#table-of-contents) | [Go Back to TOC](#table-of-contents)
+**[Go Back To Top Section](#table-of-contents)** | **[Go Back to TOC](#table-of-contents)**
 
 ## 🏆 ✍ Authors
 
@@ -443,7 +443,7 @@ Here are the list of authors who is taking part of the project.
   - **Ronald Langaoan Jr.** - *Hardware Designer and Miniature Builder*[AliasBangis](https://github.com/AliasBangis)
   - **Joshua Santos** - *Initial Build Supporter and Joint Project Leader from Logic Circuits and Design* - No Account
 
-###### [Go Back to TOC](#table-of-contents)
+**[Go Back to TOC](#table-of-contents)**
 
 ## 📜 Various Credits
 
@@ -456,6 +456,8 @@ As a maintainer, I would like to give gratitude to several people who take part 
 - **Charles Ian Mascarenas** - *Schematic Inspector and for Insights Given Regarding Buck Converter and Voltage Regulator Due To Current Exactly Caught by NodeMCU's Diode for Relays and Other Such Components* - [ci-mascarenas](https://github.com/ci-mascarenas)
 - **Engr. Cris Paulo Hate** - *Embedded System Instructor, Insights Given for Proper Components to Use for Locking Rooms such as *Solenoid Lock* and Insights were given for the future steps of the project. *Such as the proper use of IoT components like ESP8266*.* - Account Not Recognized.
 - **Engr. Jan Justin Razon** - *Internet-of-Things Instructor, Insights Given for what things should be considered and how should the system work. Also insights given on what locking mechanism should be used for the room.* - Account Not Recognized.
+
+**[Go Back to TOC](#table-of-contents)**
 
 ### 🏆  Library Credits
 
@@ -479,7 +481,7 @@ As a maintainer, I would like to give gratitude to several people who take part 
 - [Visual Studio Code](https://code.visualstudio.com/) for Robust IDE and Dependable.
 - [YAPF](https://github.com/google/yapf) for Standard Python Code Formatting.
 
-###### [Go Back To Top Section](#table-of-contents) | [Go Back to TOC](#table-of-contents)
+**[Go Back To Top Section](#table-of-contents)** | **[Go Back to TOC](#table-of-contents)**
 
 ### 📑  Documentation Credits
 
@@ -487,10 +489,10 @@ As a maintainer, I would like to give gratitude to several people who take part 
 2. T. Sali, C. Pardeshi, V. Malshette, A. Jadhav and V. Thombare, "Classroom Automation System," International Journal of Innovations in Engineering and Technology(IJIET), vol. VIII, no. 3, p. 27, 2017.
 3. Creately.com. 2020. Django Architecture Flowchart | Creately. [online] Available at: <https://creately.com/diagram/iqjshero1/Django%20Architecture%20Flowchart> [Accessed 23 March 2020].
 
-###### [Go Back to TOC](#table-of-contents)
+**[Go Back to TOC](#table-of-contents)**
 
 ## 📚 License
 
 This project is licensed under the GNU v3 License - see the [LICENSE](https://github.com/CodexLink/SmartClassroomSystem/blob/master/LICENSE) file for details
 
-###### End of File | [Go Back to TOC](#table-of-contents)
+**End of File** | **[Go Back to TOC](#table-of-contents)**
