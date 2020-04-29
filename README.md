@@ -19,6 +19,7 @@
 </div>
 
 # Welcome
+
 Hello! This is a repository dedicated to show the concept of a bare minimum IoT to server interaction and implementation. The concept consists of the system itself (excluding only the physical side of the project) which this concludes the context as the Smart Classroom System. It has the capabilities to reduce time consumption upon entering rooms that are authorized within the scope of a particular time.
 
 ## The Problem
@@ -31,6 +32,8 @@ The solution was to create a Smart Classroom. The context was not all about the 
 
 ## How does it work
 
+The following consists of a various section in regards on how this system works.
+
 ### The Context
 
 So basically, we want something to automate, right? The group managed to think of something that would help the techno core building of their school to be more technology-dependent. That is by, making all instructional rooms to be accessible without any on sight staff but only the authentication within your hands.
@@ -41,14 +44,34 @@ So, **how does it really works!?**. In this system, we have a server and a clien
 
 ## Table of Contents
 
-Please consume the following poorly made diagram below.
+This are the README Sections and Subsections. You can navigate through by clicking in one of those...
 
-```text
-asdas
+* ~~[Table of Contents](#table-of-contents)~~ (You're here.)
+* [🔥 📁 File Structure Deconstruction](#file-structure-deconstruction)
+* [Introduction to Requirements](#introduction-to-requirements)
+  + [Hardware-Side Introduction](#hardware-side-introduction)
+      - [Required Microcontroller](#required-microcontroller)
+      - ["Why should I use ESP32 instead of ESP8266 / ESP8266EX?"](#-why-should-i-use-esp32-instead-of-esp8266---esp8266ex--)
+      - [Required Components](#required-components)
+  * [Software-Side Introduction](#software-side-introduction)
+    + [Installation of Pre-requisites](#installation-of-pre-requisites)
+      - [Upload the NodeMCU Sketch](#upload-the-nodemcu-sketch)
+    + [Deployment](#deployment)
+      - [Getting Started](#getting-started)
+  * [Demo and Resources](#demo-and-resources)
+    + [Advanced Context: Protocol](#advanced-context--protocol)
+      - [Shutdown Timer Based on Motion Sensor Protocol](#shutdown-timer-based-on-motion-sensor-protocol)
+      - [Classroom Locked State Change Protocol](#classroom-locked-state-change-protocol)
+      - [Restrictive Accessibility Protocol](#restrictive-accessibility-protocol)
+* [💁 ❔ Frequently Asked Questions](#-----frequently-asked-questions)
+* [🏆 ✍ Authors](#-----authors)
+* [📜 Various Credits](#---various-credits)
+    + [🙇 Personal Credits](#---personal-credits)
+    + [🏆  Library Credits](#----library-credits)
+    + [📑  Documentation Credits](#----documentation-credits)
+* [📚 License](#---license)
 
-```
-
-## 🔥 📁 File Structure Deconstruction
+## 🔥 📁 File Structure Deconstruction |> [Go Back](#table-of-contents)
 
 This repository contains a lot of varieties. Meaning you really have to know the path you're going before navigating any further without realizing where the heck are you even going... Just read it in a bare-minimum way and you will be fine 💯
 
@@ -182,25 +205,25 @@ This repository contains a lot of varieties. Meaning you really have to know the
 └── SC_ScriptInst.py
 ```
 
-## Introduction to Requirements
+## Introduction to Requirements |> [Go Back](#table-of-contents)
 
 In this section, we're going to talk in the software-side and hardware-side. This should be enough if you're willing to duplicate this project both physically and virtually working. Keep in mind that this will be a bit hectic. So take time if you're willing to do something about this project.
 
-### Hardware-Side Introduction
+### Hardware-Side Introduction |> [Go Back](#table-of-contents)
 
 In this section, we will be slightly talking about the **required **microcontroller**,and the **required components**... Just so you know, ****this project is so expensive asf**** in the hardware stuff so that should be a spoiler alert for you. It took our allowance by 75% by the time we're buying the components. Anyway, let's get started.
 
-#### Required Microcontroller
+#### Required Microcontroller |> [Go Back](#table-of-contents)
 
 The most common typical microcontroller that the project uses is the NodeMCU v2 Lua ESP8266EX Version. We generally recommend using ESP32 which is just a slight realization after finishing this project. I myself, might guess this the PINS used in NodeMCU v2 Lua ESP8266EX Version is the same as ESP32. Though, I can't investigate further since I don't have ESP32 at the moment.
 
-#### "Why should I use ESP32 instead of ESP8266 / ESP8266EX?"
+#### "Why should I use ESP32 instead of ESP8266 / ESP8266EX?" |> [Go Back](#table-of-contents)
 
 The reason why is because of the Pin's Availability. I believe ESP32 pins are more accessible and less restrict when booting up than ESP8266. Sure, you could put a data pins on some parts of NodeMCU v2 ESP8266. But at some point in time, that would lead to boot failure. Please refer to some guides such as this [one](https://randomnerdtutorials.com/esp8266-pinout-reference-gpios/). This site will really help you out on why investing to ESP32 is better than NodeMCU v2 Lua. Though if you think going for NodeMCU v3. The issue is literally quite the same. So be wise on what MCU to choose.
 
 As long as the MCU has the capability to handle GT5X Instructions (For Fingerprint specifically...) and able to handle tasks by responding to requests both in POST and GET forms. And has the ability to handle the extensive stacked task as we have a Millis Management for Room Locks. Then you're good to go. Keep in mind the RAM is one of the factors to consider. As far as I developed it, I might be able to consume a lot of RAM for the tests.
 
-#### Required Components
+#### Required Components |> [Go Back](#table-of-contents)
 
 The components that we used, were essentially in my inventory already. So the cost of the project gets higher than I thought. That's because as a hobbyist, I find one of those are bare-minimum to withstand this project and able to make something out of it. So here's the list along with their intentions.
 
@@ -230,13 +253,13 @@ The components that we used, were essentially in my inventory already. So the co
 
 I don't provide links to these components. That's because the supplier is not supporting different countries. So let's say we bought our parts in local shop. Which technically true. We will only provide links that supports delivery to other countries.
 
-## Software-Side Introduction
+## Software-Side Introduction |> [Go Back](#table-of-contents)
 
 In this section, I'll be talking from the scratch. Since this will be long enough, it's best to check the Demo and Resources Section and watch **Youtube Video Installation**. To get the knowledge on how to install the components of the project.
 
 **DISCLAIMER**: The setup and deployment may slightly be different from what is being demonstrated in the youtube video! But the output will be the same.
 
-### Installation of Pre-requisites
+### Installation of Pre-requisites |> [Go Back](#table-of-contents)
 
 In order to move further to deployment section, I don't want to assume if you have anything installed. So it's best to install the packages / modules inside of the `requirements.txt`
 
@@ -269,7 +292,7 @@ Congratulations! You did it. But that doesn't stop there. Because you have one t
 
 .... (***Required***) Upload NodeMCU Sketch.
 
-#### Upload the NodeMCU Sketch
+#### Upload the NodeMCU Sketch |> [Go Back](#table-of-contents)
 
 This is required since this will be your communicator in the server. To get started, follow the instructions below.
 
@@ -290,7 +313,7 @@ This is required since this will be your communicator in the server. To get star
 
 And... Done! Wait further and let the screen of the device to show the information such as the temperature and humidity, classroom subject and lock states.
 
-### Deployment
+### Deployment |> [Go Back](#table-of-contents)
 
 In this section, we're going to talk about on how to deploy this project. The way you open the project is not intended or the usual way for this one. The project contains a script that could launch multiple instances of Command Prompts / Terminals.
 
@@ -336,7 +359,7 @@ If for instance, the subject is the last subject, any other circumstance may be 
 
 When the accessibilities handed out to the user. Some user might even tampered it without any hindrance to it. For instance if user wants to access rooms not assigned to them. So for us to keep things safe, we have to disable links from other rooms but only displays their states to the rooms. Some rooms will only be enabled to you only if your subject linked to you is on the current time scope of the server time, it will be accessible and controllable within outside range. Any user who attempts to access rooms, will technically make you get in but you'll be recorded for the actions that is not quite acceptable. Meaning your name is in the list of logs who misused or accessed a particular room not currently assigned / focused to you.
 
-## 💁 ❔ Frequently Asked Questions
+## 💁 ❔ Frequently Asked Questions |> [Go Back](#table-of-contents)
 
 - I feel that some parts of this project is missing... Can you tell me what is it?
   - ***Sure bro...*** There are only a few things that are ****NOT CONSIDERED**** to give away. And those are the following:
@@ -373,7 +396,7 @@ When the accessibilities handed out to the user. Some user might even tampered i
 - ***Can I ask question/s?***
   - Sure thing! Just be polite and I'll answer your question through my email indicated in my Github Profile!
 
-## 🏆 ✍ Authors
+## 🏆 ✍ Authors |> [Go Back](#table-of-contents)
 
 Here are the list of authors who is taking part of the project.
 
@@ -389,11 +412,11 @@ Here are the list of authors who is taking part of the project.
   - **Joshua Santos** - *Initial Build Supporter and Joint Project Leader from Logic Circuits and Design* - No Account
 
 
-## 📜 Various Credits
+## 📜 Various Credits |> [Go Back](#table-of-contents)
 
 In this section, the maintainer will creditsto various types of entities.
 
-### 🙇 Personal Credits
+### 🙇 Personal Credits |> [Go Back](#table-of-contents)
 
 As a maintainer, I would like to give gratitude to several people who take part on this project. Those people helped / contributed that is considered gold for us.
 
@@ -401,33 +424,34 @@ As a maintainer, I would like to give gratitude to several people who take part 
 - **Engr. Cris Paulo Hate** - *Embedded System Instructor, Insights Given for Proper Components to Use for Locking Rooms such as *Solenoid Lock* and Insights were given for the future steps of the project. *Such as the proper use of IoT components like ESP8266*.* - Account Not Recognized.
 - **Engr. Jan Justin Razon** - *Internet-of-Things Instructor, Insights Given for what things should be considered and how should the system work. Also insights given on what locking mechanism should be used for the room.* - Account Not Recognized.
 
-### 🏆  Library Credits
+### 🏆  Library Credits |> [Go Back](#table-of-contents)
 
+- [Arduino DHT-ESP](https://github.com/beegee-tokyo/arduino-DHTesp) for Proper [DHT11/22](https://learn.adafruit.com/dht) Support in ESP Variant Devices.
+- [Codacy](https://www.codacy.com/) and [CodeFactor](https://www.codefactor.io/dashboard/) for Code Quality Checking
+- [Classy Class-Based Views | Django Class-Based View Inspector](https://ccbv.co.uk/) for Proper Documentation of Views used in the project.
 - [Coveralls](https://www.coveralls.io/) for Code Coverage and Software Testing.
 - [Coveralls for Django Plugin](https://pypi.org/project/django-coverage-plugin/) for Django Coverage Support.
 - [Coveralls Github Action](https://github.com/marketplace/actions/coveralls-github-action) for Github Action Plugin Support for each Commit Instantiated.
 - [Dependabot](https://dependabot.com/) for Library Dependency Version Tracking.
-- [Shields_IO](https://shields.io/) for Badge Display and Live State Servicing.
-- [YAPF](https://github.com/google/yapf) for Standard Python Code Formatting.
-- [Visual Studio Code](https://code.visualstudio.com/) for Robust IDE and Dependable.
-- [Django Framework](https://www.djangoproject.com/) for Easy To Use(For Basic Usage) Web Framework.
-- [Classy Class-Based Views | Django Class-Based View Inspector](https://ccbv.co.uk/) for Proper Documentation of Views used in the project.
 - [Django Documentations (Docs for v3.0)](https://docs.djangoproject.com/en/3.0/) for slight clarifications. Used for the base on learning Django in the majority.
 - [Django Extensions](https://django-extensions.readthedocs.io/en/latest/) for Extra Features eliminating the unease of database management and for script runnable on the server instance.
+- [Django Framework](https://www.djangoproject.com/) for Easy To Use(For Basic Usage) Web Framework.
 - [Github Actions](https://github.com/features/actions) for CLI in-built within repository context to use for automation stuff.
-- [Codacy](https://www.codacy.com/) and [CodeFactor](https://www.codefactor.io/dashboard/) for Code Quality Checking
-- [Arduino DHT-ESP](https://github.com/beegee-tokyo/arduino-DHTesp) for Proper [DHT11/22](https://learn.adafruit.com/dht) Support in ESP Variant Devices.
+- [Github Wiki TOC Generator](https://ecotrust-canada.github.io/markdown-toc/) for Literally Generating TOC Stuff Automatically Based on README Headers.
 - [GT5X](https://github.com/brianrho/GT5X) for Proper [GT-521F52 Support](https://learn.sparkfun.com/tutorials/fingerprint-scanner-gt-521fxx-hookup-guide) instead of [official support](https://github.com/sparkfun/Fingerprint_Scanner-TTL). (This one saves my entire dignity throughout the use of the GT-521F52 Fingerprint Sensor. Kudos to this guy!)
-- [SAL](https://mciastek.github.io/sal/) for Robust Animation Transition on Page Load.
-- [Material 2](https://djibe.github.io/material/) for Continuously Supporting Daemonite's Material 1 Work Throughout the Whole Year.
 - [Isotope](https://isotope.metafizzy.co/) and [Packery](https://packery.metafizzy.co/) for Dynamic Layout Positioning based on User-Browser Space.
+- [Material 2](https://djibe.github.io/material/) for Continuously Supporting Daemonite's Material 1 Work Throughout the Whole Year.
+- [SAL](https://mciastek.github.io/sal/) for Robust Animation Transition on Page Load.
+- [Shields_IO](https://shields.io/) for Badge Display and Live State Servicing.
+- [Visual Studio Code](https://code.visualstudio.com/) for Robust IDE and Dependable.
+- [YAPF](https://github.com/google/yapf) for Standard Python Code Formatting.
 
-### 📑  Documentation Credits
+### 📑  Documentation Credits |> [Go Back](#table-of-contents)
 
 1. R. Yesodharan, R. Prince, S. Karthick, V. HariKrishnan and D. Bennaiah, "IoT based Classroom Automation using Arduino," International Open Access Journal, vol. II, no. 2, pp. 306-307, 2018.
 2. T. Sali, C. Pardeshi, V. Malshette, A. Jadhav and V. Thombare, "Classroom Automation System," International Journal of Innovations in Engineering and Technology(IJIET), vol. VIII, no. 3, p. 27, 2017.
 3. Creately.com. 2020. Django Architecture Flowchart | Creately. [online] Available at: <https://creately.com/diagram/iqjshero1/Django%20Architecture%20Flowchart> [Accessed 23 March 2020].
 
-## 📚 License
+## 📚 License |> [Go Back](#table-of-contents)
 
 This project is licensed under the GNU v3 License - see the [LICENSE](https://github.com/CodexLink/SmartClassroomSystem/blob/master/LICENSE) file for details
