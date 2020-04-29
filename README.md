@@ -5,7 +5,7 @@
 <div align="center">
 
 ![Coverage Status](https://img.shields.io/coveralls/github/CodexLink/SmartClassroomSystem?label=Code%20Coverage&logo=coveralls)
-![Code Formatter](https://img.shields.io/badge/Code%20Formatter-YAPF-important)
+![Code Formatter](https://img.shields.io/badge/Code%20Formatter-Black-black)
 ![GitHub License](https://img.shields.io/github/license/CodexLink/SmartClassroomSystem?color=purple&label=Repo%20License)
 
 </div>
@@ -447,7 +447,7 @@ Here are the list of authors who is taking part of the project.
 
 ## 📜 Various Credits
 
-In this section, the maintainer will creditsto various types of entities.
+In this section, the maintainer will credits to various types of entities.
 
 ### 🙇 Personal Credits
 
@@ -462,6 +462,7 @@ As a maintainer, I would like to give gratitude to several people who take part 
 ### 🏆  Library Credits
 
 - [Arduino DHT-ESP](https://github.com/beegee-tokyo/arduino-DHTesp) for Proper [DHT11/22](https://learn.adafruit.com/dht) Support in ESP Variant Devices.
+- [Black](https://github.com/psf/black) for Proper Implementation of Python Code Formatting. Implementation is preferrable and likeable.
 - [Codacy](https://www.codacy.com/) and [CodeFactor](https://www.codefactor.io/dashboard/) for Code Quality Checking
 - [Classy Class-Based Views | Django Class-Based View Inspector](https://ccbv.co.uk/) for Proper Documentation of Views used in the project.
 - [Coveralls](https://www.coveralls.io/) for Code Coverage and Software Testing.
@@ -479,7 +480,7 @@ As a maintainer, I would like to give gratitude to several people who take part 
 - [SAL](https://mciastek.github.io/sal/) for Robust Animation Transition on Page Load.
 - [Shields_IO](https://shields.io/) for Badge Display and Live State Servicing.
 - [Visual Studio Code](https://code.visualstudio.com/) for Robust IDE and Dependable.
-- [YAPF](https://github.com/google/yapf) for Standard Python Code Formatting.
+- [YAPF](https://github.com/google/yapf) for Standard Python Code Formatting. Formatter for Early Post Production.
 
 **[Go Back To Top Section](#--library-credits)** | **[Go Back to TOC](#table-of-contents)**
 
