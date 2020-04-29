@@ -53,16 +53,13 @@ from ..models import *
 def run():
     SessionInstance = SC_IoTDriver()
 
-    if SessionInstance.checkNodeConn(
-    ):  # Test All Connections To The IoT Devices.
+    if SessionInstance.checkNodeConn():  # Test All Connections To The IoT Devices.
         try:
             while 1:
                 SessionInstance.getNewData()
                 SessionInstance.dayCheckScheduleUpdate()
                 # Add Scheduler Checker Now.
-                print(
-                    '\nTimeout | Resting for 1 Second Before Device Data Requery!'
-                )
+                print("\nTimeout | Resting for 1 Second Before Device Data Requery!")
                 delay(1)  # ! 5 Seconds
                 SessionInstance.checkNodeConn(
                     CheckBeforeReQueue=True
@@ -88,17 +85,15 @@ class SC_IoTDriver(object):
             print("Platform Undetermined!")
             exit(-1)
 
-        print('Smart Classroom IoT Data Stream Handler | SC_DSH.py')
+        print("Smart Classroom IoT Data Stream Handler | SC_DSH.py")
         print(
             '02/29/2020 | By Janrey "CodexLink" Licas | http://github.com/CodexLink\n'
         )
-        print('In Collaboration with')
-        print('    - Ronald Langaoan Jr. |> Hardware Designer and Manager')
-        print(
-            '    - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer'
-        )
-        print('    - Joshua Santos |> Hardware Manager and Builder')
-        print('    - Johnell Casey Murillo Panotes |> Hardware Assistant\n')
+        print("In Collaboration with")
+        print("    - Ronald Langaoan Jr. |> Hardware Designer and Manager")
+        print("    - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer")
+        print("    - Joshua Santos |> Hardware Manager and Builder")
+        print("    - Johnell Casey Murillo Panotes |> Hardware Assistant\n")
         self.TimeoutDevCheck = TimeoutCondition
         self.SubjectOnScope = False
         self.RunTriggerRequestOnce = False
@@ -114,49 +109,57 @@ class SC_IoTDriver(object):
         print("Device List | Checking...")
         if not len(devList):
             print(
-                'Count Result | There are no NodeMCUs declared from the container! Please check them and correct them if possible!!!'
+                "Count Result | There are no NodeMCUs declared from the container! Please check them and correct them if possible!!!"
             )
             Terminate()
         else:
             print(
                 "Count Result | The dictionary contains %s devices to be monitored! \n"
-                % (len(devList)))
+                % (len(devList))
+            )
 
-    # * IF a device is not included to the list but WAS included to the DJango Database then we set their states as Unknown.
+        # * IF a device is not included to the list but WAS included to the DJango Database then we set their states as Unknown.
         if CheckBeforeReQueue:
-            print('Required Reiteration | Device Requeueing...')
+            print("Required Reiteration | Device Requeueing...")
 
         for deviceCandidateItem in devList:
             try:
-                print('Device %s — %s | Checking... |  ' %
-                      (deviceCandidateItem.Device_Name,
-                       deviceCandidateItem.Device_IP_Address),
-                      end='')
+                print(
+                    "Device %s — %s | Checking... |  "
+                    % (
+                        deviceCandidateItem.Device_Name,
+                        deviceCandidateItem.Device_IP_Address,
+                    ),
+                    end="",
+                )
                 DevResp = DataGETReq(
-                    'http://%s/RequestData' %
-                    (deviceCandidateItem.Device_IP_Address, ),
+                    "http://%s/RequestData" % (deviceCandidateItem.Device_IP_Address,),
                     timeout=self.TimeoutDevCheck,
-                    auth=(deviceCandidateItem.Device_Name,
-                          str(deviceCandidateItem.Device_Unique_ID).replace(
-                              "-", "")))
+                    auth=(
+                        deviceCandidateItem.Device_Name,
+                        str(deviceCandidateItem.Device_Unique_ID).replace("-", ""),
+                    ),
+                )
                 if DevResp.ok:
-                    print('Response Success.')
-                    deviceCandidateItem.Device_Status = 'Online'
-                    deviceCandidateItem.save(update_fields=['Device_Status'])
+                    print("Response Success.")
+                    deviceCandidateItem.Device_Status = "Online"
+                    deviceCandidateItem.save(update_fields=["Device_Status"])
                     passCount += 1
                 else:
-                    print('Response Failed / No Content.')
+                    print("Response Failed / No Content.")
                     errCount += 1
 
             except RequestException:
-                deviceCandidateItem.Device_Status = 'Offline'
-                deviceCandidateItem.save(update_fields=['Device_Status'])
-                print('Response Failed.')
+                deviceCandidateItem.Device_Status = "Offline"
+                deviceCandidateItem.save(update_fields=["Device_Status"])
+                print("Response Failed.")
                 errCount += 1
                 pass
 
-        print('\nDevice Checking Finished... (Success: %s, Failed: %s)\n' %
-              (passCount, errCount))
+        print(
+            "\nDevice Checking Finished... (Success: %s, Failed: %s)\n"
+            % (passCount, errCount)
+        )
 
         if passCount and errCount:
             print(
@@ -179,39 +182,38 @@ class SC_IoTDriver(object):
     # ! Step 2 | Connect To Them Individual and Check For Datas
 
     def getNewData(self):
-        devMetaData = DeviceInfo.objects.filter(Device_Status='Online')
+        devMetaData = DeviceInfo.objects.filter(Device_Status="Online")
         for devTargetItem in devMetaData:
             try:
-                print('Job | Device Currently on Process Query is %s — %s' % (
-                    devTargetItem.Device_Name,
-                    devTargetItem.Device_IP_Address,
-                ))
+                print(
+                    "Job | Device Currently on Process Query is %s — %s"
+                    % (devTargetItem.Device_Name, devTargetItem.Device_IP_Address,)
+                )
                 DevResp = DataGETReq(
-                    'http://%s/RequestData' %
-                    (devTargetItem.Device_IP_Address, ),
+                    "http://%s/RequestData" % (devTargetItem.Device_IP_Address,),
                     timeout=5,
-                    auth=(devTargetItem.Device_Name,
-                          str(devTargetItem.Device_Unique_ID).replace("-",
-                                                                      "")))
+                    auth=(
+                        devTargetItem.Device_Name,
+                        str(devTargetItem.Device_Unique_ID).replace("-", ""),
+                    ),
+                )
 
                 if DevResp.ok:
                     print(
-                        'Response Result for %s — %s was Successful on Request...\n'
-                        % (
-                            devTargetItem.Device_Name,
-                            devTargetItem.Device_IP_Address,
-                        ))
-                    self.processURL(devTargetItem.Device_Name,
-                                    devTargetItem.Device_IP_Address,
-                                    DevResp.content)
+                        "Response Result for %s — %s was Successful on Request...\n"
+                        % (devTargetItem.Device_Name, devTargetItem.Device_IP_Address,)
+                    )
+                    self.processURL(
+                        devTargetItem.Device_Name,
+                        devTargetItem.Device_IP_Address,
+                        DevResp.content,
+                    )
 
             except RequestException:
                 print(
-                    'Response Result for %s — %s was Failed on Request, Skipping It!'
-                    % (
-                        devTargetItem.Device_Name,
-                        devTargetItem.Device_IP_Address,
-                    ))
+                    "Response Result for %s — %s was Failed on Request, Skipping It!"
+                    % (devTargetItem.Device_Name, devTargetItem.Device_IP_Address,)
+                )
         return
 
     # ! Processes URL given by the NodeMCU into a dictionary for further processing.
@@ -243,171 +245,230 @@ class SC_IoTDriver(object):
     """
 
     def processURL(self, DevTarget_Name, DevTarget_IP, urlStr):
-        print("Processing Context from URL Response for %s | %s..." % (
-            DevTarget_Name,
-            DevTarget_IP,
-        ))
-        convIoTData = json.loads(urlStr.decode('utf-8').replace("'", "\""))
-        print("Context Was Sterelized for %s | %s..." % (
-            DevTarget_Name,
-            DevTarget_IP,
-        ))
+        print(
+            "Processing Context from URL Response for %s | %s..."
+            % (DevTarget_Name, DevTarget_IP,)
+        )
+        convIoTData = json.loads(urlStr.decode("utf-8").replace("'", '"'))
+        print("Context Was Sterelized for %s | %s..." % (DevTarget_Name, DevTarget_IP,))
         return self.interpretData(DevTarget_Name, DevTarget_IP, **convIoTData)
 
     # ! Interpret Data from the URL by reading them as a dictionary and Take Action about it.
-    def interpretData(self, DevInterpret_Name, DevInterpret_IP,
-                      **URLSterlData):
+    def interpretData(self, DevInterpret_Name, DevInterpret_IP, **URLSterlData):
         try:
-            print('Interpreting Given Context for %s | %s...\n' %
-                  (DevInterpret_Name, DevInterpret_IP))
+            print(
+                "Interpreting Given Context for %s | %s...\n"
+                % (DevInterpret_Name, DevInterpret_IP)
+            )
             print(
                 "DATA_HEADER => ROOM_ASSIGNMENT: %s | ROOM_NAME: %s | ROOM_UID: %s | DEVICE_NAME: %s | DEVICE_UUID: %s | CURR_COURSE_SESSION: %s"
-                % (URLSterlData['DATA_HEADER']['CR_IDENTITY'],
-                   URLSterlData['DATA_HEADER']['CR_SHORT_NAME'],
-                   URLSterlData['DATA_HEADER']['CR_UUID'],
-                   URLSterlData['DATA_HEADER']['DEV_NAME'],
-                   URLSterlData['DATA_HEADER']['DEV_UUID'],
-                   URLSterlData['DATA_HEADER']['CURR_COURSE_SESSION']))
-            print("DATA_SENS => TEMP: %s | HUMD: %s" %
-                  (URLSterlData['DATA_SENS']['CR_TEMP'],
-                   URLSterlData['DATA_SENS']['CR_HUMD']))
+                % (
+                    URLSterlData["DATA_HEADER"]["CR_IDENTITY"],
+                    URLSterlData["DATA_HEADER"]["CR_SHORT_NAME"],
+                    URLSterlData["DATA_HEADER"]["CR_UUID"],
+                    URLSterlData["DATA_HEADER"]["DEV_NAME"],
+                    URLSterlData["DATA_HEADER"]["DEV_UUID"],
+                    URLSterlData["DATA_HEADER"]["CURR_COURSE_SESSION"],
+                )
+            )
+            print(
+                "DATA_SENS => TEMP: %s | HUMD: %s"
+                % (
+                    URLSterlData["DATA_SENS"]["CR_TEMP"],
+                    URLSterlData["DATA_SENS"]["CR_HUMD"],
+                )
+            )
             print(
                 "DATA_SENS => PIR_MOTION => OUTPUT: %s | CALCULATED_PRESENCE: %s"
-                %
-                (URLSterlData['DATA_SENS']['PIR_MOTION']['PIR_OPTPT'],
-                 URLSterlData['DATA_SENS']['PIR_MOTION']['PIR_PRESENCE_PRCNT'])
+                % (
+                    URLSterlData["DATA_SENS"]["PIR_MOTION"]["PIR_OPTPT"],
+                    URLSterlData["DATA_SENS"]["PIR_MOTION"]["PIR_PRESENCE_PRCNT"],
+                )
             )
-            print("DATA_AUTH => AUTH_ID: %s | AUTH_STATE: %s" %
-                  (URLSterlData['DATA_AUTH']['AUTH_ID'],
-                   URLSterlData['DATA_AUTH']['AUTH_STATE']))
+            print(
+                "DATA_AUTH => AUTH_ID: %s | AUTH_STATE: %s"
+                % (
+                    URLSterlData["DATA_AUTH"]["AUTH_ID"],
+                    URLSterlData["DATA_AUTH"]["AUTH_STATE"],
+                )
+            )
             print(
                 "DATA_STATE => DOOR_STATE: %s | ACCESS_STATE: %s | ELECTRIC_STATE: %s"
-                % (URLSterlData['DATA_STATE']['DOOR_STATE'],
-                   URLSterlData['DATA_STATE']['ACCESS_STATE'],
-                   URLSterlData['DATA_STATE']['ELECTRIC_STATE']))
+                % (
+                    URLSterlData["DATA_STATE"]["DOOR_STATE"],
+                    URLSterlData["DATA_STATE"]["ACCESS_STATE"],
+                    URLSterlData["DATA_STATE"]["ELECTRIC_STATE"],
+                )
+            )
 
             # Get the time first and the day itself.
             timeCurrent = datetime.datetime.now().time()
-            dayCurrent = datetime.datetime.now().strftime('%A')
+            dayCurrent = datetime.datetime.now().strftime("%A")
 
             # First we check if the device is currently associated with one of the rooms. Index 0 to make things clearer that we only need one. And easy to unpack the data.
             classroomPointer = Classroom.objects.filter(
                 Classroom_Dev__Device_Unique_ID=StrToValidUUID(
-                    URLSterlData['DATA_HEADER']['DEV_UUID'])).values(
-                        'Classroom_Unique_ID')[0]
+                    URLSterlData["DATA_HEADER"]["DEV_UUID"]
+                )
+            ).values("Classroom_Unique_ID")[0]
 
             roomStatusInstance = Classroom.objects.filter(
-                Classroom_Unique_ID=StrToValidUUID(URLSterlData['DATA_HEADER']
-                                                   ['CR_UUID'])).distinct()[0]
-            roomStatusInstance.Classroom_State = ClassroomStates[0][
-                0] if not URLSterlData['DATA_STATE'][
-                    'DOOR_STATE'] else ClassroomStates[1][0]
-            roomStatusInstance.Classroom_AccessState = ClassroomAccessStates[
-                0][0] if not URLSterlData['DATA_STATE'][
-                    'ACCESS_STATE'] else ClassroomAccessStates[1][0]
+                Classroom_Unique_ID=StrToValidUUID(
+                    URLSterlData["DATA_HEADER"]["CR_UUID"]
+                )
+            ).distinct()[0]
+            roomStatusInstance.Classroom_State = (
+                ClassroomStates[0][0]
+                if not URLSterlData["DATA_STATE"]["DOOR_STATE"]
+                else ClassroomStates[1][0]
+            )
+            roomStatusInstance.Classroom_AccessState = (
+                ClassroomAccessStates[0][0]
+                if not URLSterlData["DATA_STATE"]["ACCESS_STATE"]
+                else ClassroomAccessStates[1][0]
+            )
             roomStatusInstance.save(
-                update_fields=['Classroom_State', 'Classroom_AccessState'])
+                update_fields=["Classroom_State", "Classroom_AccessState"]
+            )
 
-            print('\nQuery | Classroom with %s Found!\n' %
-                  URLSterlData['DATA_HEADER']['DEV_UUID'])
+            print(
+                "\nQuery | Classroom with %s Found!\n"
+                % URLSterlData["DATA_HEADER"]["DEV_UUID"]
+            )
             if classroomPointer:
                 enlistedScheduleCandidates = CourseSchedule.objects.filter(
                     CourseSchedule_Room__Classroom_Unique_ID=classroomPointer[
-                        'Classroom_Unique_ID'],
-                    CourseSchedule_Lecture_Day=dayCurrent).order_by(
-                        'CourseSchedule_Session_Start')
+                        "Classroom_Unique_ID"
+                    ],
+                    CourseSchedule_Lecture_Day=dayCurrent,
+                ).order_by("CourseSchedule_Session_Start")
                 print(
-                    'Schedule Check | Checking Course Schedules for All Classroom Candidates To %s...\n'
-                    % (URLSterlData['DATA_HEADER']['DEV_NAME'], ))
+                    "Schedule Check | Checking Course Schedules for All Classroom Candidates To %s...\n"
+                    % (URLSterlData["DATA_HEADER"]["DEV_NAME"],)
+                )
                 for CourseScheduleItem in enlistedScheduleCandidates:
                     print(
                         "Schedule Check | Checking Course's %s Time Scope for Today (%s)..."
-                        % (CourseScheduleItem.CourseSchedule_CourseReference.
-                           Course_Code, dayCurrent))
-                    if timeCurrent >= CourseScheduleItem.CourseSchedule_Session_Start and timeCurrent <= CourseScheduleItem.CourseSchedule_Session_End:
-                        #print(timeCurrent, '>=', CourseScheduleItem.CourseSchedule_Session_Start, 'and', timeCurrent,'<=', CourseScheduleItem.CourseSchedule_Session_End)
-                        if CourseScheduleItem.CourseSchedule_Availability == 'Not Available' or CourseScheduleItem.CourseSchedule_Availability == None or URLSterlData[
-                                'DATA_HEADER'][
-                                    'CURR_COURSE_SESSION'] == "Unknown":
+                        % (
+                            CourseScheduleItem.CourseSchedule_CourseReference.Course_Code,
+                            dayCurrent,
+                        )
+                    )
+                    if (
+                        timeCurrent >= CourseScheduleItem.CourseSchedule_Session_Start
+                        and timeCurrent <= CourseScheduleItem.CourseSchedule_Session_End
+                    ):
+                        # print(timeCurrent, '>=', CourseScheduleItem.CourseSchedule_Session_Start, 'and', timeCurrent,'<=', CourseScheduleItem.CourseSchedule_Session_End)
+                        if (
+                            CourseScheduleItem.CourseSchedule_Availability
+                            == "Not Available"
+                            or CourseScheduleItem.CourseSchedule_Availability == None
+                            or URLSterlData["DATA_HEADER"]["CURR_COURSE_SESSION"]
+                            == "Unknown"
+                        ):
                             print(
-                                'Schedule Override | Overriding Device Configuration...'
+                                "Schedule Override | Overriding Device Configuration..."
                             )
 
-                            courseTimeOnScope = CourseScheduleItem.CourseSchedule_CourseReference.Course_Code
-                            courseInstructorOnScope = CourseScheduleItem.CourseSchedule_Instructor.fp_id
+                            courseTimeOnScope = (
+                                CourseScheduleItem.CourseSchedule_CourseReference.Course_Code
+                            )
+                            courseInstructorOnScope = (
+                                CourseScheduleItem.CourseSchedule_Instructor.fp_id
+                            )
                             try:
                                 devTargetUpdate = DataGETReq(
-                                    'http://%s/RequestInstance?dev_sched_user_course_replace=%s&dev_sched_user_assign_replace=%s&cr_access=%s'
-                                    % (DevInterpret_IP, courseTimeOnScope,
-                                       courseInstructorOnScope, True),
+                                    "http://%s/RequestInstance?dev_sched_user_course_replace=%s&dev_sched_user_assign_replace=%s&cr_access=%s"
+                                    % (
+                                        DevInterpret_IP,
+                                        courseTimeOnScope,
+                                        courseInstructorOnScope,
+                                        True,
+                                    ),
                                     timeout=5,
-                                    auth=(URLSterlData['DATA_HEADER']
-                                          ['DEV_NAME'],
-                                          URLSterlData['DATA_HEADER']
-                                          ['DEV_UUID']))
+                                    auth=(
+                                        URLSterlData["DATA_HEADER"]["DEV_NAME"],
+                                        URLSterlData["DATA_HEADER"]["DEV_UUID"],
+                                    ),
+                                )
                                 if devTargetUpdate.ok:
-                                    CourseScheduleItem.CourseSchedule_Availability = 'Available'
-                                    CourseScheduleItem.save(update_fields=[
-                                        'CourseSchedule_Availability'
-                                    ])
-                                    print('Schedule Override | Done!')
+                                    CourseScheduleItem.CourseSchedule_Availability = (
+                                        "Available"
+                                    )
+                                    CourseScheduleItem.save(
+                                        update_fields=["CourseSchedule_Availability"]
+                                    )
+                                    print("Schedule Override | Done!")
                                     self.SubjectOnScope = True
                                     break
                                 else:
                                     print(
-                                        'Schedule Override | Failed! Response may be Unauthorized or Forbidden! Retrying At Next Query... Info: %s'
-                                        % (devTargetUpdate, ))
+                                        "Schedule Override | Failed! Response may be Unauthorized or Forbidden! Retrying At Next Query... Info: %s"
+                                        % (devTargetUpdate,)
+                                    )
 
                             except RequestException as Err:
                                 print(
-                                    'Error While Requesting Replacement... Info: %s'
-                                    % Err)
+                                    "Error While Requesting Replacement... Info: %s"
+                                    % Err
+                                )
                         else:
                             print(
-                                'Schedule Override | Override Process was done already! Ignoring it!\n'
+                                "Schedule Override | Override Process was done already! Ignoring it!\n"
                             )
                             self.SubjectOnScope = True
                             break
                     else:
-                        if CourseScheduleItem.CourseSchedule_Availability == 'Available':
-                            CourseScheduleItem.CourseSchedule_Availability = 'Not Available'
+                        if (
+                            CourseScheduleItem.CourseSchedule_Availability
+                            == "Available"
+                        ):
+                            CourseScheduleItem.CourseSchedule_Availability = (
+                                "Not Available"
+                            )
                             CourseScheduleItem.save(
-                                update_fields=['CourseSchedule_Availability'])
+                                update_fields=["CourseSchedule_Availability"]
+                            )
 
-                        #devTargetUpdate = DataGETReq('http://%s/RequestInstance?dev_sched_user_course_replace=%s&dev_sched_user_assign_replace=%s&cr_access=%s' % (DevInterpret_IP, "Unknown", 0, False), timeout=5, auth=(URLSterlData['DATA_HEADER']['DEV_NAME'], URLSterlData['DATA_HEADER']['DEV_UUID']))
-                        #self.SubjectOnScope = False
+                        # devTargetUpdate = DataGETReq('http://%s/RequestInstance?dev_sched_user_course_replace=%s&dev_sched_user_assign_replace=%s&cr_access=%s' % (DevInterpret_IP, "Unknown", 0, False), timeout=5, auth=(URLSterlData['DATA_HEADER']['DEV_NAME'], URLSterlData['DATA_HEADER']['DEV_UUID']))
+                        # self.SubjectOnScope = False
                         print(
-                            'Schedule Override | Time Scope for Course %s is not on scope within this time!\n'
-                            % (CourseScheduleItem.
-                               CourseSchedule_CourseReference.Course_Code, ))
+                            "Schedule Override | Time Scope for Course %s is not on scope within this time!\n"
+                            % (
+                                CourseScheduleItem.CourseSchedule_CourseReference.Course_Code,
+                            )
+                        )
                 else:
                     if not self.SubjectOnScope:
                         devTargetUpdate = DataGETReq(
-                            'http://%s/RequestInstance?dev_sched_user_course_replace=%s&dev_sched_user_assign_replace=%s&cr_access=%s'
+                            "http://%s/RequestInstance?dev_sched_user_course_replace=%s&dev_sched_user_assign_replace=%s&cr_access=%s"
                             % (DevInterpret_IP, "Unknown", 0, False),
                             timeout=5,
-                            auth=(URLSterlData['DATA_HEADER']['DEV_NAME'],
-                                  URLSterlData['DATA_HEADER']['DEV_UUID']))
+                            auth=(
+                                URLSterlData["DATA_HEADER"]["DEV_NAME"],
+                                URLSterlData["DATA_HEADER"]["DEV_UUID"],
+                            ),
+                        )
                         print(
-                            'Schedule Override | No Other Such Subject Candidates! Device Access Disabled.'
+                            "Schedule Override | No Other Such Subject Candidates! Device Access Disabled."
                         )
                     else:
                         print(
                             "Schedule Override | There's a subject currently on schedule runtime! Device Access Enabled."
                         )
 
-            print('Schedule Check | Course Schedules Availability Updated!')
+            print("Schedule Check | Course Schedules Availability Updated!")
             # Next, we get all the schedule based on time scope and should be matched with the classroom associated device.
 
         except BaseException as error:
-            print('Exception: An error occurred: %s' % (error, ))
+            print("Exception: An error occurred: %s" % (error,))
         return
 
     def dayCheckScheduleUpdate(self):
         return
 
 
-if __name__ == '__main__':
-    CommandLine('CLS', shell=True)
+if __name__ == "__main__":
+    CommandLine("CLS", shell=True)
     delay(0.5)
     run()

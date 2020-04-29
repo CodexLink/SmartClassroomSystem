@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
-    help = 'Get a list of all permissions available in the system.'
+    help = "Get a list of all permissions available in the system."
 
     def handle(self, *args, **options):
         permissions = set()
@@ -25,4 +25,4 @@ class Command(BaseCommand):
         sorted_list_of_permissions = sorted(list(permissions))
 
         # Send a joined list of permissions to a command-line output.
-        self.stdout.write('\n'.join(sorted_list_of_permissions))
+        self.stdout.write("\n".join(sorted_list_of_permissions))
