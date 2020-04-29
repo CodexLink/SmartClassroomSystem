@@ -13,21 +13,59 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='userdatacredentials',
             name='fp_primary',
-            field=models.PositiveIntegerField(blank=True, help_text='User FingerPrint Slot #1. Required for Classroom User Detection.', null=True, unique=True, verbose_name='User Primary Fingerprint'),
+            field=models.PositiveIntegerField(
+                blank=True,
+                help_text=
+                'User FingerPrint Slot #1. Required for Classroom User Detection.',
+                null=True,
+                unique=True,
+                verbose_name='User Primary Fingerprint'),
         ),
         migrations.AddField(
             model_name='userdatacredentials',
             name='fp_secondary',
-            field=models.PositiveIntegerField(blank=True, help_text='User FingerPrint Slot #2. Optional, can be used when other finger is not available.', null=True, unique=True, verbose_name='User Secondary Fingerprint'),
+            field=models.PositiveIntegerField(
+                blank=True,
+                help_text=
+                'User FingerPrint Slot #2. Optional, can be used when other finger is not available.',
+                null=True,
+                unique=True,
+                verbose_name='User Secondary Fingerprint'),
         ),
         migrations.AddField(
             model_name='userdatacredentials',
             name='fp_tertiary',
-            field=models.PositiveIntegerField(blank=True, help_text='User FingerPrint Slot #3. Optional, can be used when other finger is not available.', null=True, unique=True, verbose_name='User Tertiary Fingerprint'),
+            field=models.PositiveIntegerField(
+                blank=True,
+                help_text=
+                'User FingerPrint Slot #3. Optional, can be used when other finger is not available.',
+                null=True,
+                unique=True,
+                verbose_name='User Tertiary Fingerprint'),
         ),
         migrations.AlterField(
             model_name='classroomactionlog',
             name='UserActionTaken',
-            field=models.CharField(choices=[('Classroom was Opened by Toggle Lock.', 'Classroom was Opened by Toggle Lock.'), ('Classroom was Closed by Toggle Lock.', 'Classroom was Closed by Toggle Lock.'), ('Action: Set Room Automate to ON.', 'Action: Set Room Automate to ON.'), ('Action: Set Room Automate to OFF.', 'Action: Set Room Automate to OFF.'), ('Unauthorized Access Detected.', 'Unauthorized Access Detected.'), ('Authorized Access Passed.', 'Authorized Access Passed.'), ('Classroom Access was set to Disabled.', 'Classroom Access was set to Disabled.'), ('Classroom Access was set to Enabled.', 'Classroom Access was set to Enabled.')], help_text='A set of action taken by the stuff and user that is recently recorded by the system.', max_length=255, verbose_name='Staff / User Action Message'),
+            field=models.CharField(
+                choices=[('Classroom was Opened by Toggle Lock.',
+                          'Classroom was Opened by Toggle Lock.'),
+                         ('Classroom was Closed by Toggle Lock.',
+                          'Classroom was Closed by Toggle Lock.'),
+                         ('Action: Set Room Automate to ON.',
+                          'Action: Set Room Automate to ON.'),
+                         ('Action: Set Room Automate to OFF.',
+                          'Action: Set Room Automate to OFF.'),
+                         ('Unauthorized Access Detected.',
+                          'Unauthorized Access Detected.'),
+                         ('Authorized Access Passed.',
+                          'Authorized Access Passed.'),
+                         ('Classroom Access was set to Disabled.',
+                          'Classroom Access was set to Disabled.'),
+                         ('Classroom Access was set to Enabled.',
+                          'Classroom Access was set to Enabled.')],
+                help_text=
+                'A set of action taken by the stuff and user that is recently recorded by the system.',
+                max_length=255,
+                verbose_name='Staff / User Action Message'),
         ),
     ]

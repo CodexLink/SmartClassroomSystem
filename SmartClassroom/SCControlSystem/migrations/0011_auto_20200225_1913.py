@@ -14,6 +14,19 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='courseschedule',
             name='CourseSchedule_Lecture_Day',
-            field=models.CharField(choices=[('Monday', 'Monday'), ('Tuesday', 'Tuesday'), ('Wednesday', 'Wednesday'), ('Thursday', 'Thursday'), ('Friday', 'Friday'), ('Saturday', 'Saturday'), ('Sunday', 'Sunday')], default=('Monday', 'Monday'), help_text='Refers to a day in which the course session takes place.', max_length=9, validators=[django.core.validators.MinLengthValidator(6), django.core.validators.MaxLengthValidator(9)], verbose_name='Course Lecture Day'),
+            field=models.CharField(
+                choices=[('Monday', 'Monday'), ('Tuesday', 'Tuesday'),
+                         ('Wednesday', 'Wednesday'), ('Thursday', 'Thursday'),
+                         ('Friday', 'Friday'), ('Saturday', 'Saturday'),
+                         ('Sunday', 'Sunday')],
+                default=('Monday', 'Monday'),
+                help_text=
+                'Refers to a day in which the course session takes place.',
+                max_length=9,
+                validators=[
+                    django.core.validators.MinLengthValidator(6),
+                    django.core.validators.MaxLengthValidator(9)
+                ],
+                verbose_name='Course Lecture Day'),
         ),
     ]

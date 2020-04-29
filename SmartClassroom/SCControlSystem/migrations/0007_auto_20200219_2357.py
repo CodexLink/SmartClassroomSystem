@@ -13,6 +13,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='classroom',
             name='Classroom_State',
-            field=models.CharField(choices=[('Unlocked', 'Unlocked'), ('Locked', 'Locked')], default='Locked', help_text='The current state of the classroom. This is very different from classroom device status.', max_length=8, verbose_name='Classroom State'),
+            field=models.CharField(
+                choices=[('Unlocked', 'Unlocked'), ('Locked', 'Locked')],
+                default='Locked',
+                help_text=
+                'The current state of the classroom. This is very different from classroom device status.',
+                max_length=8,
+                verbose_name='Classroom State'),
         ),
     ]

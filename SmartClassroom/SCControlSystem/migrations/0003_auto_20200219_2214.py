@@ -8,13 +8,21 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('SCControlSystem', '0002_remove_courseschedule_courseschedule_unique_id'),
+        ('SCControlSystem',
+         '0002_remove_courseschedule_courseschedule_unique_id'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='courseschedule',
             name='CourseSchedule_Instructor',
-            field=models.ForeignKey(help_text='Refers to an instructor who teach the following course.', limit_choices_to={'user_role': 'Professor'}, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, to_field='unique_id', verbose_name='Course Instructor'),
+            field=models.ForeignKey(
+                help_text=
+                'Refers to an instructor who teach the following course.',
+                limit_choices_to={'user_role': 'Professor'},
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+                to_field='unique_id',
+                verbose_name='Course Instructor'),
         ),
     ]

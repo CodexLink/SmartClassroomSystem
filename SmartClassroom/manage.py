@@ -4,6 +4,7 @@ import os
 import sys
 from sys import platform as ReturnedOSName
 
+
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SmartClassroom.settings')
 
@@ -16,10 +17,14 @@ def main():
         exit(-1)
 
     print('Smart Classroom Django Server Handler | < Django Project Caller >')
-    print('02/29/2020 | By Janrey "CodexLink" Licas | http://github.com/CodexLink\n')
+    print(
+        '02/29/2020 | By Janrey "CodexLink" Licas | http://github.com/CodexLink\n'
+    )
     print('In Collaboration with')
     print('    - Ronald Langaoan Jr. |> Hardware Designer and Manager')
-    print('    - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer')
+    print(
+        '    - Janos Angelo Jantoc |> Hardware Designer and Assistant Programmer'
+    )
     print('    - Joshua Santos |> Hardware Manager and Builder')
     print('    - Johnell Casey Murillo Panotes |> Hardware Assistant\n')
 
@@ -30,8 +35,7 @@ def main():
         raise ImportError(
             "Couldn't import Django. Are you sure it's installed and "
             "available on your PYTHONPATH environment variable? Did you "
-            "forget to activate a virtual environment?"
-        ) from exc
+            "forget to activate a virtual environment?") from exc
     execute_from_command_line(sys.argv)
 
 

@@ -13,6 +13,15 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='userdatacredentials',
             name='user_role',
-            field=models.CharField(choices=[('Project Owner', 'Project Owner'), ('Project Administrator', 'Project Administrator'), ('ITSO Administrator', 'ITSO Administrator'), ('ITSO Supervisor', 'ITSO Supervisor'), ('Professor', 'Professor')], default=('Project Owner', 'Project Owner'), help_text='Roles Defined that gives users multiple actions to do. Pick one with RISK.', max_length=27),
+            field=models.CharField(
+                choices=[('Project Owner', 'Project Owner'),
+                         ('Project Administrator', 'Project Administrator'),
+                         ('ITSO Administrator', 'ITSO Administrator'),
+                         ('ITSO Supervisor', 'ITSO Supervisor'),
+                         ('Professor', 'Professor')],
+                default=('Project Owner', 'Project Owner'),
+                help_text=
+                'Roles Defined that gives users multiple actions to do. Pick one with RISK.',
+                max_length=27),
         ),
     ]

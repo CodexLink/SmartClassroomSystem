@@ -14,6 +14,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='deviceinfo',
             name='Device_Status',
-            field=models.CharField(choices=[('Online', 'Online'), ('Offline', 'Offline')], default='Unknown', help_text='Status Indication of the device. Required. Basically this must match from the classroom status that is currently assigned with.', max_length=15, validators=[django.core.validators.MinLengthValidator(6), django.core.validators.MaxLengthValidator(15)], verbose_name='Device Status'),
+            field=models.CharField(
+                choices=[('Online', 'Online'), ('Offline', 'Offline')],
+                default='Unknown',
+                help_text=
+                'Status Indication of the device. Required. Basically this must match from the classroom status that is currently assigned with.',
+                max_length=15,
+                validators=[
+                    django.core.validators.MinLengthValidator(6),
+                    django.core.validators.MaxLengthValidator(15)
+                ],
+                verbose_name='Device Status'),
         ),
     ]
