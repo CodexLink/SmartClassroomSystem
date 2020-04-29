@@ -5,7 +5,8 @@
 <div align="center">
 
 ![Coverage Status](https://img.shields.io/coveralls/github/CodexLink/SmartClassroomSystem?label=Code%20Coverage&logo=coveralls)
-![Code Formatter](https://img.shields.io/badge/Code%20Formatter-Black-black)
+![C++ Code Formatter](https://img.shields.io/badge/C++%20Code%20Formatter-Clang--Format-blueviolet)
+![Python Code Formatter](https://img.shields.io/badge/Python%20Code%20Formatter-Black-black)
 ![GitHub License](https://img.shields.io/github/license/CodexLink/SmartClassroomSystem?color=purple&label=Repo%20License)
 
 </div>
