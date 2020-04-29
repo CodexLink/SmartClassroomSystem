@@ -52,7 +52,7 @@ This are the README Sections and Subsections. You can navigate through by clicki
   + [Hardware-Side Introduction](#hardware-side-introduction)
       - [Required Microcontroller](#required-microcontroller)
       - ["Why should I use ESP32 instead of ESP8266 / ESP8266EX?"](#why-should-i-use-esp32-instead-of-esp8266--esp8266ex)
-      - [Required Components](required-components)
+      - [Required Components](#required-components)
   * [Software-Side Introduction](#software-side-introduction)
     + [Installation of Pre-requisites](#installation-of-pre-requisites)
       - [Upload the NodeMCU Sketch](#upload-the-nodemcu-sketch)
@@ -205,7 +205,7 @@ This repository contains a lot of varieties. Meaning you really have to know the
 └── SC_ScriptInst.py
 ```
 
-**[Go Back To Top Section](#table-of-contents)** | **[Go Back to TOC](#table-of-contents)**
+**[Go Back To Top Section](#--file-structure-deconstruction)** | **[Go Back to TOC](#table-of-contents)**
 
 ## Introduction to Requirements
 
@@ -263,7 +263,7 @@ The components that we used, were essentially in my inventory already. So the co
 
 I don't provide links to these components. That's because the supplier is not supporting different countries. So let's say we bought our parts in local shop. Which technically true. We will only provide links that supports delivery to other countries.
 
-**[Go Back To Top Section](#table-of-contents)** | **[Go Back to TOC](#table-of-contents)**
+**[Go Back To Top Section](required-components)** | **[Go Back to TOC](#table-of-contents)**
 
 ## Software-Side Introduction
 
@@ -306,7 +306,7 @@ Congratulations! You did it. But that doesn't stop there. Because you have one t
 
 .... (***Required***) Upload NodeMCU Sketch.
 
-**[Go Back To Top Section](#table-of-contents)** | **[Go Back to TOC](#table-of-contents)**
+**[Go Back To Top Section](#installation-of-pre-requisites)** | **[Go Back to TOC](#table-of-contents)**
 
 #### Upload the NodeMCU Sketch
 
@@ -329,7 +329,7 @@ This is required since this will be your communicator in the server. To get star
 
 And... Done! Wait further and let the screen of the device to show the information such as the temperature and humidity, classroom subject and lock states.
 
-**[Go Back To Top Section](#table-of-contents)** | **[Go Back to TOC](#table-of-contents)**
+**[Go Back To Top Section](#upload-the-nodemcu-sketch)** | **[Go Back to TOC](#table-of-contents)**
 
 ### Deployment
 
@@ -426,7 +426,7 @@ When the accessibilities handed out to the user. Some user might even tampered i
 - ***Can I ask question/s?***
   - Sure thing! Just be polite and I'll answer your question through my email indicated in my Github Profile!
 
-**[Go Back To Top Section](#table-of-contents)** | **[Go Back to TOC](#table-of-contents)**
+**[Go Back To Top Section](#--frequently-asked-questions)** | **[Go Back to TOC](#table-of-contents)**
 
 ## 🏆 ✍ Authors
 
@@ -481,7 +481,7 @@ As a maintainer, I would like to give gratitude to several people who take part 
 - [Visual Studio Code](https://code.visualstudio.com/) for Robust IDE and Dependable.
 - [YAPF](https://github.com/google/yapf) for Standard Python Code Formatting.
 
-**[Go Back To Top Section](#table-of-contents)** | **[Go Back to TOC](#table-of-contents)**
+**[Go Back To Top Section](#--library-credits)** | **[Go Back to TOC](#table-of-contents)**
 
 ### 📑  Documentation Credits
 
