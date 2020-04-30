@@ -1,16 +1,23 @@
 
 name: Embedded Sketch Worker
 
-on: [push, pull_request]
-  paths:
-  - 'Externals/Sketch/NodeSketch_SC/*.cpp'
-  - 'Externals/Sketch/NodeSketch_SC/*.ino'
-  - 'Externals/Sketch/NodeSketch_SC/*.h'
+on:
+  push:
+    paths:
+      - 'Externals/Sketch/NodeSketch_SC/*.cpp'
+      - 'Externals/Sketch/NodeSketch_SC/*.ino'
+      - 'Externals/Sketch/NodeSketch_SC/*.h'
+
+  pull_request:
+    paths:
+      - 'Externals/Sketch/NodeSketch_SC/*.cpp'
+      - 'Externals/Sketch/NodeSketch_SC/*.ino'
+      - 'Externals/Sketch/NodeSketch_SC/*.h'
 
 jobs:
   ESPBuildWorker:
     name: NodeMCU Sketch Build Worker
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
