@@ -1,0 +1,36 @@
+
+name: Embedded Sketch Worker
+
+on: [push, pull_request]
+  paths:
+  - 'Externals/Sketch/NodeSketch_SC/*.cpp'
+  - 'Externals/Sketch/NodeSketch_SC/*.ino'
+  - 'Externals/Sketch/NodeSketch_SC/*.h'
+
+jobs:
+  ESPBuildWorker:
+    name: NodeMCU Sketch Build Worker
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        include:
+        - mcu_candidate_fqbn: esp8266:esp8266:nodemcuv2
+          mcu_platform_candidate: esp8266:esp8266
+          mcu_platform_sketch:  Externals/Sketch/NodeSketch_SC/NodeSketch_SC.ino
+          boardAdditionals: https://arduino.esp8266.com/stable/package_esp8266com_index.json
+
+    steps:
+    - name: Stage 1 | Repository Checkout
+      uses: actions/checkout@master
+
+    - name: Stage 2 | Arduino-CLI Setup
+      uses: arduino/setup-arduino-cli@master
+
+    - name: Stage 3 | ESP8266 Package Setup
+      run : |
+        arduino-cli core update-index --additional-urls ${{ matrix.boardAdditionals }}
+        arduino-cli core install ${{ matrix.mcu_platform_candidate }} --additional-urls ${{ matrix.boardAdditionals }}
+
+    - name: Final Stage (4) | Sketch Verification
+      run: arduino-cli compile --fqbn ${{ matrix.mcu_candidate_fqbn }} ${{ matrix.mcu_platform_sketch }}
