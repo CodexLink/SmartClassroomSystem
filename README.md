@@ -70,8 +70,8 @@ This are the README Sections and Subsections. You can navigate through by clicki
 * [📜 Various Credits](#-various-credits)
   * [🙇 Personal Credits](#-personal-credits)
   * [🏆  Library Credits](#--library-credits)
-  * [📑  Documentation Credits](#--documentation-credits)
-  * [💯 Solution Credits](#--solution-credits)
+  * [📑  Documentation Credits](#-ocumentation-credits)
+  * [💯 Solution Credits](#-olution-credits)
 * [📚 License](#-license)
 
 ## 🔥 📁 File Structure Deconstruction
