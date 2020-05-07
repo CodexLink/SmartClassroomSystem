@@ -3,12 +3,10 @@
 
 <h4 align="center"> An Embedded Systems and IoT 2nd Semester Project | Ease your class workflow by automating classroom access without the need of staff to open them for you. (Unless, you want to open parts of the room that is not designed to be accessed to you...)
 </h4>
+
 <div align="center">
 
-![Coverage Status](https://img.shields.io/coveralls/github/CodexLink/SmartClassroomSystem?label=Code%20Coverage&logo=coveralls)
-![C++ Code Formatter](https://img.shields.io/badge/C++%20Code%20Formatter-Clang--Format-blueviolet)
-![Python Code Formatter](https://img.shields.io/badge/Python%20Code%20Formatter-Black-black)
-![GitHub License](https://img.shields.io/github/license/CodexLink/SmartClassroomSystem?color=purple&label=Repo%20License)
+![Embedded Sketch Worker](https://github.com/CodexLink/SmartClassroomSystem/workflows/Embedded%20Sketch%20Worker/badge.svg?branch=master)
 
 </div>
 
@@ -17,6 +15,15 @@
 ![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/codexlink/SmartClassroomSystem/master?label=CodeFactor%20Code%20Quality&logo=codefactor&logoColor=white)
 ![Codacy Branch Grade](https://img.shields.io/codacy/grade/f649c48ccc3a431a84cad2f7e7ac65ca/master?label=Codacy%20Code%20Quality&logo=codacy&logoColor=White)
 ![Dependabot Dependency Status](https://badgen.net/dependabot/CodexLink/SmartClassroomSystem/?icon=dependabot)
+
+</div>
+
+<div align="center">
+
+![Coverage Status](https://img.shields.io/coveralls/github/CodexLink/SmartClassroomSystem?label=Code%20Coverage&logo=coveralls)
+![C++ Code Formatter](https://img.shields.io/badge/C++%20Code%20Formatter-Clang--Format-blueviolet)
+![Python Code Formatter](https://img.shields.io/badge/Python%20Code%20Formatter-Black-black)
+![GitHub License](https://img.shields.io/github/license/CodexLink/SmartClassroomSystem?color=purple&label=Repo%20License)
 
 </div>
 
