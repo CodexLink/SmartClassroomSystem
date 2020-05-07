@@ -22,7 +22,7 @@ jobs:
 
     - name: Stage 3 | Setup MySQL for Test Case Capability
       run: |
-        mysql -h 127.0.0.1 --port 3306 -u root -p root
+        mysql -u root -p root
         use mysql;
         ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'newpassword';
         FLUSH PRIVILEGES;
