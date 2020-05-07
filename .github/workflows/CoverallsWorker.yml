@@ -22,10 +22,7 @@ jobs:
 
     - name: Stage 3 | Setup MySQL for Test Case Capability
       run: |
-        mysql -u root -p root
-        use mysql;
-        ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'newpassword';
-        FLUSH PRIVILEGES;
+        mysql -uroot -h127.0.0.1 -proot -e 'CREATE DATABASE IF NOT EXISTS db1;'
 
     - name: Stage 4 | Repo Installation of Dependencies
       run: python -m pip install -r requirements.txt
