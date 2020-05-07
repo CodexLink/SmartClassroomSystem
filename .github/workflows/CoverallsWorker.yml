@@ -21,12 +21,10 @@ jobs:
         architecture: x64
 
     - name: Stage 3 | Repo Installation of Dependencies
-      run: |
-        python -m pip install -r requirements.txt
-        cd SmartClassroom
+      run: python -m pip install -r requirements.txt
 
     - name: Stage 4 | Code Coverage Test
-      run: python manage.py test
+      run: python SmartClassroom/manage.py test
 
     - name: Stage 5 | Code Coverage Result Submission to Coveralls.IO
       run: coveralls
