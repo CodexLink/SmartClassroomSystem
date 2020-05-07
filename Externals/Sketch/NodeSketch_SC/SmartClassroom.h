@@ -194,8 +194,7 @@ public:
     String SERVER_IP_ADDRESS = "192.168.100.5"; // By Default
     uint16_t SERVER_PORT = 8000;                // By Default
 
-    bool PIR_ARR_OUTPUT[CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS] = {0};
-
+    //@promise | Make a better explanation about this one soon and all other such.
     //5 MINUTES, 1 MINUTE = 60 SECONDS
 
     // [0] = 30 SECONDS = 1
@@ -210,7 +209,8 @@ public:
     // [9] = 30 SECONDS = 0
 
     // 50% > EXTEND 5 MINUTES
-    // 50 < SHUTDOWN YUNG CLASSROOM
+    // 50 <  CLASSROOM SHUTDOWN
+    bool PIR_ARR_OUTPUT[CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS] = {0};
 
     bool ForceEEPROMUpdate = false;
     char SER_INPUT_RAW = '0';
