@@ -22,7 +22,6 @@ jobs:
 
     - name: Stage 3 | Setup MySQL for Test Case Capability
       run: |
-        sudo service mysql start
         mysql -h 127.0.0.1 --port 3306 -u root -p root
         use mysql;
         ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'newpassword';
@@ -36,7 +35,3 @@ jobs:
 
     - name: Stage 6 | Code Coverage Result Submission to Coveralls.IO
       run: coveralls
-
-    - name: Stage 7 | Closing MySQL Instance
-      run: |
-        sudo service mysql stop
