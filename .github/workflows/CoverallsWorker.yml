@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@master
 
     - name: Stage 2 | Python Setup on Version 3.8
-      uses: actions/setup-python@latest
+      uses: actions/setup-python@v2
       with:
         python-version: 3.8.2
         architecture: x64
