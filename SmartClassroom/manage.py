@@ -4,6 +4,9 @@ import os
 import sys
 from sys import platform as ReturnedOSName
 
+## REQUIRED WHEN RUNNING ON LOCAL REPOSITORY OR CODE COVERAGE IS ENABLED.
+# ! The value of `reqCovPercentage` must be inlined with the value of `fail_under` inside .coveragerc.
+reqCovPercentage = 85
 
 def main():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "SmartClassroom.settings")
@@ -24,6 +27,17 @@ def main():
     print("    - Joshua Santos |> Hardware Manager and Builder")
     print("    - Johnell Casey Murillo Panotes |> Hardware Assistant\n")
 
+    if sys.argv[1] == "test":
+        print("\n - Coverage Report Activated!")
+        from coverage import Coverage
+        print("| - Coverage > Importing...")
+        baseCov = Coverage()
+        print("| - Coverage > Initializing...")
+        baseCov.erase()
+        print("| - Coverage > Erasing Recent Reports...")
+        baseCov.start()
+        print("| - Coverage > Code Coverage Start!")
+
     try:
         from django.core.management import execute_from_command_line
 
@@ -35,6 +49,18 @@ def main():
         ) from exc
     execute_from_command_line(sys.argv)
 
+    if sys.argv[1] == "test":
+        baseCov.stop()
+        baseCov.save()
+        baseCovReport = baseCov.report()
+        print("\n | - Coverage > Report Saved.")
+        baseCov.html_report()
+        if baseCovReport < reqCovPercentage:
+            print("\n | - Coverage > Code Coverage Completed But Fails To Meet Required Passing Rate of {0}%...".format(reqCovPercentage))
+            sys.exit(1)
+        else:
+            print("\n | - Coverage > Code Coverage Completed and Passed Above Required Passing Rate of {0}%!".format(reqCovPercentage))
+            sys.exit(0)
 
 if __name__ == "__main__":
     main()

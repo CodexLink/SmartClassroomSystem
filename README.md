@@ -510,6 +510,8 @@ As a maintainer, I would like to give gratitude to several people who take part 
 
 * [The Use of EEPROM.put() and EEPROM.get() in ESP8266](https://github.com/esp8266/Arduino/issues/1053) for actually using the code for ESP8266. The EEPROM is Emulated and different in Arduino.
 
+* [Getting a Django Application to 100% Coverage](https://adamj.eu/tech/2019/04/30/getting-a-django-application-to-100-percent-coverage/) for guiding me to setup Coverage with Possible Guarantee of high Percetange of Code Coverage.
+
 **[Go Back to TOC](#table-of-contents)**
 
 ## 📚 License

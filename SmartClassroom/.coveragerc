@@ -1,0 +1,33 @@
+[run]
+
+plugins =
+    django_coverage_plugin
+
+source =
+    NodeHandler
+    SmartClassroom
+    SCControlSystem
+
+branch = True
+
+# Here we omit things that coverage cannot run inside active directory unless specific tasks are executed.
+omit =
+    */migrations/*
+    */node_modules/*
+    */htmlcov/*
+
+    # We exclude scripts since they're being used by SC_ScriptInst.py which is outside directory. Including SC_ScriptInst will result to failed result because it contains blocking functions.
+    SCControlSystem/scripts/*
+
+    # We exclude manage.py since we're using this one as a starting point.
+    manage.py
+
+    # We exclude views.py of NodeHandler because that was only being executed when NodeMCU tries to POST in the server.
+    NodeHandler/views.py
+
+[report]
+fail_under = 95
+show_missing = True
+exclude_lines =
+    pragma: no cover
+    pragma: Exclude Coverage

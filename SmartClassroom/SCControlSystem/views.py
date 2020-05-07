@@ -34,9 +34,7 @@ class DashboardView(PermissionRequiredMixin, TemplateView):
 
     more_context = {"title_view": "Dashboard", "ClassInstance": str(__qualname__)}
 
-    def get_context_data(
-        self, **kwargs
-    ):  # ! Override Get_Context_Data by adding more data.
+    def get_context_data(self, **kwargs):  # ! Override Get_Context_Data by adding more data.
         current_user = self.request.user
         view_context = super(DashboardView, self).get_context_data(
             **kwargs
@@ -156,9 +154,7 @@ class ClassroomView(PermissionRequiredMixin, ListView):
         "ClassInstance": str(__qualname__),
     }
 
-    def get_context_data(
-        self, **kwargs
-    ):  # ! Override Get_Context_Data by adding more data.
+    def get_context_data(self, **kwargs):  # ! Override Get_Context_Data by adding more data.
         current_user = self.request.user
         view_context = super(ClassroomView, self).get_context_data(
             **kwargs
@@ -203,9 +199,7 @@ class SelectableClassroomView(PermissionRequiredMixin, ListView):
         "ClassInstance": str(__qualname__),
     }
 
-    def get_context_data(
-        self, **kwargs
-    ):  # ! Override Get_Context_Data by adding more data.
+    def get_context_data(self, **kwargs):  # ! Override Get_Context_Data by adding more data.
         current_user = self.request.user
         view_context = super(SelectableClassroomView, self).get_context_data(
             **kwargs
@@ -873,9 +867,7 @@ class ScheduleListView(PermissionRequiredMixin, ListView):
         ).order_by("CourseSchedule_Lecture_Day", "CourseSchedule_Session_Start")
         # CourseSchedule.objects.filter(CourseSchedule_Instructor__first_name="Lily Ann", CourseSchedule_Instructor__middle_name="Ann", CourseSchedule_Instructor__last_name="Rastica").order_by('CourseSchedule_Session_Start')
 
-    def get_context_data(
-        self, **kwargs
-    ):  # ! Override Get_Context_Data by adding more data.
+    def get_context_data(self, **kwargs):  # ! Override Get_Context_Data by adding more data.
         current_user = self.request.user
         view_context = super(ScheduleListView, self).get_context_data(
             **kwargs
@@ -1008,9 +1000,7 @@ class StaffActionsListView(PermissionRequiredMixin, ListView):
                 Course_Reference__CourseSchedule_Instructor__last_name=self.request.user.last_name,
             ).order_by("-TimeRecorded")
 
-    def get_context_data(
-        self, **kwargs
-    ):  # ! Override Get_Context_Data by adding more data.
+    def get_context_data(self, **kwargs):  # ! Override Get_Context_Data by adding more data.
         current_user = self.request.user
         view_context = super(StaffActionsListView, self).get_context_data(
             **kwargs
