@@ -20,11 +20,19 @@ jobs:
         python-version: 3.8.2
         architecture: x64
 
-    - name: Stage 3 | Repo Installation of Dependencies
+    - name: Stage 3 | Setup MySQL for Test Case Capability
+      run: |
+        sudo service mysql start
+
+    - name: Stage 4 | Repo Installation of Dependencies
       run: python -m pip install -r requirements.txt
 
-    - name: Stage 4 | Code Coverage Test
+    - name: Stage 5 | Code Coverage Test
       run: python SmartClassroom/manage.py test
 
-    - name: Stage 5 | Code Coverage Result Submission to Coveralls.IO
+    - name: Stage 6 | Code Coverage Result Submission to Coveralls.IO
       run: coveralls
+
+    - name: Stage 7 | Closing MySQL Instance
+      run: |
+        sudo service mysql stop
