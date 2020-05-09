@@ -32,8 +32,8 @@ jobs:
 
     - name: Stage 4.1 | Repo Installation of Dependencies
       run: |
-      python -m pip install --upgrade pip
-      python -m pip install -r requirements.txt
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
 
     - name: Stage 5 | Code Coverage Test
       run: python SmartClassroom/manage.py test
