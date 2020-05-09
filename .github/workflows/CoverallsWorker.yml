@@ -21,6 +21,9 @@ jobs:
             - 3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
+      python:
+          image: python:3
+
     steps:
     - name: Stage 1 | Repository Checkout
       uses: actions/checkout@master
@@ -31,8 +34,8 @@ jobs:
         python-version: 3.8.2
         architecture: x64
 
-    - name: Stage - | Install LibPython for Shared Libraries Conflict
-      run: sudo apt-get install libpython3.8
+    - name: Stage - | Display List of Directories Inside Docker Container
+      run: ls --all
 
     - name: Stage 4 | Repo Installation of Dependencies
       run: python -m pip install -r requirements.txt
