@@ -31,6 +31,9 @@ jobs:
         python-version: 3.8.2
         architecture: x64
 
+    - name: Stage - | Install LibPython for Shared Libraries Conflict
+      run: sudo apt-get install libpython3.8
+
     - name: Stage 4 | Repo Installation of Dependencies
       run: python -m pip install -r requirements.txt
 
