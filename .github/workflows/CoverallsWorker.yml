@@ -3,7 +3,7 @@ name: Coveralls.IO / Coverage Worker
 # ! Just ensure that no matter what parts of codebase are changed.
 ## Continue to Execute This Worker.
 
-on: [push, pull_request]
+on: push
 
 jobs:
   CoverageWorker:
