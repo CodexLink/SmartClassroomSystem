@@ -9,6 +9,17 @@ jobs:
   CoverageWorker:
     name: Repo Setup
     runs-on: ubuntu-latest
+    container: node:10.18-jessie
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+            MYSQL_ALLOW_EMPTY_PASSWORD: yes
+            MYSQL_DATABASE: sc_db
+        ports:
+            - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
     - name: Stage 1 | Repository Checkout
@@ -19,10 +30,6 @@ jobs:
       with:
         python-version: 3.8.2
         architecture: x64
-
-    - name: Stage 3 | Setup MySQL for Test Case Capability
-      run: |
-        mysql -uroot -h127.0.0.1 -proot -e 'CREATE DATABASE IF NOT EXISTS db1;'
 
     - name: Stage 4 | Repo Installation of Dependencies
       run: python -m pip install -r requirements.txt
