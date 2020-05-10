@@ -11,16 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     container: node:10.18-jessie
 
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-            MYSQL_ALLOW_EMPTY_PASSWORD: yes
-            MYSQL_DATABASE: sc_db
-        ports:
-            - 3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
     steps:
     - name: Stage 1 | Repository Checkout
       uses: actions/checkout@master
@@ -28,7 +18,7 @@ jobs:
     - name: Stage 2 | Install Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.8.2
 
     - name: Stage 4.1 | Repo Installation of Dependencies
       run: |
