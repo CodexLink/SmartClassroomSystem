@@ -57,10 +57,11 @@ def main():
         baseCov.html_report()
         if baseCovReport < reqCovPercentage:
             print("\n | - Coverage > Code Coverage Completed But Fails To Meet Required Passing Rate of {0}%...".format(reqCovPercentage))
-            sys.exit(1)
         else:
             print("\n | - Coverage > Code Coverage Completed and Passed Above Required Passing Rate of {0}%!".format(reqCovPercentage))
-            sys.exit(0)
+
+        print("\n | - Coverage > Done~!")
+        sys.exit(0)
 
 if __name__ == "__main__":
     main()

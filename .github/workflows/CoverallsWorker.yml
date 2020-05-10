@@ -3,39 +3,44 @@ name: Coveralls.IO / Coverage Worker
 # ! Just ensure that no matter what parts of codebase are changed.
 ## Continue to Execute This Worker.
 
-on: [push, pull_request]
+on: push
 
 jobs:
   CoverageWorker:
-    name: Repo Setup
-    runs-on: ubuntu-latest
-    container: node:10.18-jessie
-
-    services:
-      mysql:
-        image: mysql:5.7
-        env:
-            MYSQL_ALLOW_EMPTY_PASSWORD: yes
-            MYSQL_DATABASE: sc_db
-        ports:
-            - 3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    name: Project Coverage Test Setup
+    runs-on: ubuntu-18.04
 
     steps:
     - name: Stage 1 | Repository Checkout
       uses: actions/checkout@master
 
-    - name: Stage 2 | Python Setup on Version 3.8
+    - name: Stage 2 | Install Python3 Version 3.8.2
       uses: actions/setup-python@v2
       with:
         python-version: 3.8.2
-        architecture: x64
 
-    - name: Stage 4 | Repo Installation of Dependencies
-      run: python -m pip install -r requirements.txt
+    - name: Stage 3 | Activate MySQL Service in Virtual Environment
+      run: sudo service mysql start
 
-    - name: Stage 5 | Code Coverage Test
+    - name: Stage 3.1 | Setup Empty Database Container
+      run: |
+        mysql --host=127.0.0.1 -uroot -proot --execute="CREATE DATABASE sc_db"
+
+    - name: Stage 4 | Install Project Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
+
+    - name: Stage 5 | Initialize Project Database
+      run: |
+        cd SmartClassroom
+        python manage.py makemigrations SCControlSystem
+        python manage.py migrate
+
+    - name: Stage 6 | Code Coverage Test
       run: python SmartClassroom/manage.py test
 
-    - name: Stage 6 | Code Coverage Result Submission to Coveralls.IO
-      run: coveralls
+    - name: Stage 7 | Code Coverage Result Submission to Coveralls.IO
+      run: |
+        cd SmartClassroom
+        coveralls
