@@ -24,9 +24,7 @@ jobs:
 
     - name: Stage 3.1 | Setup Empty Database Container
       run: |
-        mysql -uroot -proot
-        CREATE DATABASE sc_db;
-        exit
+        mysql -u root -p root -e "CREATE DATABASE sc_db"
 
     - name: Stage 4 | Install Project Dependencies
       run: |
