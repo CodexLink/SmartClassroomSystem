@@ -20,7 +20,7 @@ jobs:
         python-version: 3.8.2
 
     - name: Stage - | Active MySQL Service in Virtual Container
-      run: service mysql start
+      run: sudo service mysql start
 
     - name: Stage 4.1 | Repo Installation of Dependencies
       run: |
