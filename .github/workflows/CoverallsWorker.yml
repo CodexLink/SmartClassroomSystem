@@ -19,6 +19,9 @@ jobs:
       with:
         python-version: 3.8.2
 
+    - name: Stage - | Active MySQL Service in Virtual Container
+      run: service mysql start
+
     - name: Stage 4.1 | Repo Installation of Dependencies
       run: |
         python -m pip install --upgrade pip
