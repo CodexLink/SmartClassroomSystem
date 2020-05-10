@@ -29,6 +29,7 @@ jobs:
 
     - name: Stage 5 | Initialize Project Database
       run: |
+        cd SmartClassroom
         python manage.py makemigrations SCControlSystem
         python manage.py migrate
 
