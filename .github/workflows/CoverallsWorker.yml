@@ -37,10 +37,8 @@ jobs:
         python manage.py makemigrations SCControlSystem
         python manage.py migrate
 
-    - name: Stage 6 | Code Coverage Test
-      run: python SmartClassroom/manage.py test
-
-    - name: Stage 7 | Code Coverage Result Submission to Coveralls.IO
+    - name: Stage 6 | Code Coverage Test and Result Submission to Coveralls.IO
       run: |
+        python SmartClassroom/manage.py test
         cd SmartClassroom
         coveralls
