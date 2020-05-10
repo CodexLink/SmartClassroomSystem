@@ -22,6 +22,12 @@ jobs:
     - name: Stage 3 | Activate MySQL Service in Virtual Environment
       run: sudo service mysql start
 
+    - name: Stage 3.1 | Setup Empty Database Container
+      run: |
+        mysql -uroot -proot
+        CREATE DATABASE sc_db;
+        exit
+
     - name: Stage 4 | Install Project Dependencies
       run: |
         python -m pip install --upgrade pip
