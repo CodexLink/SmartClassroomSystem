@@ -3,7 +3,18 @@ name: Coveralls.IO / Coverage Worker
 # ! Just ensure that no matter what parts of codebase are changed.
 ## Continue to Execute This Worker.
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - '.github/workflows/**'
+      - 'Externals/Sketch/NodeSketch_SC/**' # ! Required For PRs and General Codebase Change
+      - 'SmartClassroom/**'
+
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - 'Externals/Sketch/NodeSketch_SC/**' # ! Required For PRs and General Codebase Change
+      - 'SmartClassroom/**'
 
 jobs:
   CoverageWorker:
