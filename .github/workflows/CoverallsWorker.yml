@@ -7,28 +7,33 @@ on: push
 
 jobs:
   CoverageWorker:
-    name: Repo Setup
+    name: Project Coverage Test Setup
     runs-on: ubuntu-18.04
 
     steps:
     - name: Stage 1 | Repository Checkout
       uses: actions/checkout@master
 
-    - name: Stage 2 | Install Python
+    - name: Stage 2 | Install Python3 Version 3.8.2
       uses: actions/setup-python@v2
       with:
         python-version: 3.8.2
 
-    - name: Stage - | Active MySQL Service in Virtual Container
+    - name: Stage 3 | Activate MySQL Service in Virtual Environment
       run: sudo service mysql start
 
-    - name: Stage 4.1 | Repo Installation of Dependencies
+    - name: Stage 4 | Install Project Dependencies
       run: |
         python -m pip install --upgrade pip
         python -m pip install -r requirements.txt
 
-    - name: Stage 5 | Code Coverage Test
+    - name: Stage 5 | Initialize Project Database
+      run: |
+        python manage.py makemigrations SCControlSystem
+        python manage.py migrate
+
+    - name: Stage 6 | Code Coverage Test
       run: python SmartClassroom/manage.py test
 
-    - name: Stage 6 | Code Coverage Result Submission to Coveralls.IO
+    - name: Stage 7 | Code Coverage Result Submission to Coveralls.IO
       run: coveralls
