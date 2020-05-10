@@ -39,6 +39,6 @@ jobs:
 
     - name: Stage 6 | Code Coverage Test and Result Submission to Coveralls.IO
       run: |
-        python SmartClassroom/manage.py test
         cd SmartClassroom
+        python manage.py test
         coveralls
