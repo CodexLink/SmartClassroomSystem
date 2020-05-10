@@ -6,6 +6,8 @@
 
 <div align="center">
 
+![Coveralls.IO / Coverage Worker](https://github.com/CodexLink/SmartClassroomSystem/workflows/Coveralls.IO%20/%20Coverage%20Worker/badge.svg?branch=master)
+![Coverage Status](https://img.shields.io/coveralls/github/CodexLink/SmartClassroomSystem?label=Python-Django%20Code%20Coverage&logo=coveralls)
 ![Embedded Sketch Worker](https://github.com/CodexLink/SmartClassroomSystem/workflows/Embedded%20Sketch%20Worker/badge.svg?branch=master)
 
 </div>
@@ -14,15 +16,14 @@
 
 ![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/codexlink/SmartClassroomSystem/master?label=CodeFactor%20Code%20Quality&logo=codefactor&logoColor=white)
 ![Codacy Branch Grade](https://img.shields.io/codacy/grade/f649c48ccc3a431a84cad2f7e7ac65ca/master?label=Codacy%20Code%20Quality&logo=codacy&logoColor=White)
-![Dependabot Dependency Status](https://badgen.net/dependabot/CodexLink/SmartClassroomSystem/?icon=dependabot)
+![C++ Code Formatter](https://img.shields.io/badge/C++%20Code%20Formatter-Clang--Format-blueviolet)
+![Python Code Formatter](https://img.shields.io/badge/Python%20Code%20Formatter-Black-black)
 
 </div>
 
 <div align="center">
 
-![Coverage Status](https://img.shields.io/coveralls/github/CodexLink/SmartClassroomSystem?label=Django%20Code%20Coverage&logo=coveralls)
-![C++ Code Formatter](https://img.shields.io/badge/C++%20Code%20Formatter-Clang--Format-blueviolet)
-![Python Code Formatter](https://img.shields.io/badge/Python%20Code%20Formatter-Black-black)
+![Dependabot Dependency Status](https://badgen.net/dependabot/CodexLink/SmartClassroomSystem/?icon=dependabot)
 ![GitHub License](https://img.shields.io/github/license/CodexLink/SmartClassroomSystem?color=purple&label=Repo%20License)
 
 </div>
