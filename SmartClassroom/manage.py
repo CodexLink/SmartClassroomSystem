@@ -60,7 +60,7 @@ def main():
         else:
             print("\n | - Coverage > Code Coverage Completed and Passed Above Required Passing Rate of {0}%!".format(reqCovPercentage))
 
-        print("\n | - Coverage > Done~!")
+        print("\n | - Coverage > Done~!\n")
         sys.exit(0)
 
 if __name__ == "__main__":
