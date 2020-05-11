@@ -371,7 +371,6 @@ but with different program branch, such as 'ARch22FA1' then it will not be allow
 Hence, we conclude that the completed unique field is the one that we only need to be our primary key or well, at least a unique key.
 # ! Status: Completed
 """
-
 class SectionGroup(models.Model):
     class Meta:
         verbose_name = "Student Section"

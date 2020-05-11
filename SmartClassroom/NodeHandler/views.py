@@ -1,5 +1,3 @@
-from django.shortcuts import render
-from requests import get as FetchData
 from SCControlSystem.models import *
 from SCControlSystem.externs.subject_types import *
 
@@ -81,7 +79,7 @@ class NodeMultiAuthenticator(TemplateView):
                         "Classroom_CompleteString"
                     ],
                 )[0]
-                recordInstance = ClassroomActionLog.objects.create(
+                ClassroomActionLog.objects.create(
                     UserActionTaken=ClassroomActionTypes[2][0]
                     if context_RoomLockState
                     else ClassroomActionTypes[3][0],

@@ -7,9 +7,9 @@ from django.contrib.auth.mixins import (
     PermissionRequiredMixin,
 )
 from django.contrib.auth.views import LoginView, LogoutView
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import FormView, ListView
+from django.views.generic import ListView
 from django.views.generic.base import TemplateView
 from requests import get as FetchLiveData
 from requests.exceptions import RequestException

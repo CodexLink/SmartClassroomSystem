@@ -16,7 +16,6 @@ from .models import *
     ModelAdmin renders a particular object INSIDE. When I say inside, what I meant is, rendering their fields when modifying or creating new data on it.
     UserAdmin renders the Special Overidden User Model. Which means it does the same as ModelAdmin except that it is specially configured.
 """
-
 class ClassroomActionLogAttributes(admin.ModelAdmin):
     model = ClassroomActionLog
     list_display = (
@@ -28,7 +27,6 @@ class ClassroomActionLogAttributes(admin.ModelAdmin):
     list_filter = ("Course_Reference", "ActionLevel", "UserActionTaken", "TimeRecorded")
 
     readonly_fields = ("TimeRecorded",)
-
 
 class ClassroomAttributes(admin.ModelAdmin):
     model = Classroom

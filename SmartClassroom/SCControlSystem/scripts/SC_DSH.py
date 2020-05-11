@@ -41,7 +41,6 @@ from time import sleep as delay
 from uuid import UUID as StrToValidUUID
 
 from requests import get as DataGETReq
-from requests import post as DevDataUpdate
 from requests.exceptions import RequestException
 
 from ..models import *
@@ -154,7 +153,6 @@ class SC_IoTDriver(object):
                 deviceCandidateItem.save(update_fields=["Device_Status"])
                 print("Response Failed.")
                 errCount += 1
-                pass
 
         print(
             "\nDevice Checking Finished... (Success: %s, Failed: %s)\n"
@@ -243,7 +241,6 @@ class SC_IoTDriver(object):
         }
 
     """
-
     def processURL(self, DevTarget_Name, DevTarget_IP, urlStr):
         print(
             "Processing Context from URL Response for %s | %s..."
@@ -463,10 +460,6 @@ class SC_IoTDriver(object):
         except BaseException as error:
             print("Exception: An error occurred: %s" % (error,))
         return
-
-    def dayCheckScheduleUpdate(self):
-        return
-
 
 if __name__ == "__main__":
     CommandLine("CLS", shell=True)
