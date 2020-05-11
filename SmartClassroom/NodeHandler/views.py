@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from requests import get as FetchData
-from requests.exceptions import RequestException
 from SCControlSystem.models import *
 from SCControlSystem.externs.subject_types import *
 
@@ -14,9 +13,6 @@ from uuid import UUID as ReturnValidableUUID
 @method_decorator(csrf_exempt, name="dispatch")
 class NodeMultiAuthenticator(TemplateView):
     template_name = "noContextReponseOnly.html"
-
-    def dispatch(self, *args, **kwargs):
-        return super(NodeMultiAuthenticator, self).dispatch(*args, **kwargs)
 
     def post(self, *args, **kwargs):
         print("\nBackend | Lock Authentication Callback Accessed!")

@@ -32,10 +32,8 @@
 """
 
 import os
-import time
 from subprocess import PIPE, Popen, run
 from sys import platform as ReturnedOSName
-import signal
 
 SERVER_IP = "0.0.0.0"
 SERVER_PORT = 8000

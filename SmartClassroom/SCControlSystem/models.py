@@ -10,7 +10,6 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.contrib.auth.models import AbstractUser
 from uuid import uuid4
-from django.utils.crypto import get_random_string
 
 # ! ImageField Avatar to Account Function Use
 
@@ -372,7 +371,6 @@ but with different program branch, such as 'ARch22FA1' then it will not be allow
 Hence, we conclude that the completed unique field is the one that we only need to be our primary key or well, at least a unique key.
 # ! Status: Completed
 """
-
 
 class SectionGroup(models.Model):
     class Meta:

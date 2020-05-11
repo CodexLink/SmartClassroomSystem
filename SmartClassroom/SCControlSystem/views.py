@@ -2,19 +2,16 @@ import datetime
 from json import loads as DictSerialize
 
 from django.contrib import messages
-from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import (
-    AccessMixin,
     LoginRequiredMixin,
     PermissionRequiredMixin,
 )
-from django.contrib.auth.views import LoginView, LogoutView, logout_then_login
+from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy, reverse
-from django.views.generic import FormView, ListView, RedirectView
+from django.urls import reverse_lazy
+from django.views.generic import FormView, ListView
 from django.views.generic.base import TemplateView
 from requests import get as FetchLiveData
-from django.http import HttpResponseRedirect
 from requests.exceptions import RequestException
 from .externs.subject_types import *
 

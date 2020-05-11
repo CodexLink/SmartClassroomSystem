@@ -64,7 +64,7 @@ def run():
                 SessionInstance.checkNodeConn(
                     CheckBeforeReQueue=True
                 )  # Test All Connections To The IoT Devices.
-        except:
+        except BaseException:
             pass
     else:
         Terminate()

@@ -17,7 +17,6 @@ from .models import *
     UserAdmin renders the Special Overidden User Model. Which means it does the same as ModelAdmin except that it is specially configured.
 """
 
-
 class ClassroomActionLogAttributes(admin.ModelAdmin):
     model = ClassroomActionLog
     list_display = (
