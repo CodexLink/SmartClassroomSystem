@@ -131,6 +131,28 @@ void SC_MCU_DRVR::begin()
     FPController.set_led(true);
     return;
 }
+
+inline void SC_MCU_DRVR::display_DEV_DATA()
+{
+    Serial.print(F("DEV_CR_ASSIGNMENT |> "));
+    Serial.println(DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT);
+    Serial.print(F("DEV_CR_SHORT_NAME |> "));
+    Serial.println(DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME);
+    Serial.print(F("DEV_CR_UUID |> "));
+    Serial.println(DEV_INST_CREDENTIALS.DEV_CR_UUID);
+    Serial.print(F("DEV_UUID |> "));
+    Serial.println(DEV_INST_CREDENTIALS.DEV_UUID);
+    Serial.print(F("AUTH_DEV_USN |> "));
+    Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_USN);
+    Serial.print(F("AUTH_DEV_PWD |> "));
+    Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_PWD);
+    Serial.print(F("CURRENT_COURSE_CODENAME |> "));
+    Serial.println(DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME);
+    Serial.print(F("AUTH_USER_ID_FNGRPRNT |> "));
+    Serial.println(DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
+    return;
+}
+
 //  ! Parent Class -> Begin() Function — Second Layer of Class Initialization
 
 // ! A Function to Retrieve EEPROM MetaData
@@ -146,29 +168,13 @@ inline void SC_MCU_DRVR::retrieve_EEPROMData()
     Serial.println(F("Structure Data has No Default Content. Retrieving Values..."));
     if (EEPROM.read(CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_START_ADDR) != NULL)
     {
-
         Serial.println(F("EEPROM Stored Data Byte Detected!"));
         for (size_t structBytes = CONST_VAL::NULL_CONTENT; structBytes < sizeof(DEV_CREDENTIALS); structBytes++)
         {
             structStorage[structBytes] = EEPROM.read(CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_START_ADDR + structBytes);
         }
         Serial.println(F("Retrieved Meta Data: "));
-        Serial.print(F("DEV_CR_ASSIGNMENT |> "));
-        Serial.println(DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT);
-        Serial.print(F("DEV_CR_SHORT_NAME |> "));
-        Serial.println(DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME);
-        Serial.print(F("DEV_CR_UUID |> "));
-        Serial.println(DEV_INST_CREDENTIALS.DEV_CR_UUID);
-        Serial.print(F("DEV_UUID |> "));
-        Serial.println(DEV_INST_CREDENTIALS.DEV_UUID);
-        Serial.print(F("AUTH_DEV_USN |> "));
-        Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_USN);
-        Serial.print(F("AUTH_DEV_PWD |> "));
-        Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_PWD);
-        Serial.print(F("CURRENT_COURSE_CODENAME |> "));
-        Serial.println(DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME);
-        Serial.print(F("AUTH_USER_ID_FNGRPRNT |> "));
-        Serial.println(DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
+        display_DEV_DATA();
         EEPROM.end();
         Serial.println(F("EEPROM Data Retrival to Structured Data was Finished."));
         Serial.println();
@@ -193,22 +199,7 @@ inline void SC_MCU_DRVR::save_MetaToEEPROM()
     Serial.println(F("Structured Data with Content Changing nor Updated Detected. Saving Those Values..."));
     Serial.println();
     Serial.println(F("Meta Data From Structured Data: "));
-    Serial.print(F("DEV_CR_ASSIGNMENT |> "));
-    Serial.println(DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT);
-    Serial.print(F("DEV_CR_SHORT_NAME |> "));
-    Serial.println(DEV_INST_CREDENTIALS.DEV_CR_SHORT_NAME);
-    Serial.print(F("DEV_CR_UUID |> "));
-    Serial.println(DEV_INST_CREDENTIALS.DEV_CR_UUID);
-    Serial.print(F("DEV_UUID |> "));
-    Serial.println(DEV_INST_CREDENTIALS.DEV_UUID);
-    Serial.print(F("AUTH_DEV_USN |> "));
-    Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_USN);
-    Serial.print(F("AUTH_DEV_PWD |> "));
-    Serial.println(DEV_INST_CREDENTIALS.AUTH_DEV_PWD);
-    Serial.print(F("CURRENT_COURSE_CODENAME |> "));
-    Serial.println(DEV_INST_CREDENTIALS.CURRENT_COURSE_CODENAME);
-    Serial.print(F("AUTH_USER_ID_FNGRPRNT |> "));
-    Serial.println(DEV_INST_CREDENTIALS.AUTH_USER_ID_FNGRPRNT);
+    display_DEV_DATA();
     Serial.println();
     Serial.println(F("Saving Those Values..."));
     if (EEPROM.read(CONST_VAL::EEPROM_CR_ASSIGNED_CHAR_START_ADDR) != NULL)
@@ -429,16 +420,8 @@ void SC_MCU_DRVR::displayLCDScreen(DataDisplayTypes Screens)
 
     case DataDisplayTypes::DISP_CR_INFO:
         digitalWrite(RESTATED_DEV_PINS::MCU_LED, LOW);
-        if (isnan(TempSens.getTemperature() && isnan(TempSens.getHumidity())))
-        {
-            ENV_INST_CONT.DHT11_TEMP = ENV_INST_CONT.DHT11_TEMP;
-            ENV_INST_CONT.DHT11_HUMID = ENV_INST_CONT.DHT11_HUMID;
-        }
-        else
-        {
-            ENV_INST_CONT.DHT11_TEMP = TempSens.getTemperature();
-            ENV_INST_CONT.DHT11_HUMID = TempSens.getHumidity();
-        }
+        ENV_INST_CONT.DHT11_TEMP = TempSens.getTemperature();
+        ENV_INST_CONT.DHT11_HUMID = TempSens.getHumidity();
         ENV_INST_CONT.PIR_OPTPT = (digitalRead(SENS_DAT_PINS::PIR_DAT_PIN) == HIGH) ? true : false;
         LCD_DRVR.setCursor(0, 0);
         LCD_DRVR.print(DEV_INST_CREDENTIALS.DEV_CR_ASSIGNMENT);
@@ -629,7 +612,6 @@ bool SC_MCU_DRVR::PresencePassCalculation()
     Serial.println("PIR Calculation Percentage | Time Extension Checking...");
     for (size_t PIR_ARR_ELEM = CONST_VAL::NULL_CONTENT; PIR_ARR_ELEM < CONST_VAL::PIR_DIVIDED_REQUIRED_OUTPUTS; PIR_ARR_ELEM++)
     {
-
         (PIR_ARR_OUTPUT[PIR_ARR_ELEM]) ? Bool_TrueCount++ : Bool_FalseCount++;
         PIR_ARR_OUTPUT[PIR_ARR_ELEM] = 0;
         // Then clear the PIR sensor array state by for loop again.

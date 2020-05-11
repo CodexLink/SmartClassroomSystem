@@ -217,19 +217,20 @@ public:
     uint16_t SER_INPUT_ID = CONST_VAL::NULL_CONTENT;
     // Constructor
     SC_MCU_DRVR(uint16_t SUPPLIED_BAUD_RATE, const char *SUPPLIED_SSID, const char *SUPPLIED_PW, const String SUPPLIED_SERVER_IP_ADDRESS, const uint16_t SUPPLIED_SERVER_PORT);
-    void begin();
-    bool waitStateWiFiConn();
-    void displayLCDScreen(DataDisplayTypes Screens);
-    void authStateCheck_FNGRPRNT();
     bool PresenceExtendedScheduler(uint32_t TimeIntervalToMeet);
-    inline void save_MetaToEEPROM();
+    bool waitStateWiFiConn();
+    void begin();
+    void authStateCheck_FNGRPRNT();
+    void displayLCDScreen(DataDisplayTypes Screens);
 
 private:
-    inline void retrieve_EEPROMData();
-    void triggerPresenceAction();
     bool checkWiFiConn();
-    inline void clearPresenceCalcData();
     bool PresencePassCalculation();
+    inline void clearPresenceCalcData();
+    inline void display_DEV_DATA();
+    inline void retrieve_EEPROMData();
+    inline void save_MetaToEEPROM();
+    void triggerPresenceAction();
 };
 
 // END OF FILE SMARTROOM
