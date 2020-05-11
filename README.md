@@ -6,18 +6,18 @@
 
 <div align="center">
 
-![Coveralls.IO / Coverage Worker](https://github.com/CodexLink/SmartClassroomSystem/workflows/Coveralls.IO%20/%20Coverage%20Worker/badge.svg?branch=master)
-![Coverage Status](https://img.shields.io/coveralls/github/CodexLink/SmartClassroomSystem?label=Python-Django%20Code%20Coverage&logo=coveralls)
+[![Coveralls.IO / Coverage Worker](https://github.com/CodexLink/SmartClassroomSystem/workflows/Coveralls.IO%20/%20Coverage%20Worker/badge.svg?branch=master)](https://coveralls.io/builds/30683598)
+[![Coverage Status](https://img.shields.io/coveralls/github/CodexLink/SmartClassroomSystem?label=Python-Django%20Code%20Coverage&logo=coveralls)](https://coveralls.io/builds/30683598)
 ![Embedded Sketch Worker](https://github.com/CodexLink/SmartClassroomSystem/workflows/Embedded%20Sketch%20Worker/badge.svg?branch=master)
 
 </div>
 
 <div align="center">
 
-![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/codexlink/SmartClassroomSystem/master?label=CodeFactor%20Code%20Quality&logo=codefactor&logoColor=white)
-![Codacy Branch Grade](https://img.shields.io/codacy/grade/f649c48ccc3a431a84cad2f7e7ac65ca/master?label=Codacy%20Code%20Quality&logo=codacy&logoColor=White)
-![C++ Code Formatter](https://img.shields.io/badge/C++%20Code%20Formatter-Clang--Format-blueviolet)
-![Python Code Formatter](https://img.shields.io/badge/Python%20Code%20Formatter-Black-black)
+[![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/codexlink/SmartClassroomSystem/master?label=CodeFactor%20Code%20Quality&logo=codefactor&logoColor=white)](https://www.codefactor.io/repository/github/codexlink/smartclassroomsystem)
+[![Codacy Branch Grade](https://img.shields.io/codacy/grade/f649c48ccc3a431a84cad2f7e7ac65ca/master?label=Codacy%20Code%20Quality&logo=codacy&logoColor=White)](https://app.codacy.com/manual/CodexLink/SmartClassroomSystem/dashboard)
+[![C++ Code Formatter](https://img.shields.io/badge/C++%20Code%20Formatter-Clang--Format-blueviolet)](https://clang.llvm.org/docs/ClangFormat.html)
+[![Python Code Formatter](https://img.shields.io/badge/Python%20Code%20Formatter-Black-black)](https://github.com/psf/black)
 
 </div>
 
