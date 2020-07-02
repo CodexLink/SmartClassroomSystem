@@ -4,6 +4,6 @@ coveralls==2.0.0
 Django==3.0.7
 django-coverage-plugin==1.8.0
 django_extensions==2.2.9
-mysqlclient==1.4.6
+mysqlclient==2.0.0
 Pillow==7.1.2
 PyYAML==5.3.1
